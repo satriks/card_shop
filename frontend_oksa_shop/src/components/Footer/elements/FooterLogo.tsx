@@ -1,0 +1,13 @@
+import footerLogo from "../../../assets/footer/footerLogo.png";
+
+type Props = {};
+
+export default function FooterLogo({}: Props) {
+  return (
+    <div className="footer_logo">
+      <p className="footer_logo_title">Kailin Card</p>
+      <img className="footer_logo_img" src={footerLogo} alt="Logo" />
+      <p className="footer_logo_text">www.kailin_kard.ru</p>
+    </div>
+  );
+}

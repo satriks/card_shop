@@ -1,0 +1,15 @@
+@use "../../../../main.scss" as *;
+
+.header_catalog {
+  display: flex;
+  width: 144px;
+  height: 48px;
+  background: #c3abdb;
+  border-radius: 16px;
+  gap: 20px;
+}
+
+.header_catalog_title {
+  @extend .labelTextClass;
+  font-size: 20px;
+}

@@ -1,0 +1,35 @@
+@use "../../../../main.scss" as *;
+
+.header_search {
+  height: 48px;
+  width: 1.5em;
+  background: white;
+  min-width: 360px;
+  border: 0;
+  border-radius: 16px;
+  padding: 0 10px;
+  border: 1px solid $borderColor;
+}
+.header_search:hover {
+  border: 2px solid $borderColor;
+}
+
+.header_search_img {
+  width: 52px;
+  height: 52px;
+  position: absolute;
+  right: -2px;
+  // border: 2px solid $mainColor;
+  // margin-right: 10px;
+}
+
+.header_search_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+// .header_search_wrapper :hover {
+//   border: 1px;
+// }
