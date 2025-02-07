@@ -1,0 +1,59 @@
+@use "../../main.scss";
+
+.cards_wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.cards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.cardItem {
+  margin: 1em;
+  padding: 1em;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: rgba($color: #a5f2de, $alpha: 0.4);
+  transition: box-shadow 0.3s ease;
+}
+
+.cardItem > h2 {
+  margin: 10px auto;
+  text-align: center;
+}
+
+.cardItem > img {
+  width: 250px;
+  height: 210px;
+}
+
+.cardItem_price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardItem_price > button {
+  min-width: 110px;
+  height: 30px;
+  background-color: #c3abdb;
+  border-radius: 16px;
+  color: #000;
+  border: 1px solid black;
+  cursor: pointer;
+  padding: 0;
+  @extend .TextLabel;
+  font-size: 1.2em;
+}
+
+.cardItem_price > p {
+  @extend .TextLabel;
+  font-size: 1.2em;
+  font-weight: bold;
+}

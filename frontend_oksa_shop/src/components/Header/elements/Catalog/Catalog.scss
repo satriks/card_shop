@@ -10,6 +10,6 @@
 }
 
 .header_catalog_title {
-  @extend .labelTextClass;
-  font-size: 20px;
+  @extend .TextLabel;
+  color: #ffffff;
 }
