@@ -1,4 +1,4 @@
-import burger from "../../../../assets/header/burger.png";
+import burger from "../../../../assets/header/burger2.png";
 import "./Catalog.scss";
 
 type Props = {};

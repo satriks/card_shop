@@ -9,6 +9,10 @@
   gap: 20px;
 }
 
+.header_catalog:hover {
+  border: 2px solid $borderColor;
+}
+
 .header_catalog_title {
   @extend .TextLabel;
   color: #ffffff;

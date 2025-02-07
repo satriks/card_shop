@@ -3,7 +3,7 @@ import MainSlice from "./MainSlice";
 import { cardApi } from "./cardAPI";
 
 const store = configureStore({
-  reducer: { [cardApi.reducerPath]: cardApi.reducer },
+  reducer: { [cardApi.reducerPath]: cardApi.reducer, store: MainSlice },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(cardApi.middleware),
 });
