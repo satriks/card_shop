@@ -21,7 +21,9 @@ export function Header(props: IAppProps) {
         <Catalog />
         <div className="header_cart">
           <button className="header_cart_button"></button>
-          {cartCount && <div className="header_cart_counter">{cartCount}</div>}
+          {Boolean(cartCount) && (
+            <div className="header_cart_counter">{cartCount}</div>
+          )}
         </div>
         <div className="header_user" onClick={() => dispatch(setUserInfo())}>
           <button className="header_user_button"></button>

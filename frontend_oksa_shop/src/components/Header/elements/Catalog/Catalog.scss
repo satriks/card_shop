@@ -1,12 +1,13 @@
 @use "../../../../main.scss" as *;
 
 .header_catalog {
-  display: flex;
   width: 144px;
   height: 48px;
   background: #c3abdb;
   border-radius: 16px;
-  gap: 20px;
+  text-align: center;
+  @extend .TextLabel;
+  color: #ffffff;
 }
 
 .header_catalog:hover {

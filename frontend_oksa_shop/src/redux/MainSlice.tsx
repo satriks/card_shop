@@ -1,8 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CardData } from "../models/models";
 
+const testCategory = ["Все", "Новый Год", "8 марта", "Свадьба"];
+
 interface InitialStateType {
   cards: CardData[];
+  category: string[];
   userInfo: boolean;
   delivery: boolean;
   cart: {
@@ -14,6 +17,7 @@ interface InitialStateType {
 
 const initialState: InitialStateType = {
   cards: [],
+  category: testCategory,
   userInfo: false,
   delivery: false,
   cart: {

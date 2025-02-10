@@ -7,7 +7,6 @@
 
 .header_main {
   background-color: $secondColor;
-  color: #fff;
   margin: 60px 0;
   display: flex;
   justify-content: space-around;
@@ -22,8 +21,6 @@
 .header_title {
   @extend .TextH1;
   margin: 0;
-  // font-size: 28px;
-  // color: #000;
 }
 
 .header_catalog {
@@ -35,9 +32,6 @@
   align-items: center;
 }
 
-// .header_catalog :hover {
-//   border: 2px solid $borderColor;
-// }
 .header_cart {
   position: relative;
 }
