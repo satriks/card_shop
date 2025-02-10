@@ -19,8 +19,6 @@ export default function Catalog({}: Props) {
 
   useEffect(() => {
     catalog.isActive && setValue(catalog.isActive);
-    // dispatch(setActiveCategory("Каталог"));
-    // dispatch(fetchProducts("Каталог")); // fetch products on initial render and on category change
   }, [catalog]);
 
   return (
