@@ -1,18 +1,27 @@
 import "./Catalog.scss";
-import { useAppSelector } from "../../../../models/hooks";
-import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../../models/hooks";
+import { useEffect, useState } from "react";
+import { setActiveCategory } from "../../../../redux/MainSlice";
 
 type Props = {};
 
 export default function Catalog({}: Props) {
-  const [value, setValue] = useState("Каталог");
   const catalog = useAppSelector((state) => state.store.category);
-  const options = catalog.map((category, index) => (
+  const dispatch = useAppDispatch();
+
+  const [value, setValue] = useState("Каталог");
+  const options = catalog.all.map((category, index) => (
     <option key={index} value={category}>
       {" "}
       {category}
     </option>
   ));
+
+  useEffect(() => {
+    setValue(catalog.isActive);
+    // dispatch(setActiveCategory("Каталог"));
+    // dispatch(fetchProducts("Каталог")); // fetch products on initial render and on category change
+  }, [catalog]);
 
   return (
     <select className="header_catalog" value={value} onChange={chooseCategory}>
@@ -27,7 +36,7 @@ export default function Catalog({}: Props) {
     const element = e.target as HTMLSelectElement;
     setValue(element.value);
     console.log(element.value);
-    // dispatch(setCategory(e.target.value));
+    dispatch(setActiveCategory(element.value));
     // dispatch(fetchProducts(e.target.value));
   }
 }

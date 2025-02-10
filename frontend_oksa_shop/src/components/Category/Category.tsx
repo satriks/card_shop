@@ -7,7 +7,7 @@ import Tag from "./Tag/Tag";
 type Props = {};
 
 export default function Category({}: Props) {
-  const category = useAppSelector((state) => state.store.category);
+  const category = useAppSelector((state) => state.store.category.all);
 
   return (
     <div className="category">

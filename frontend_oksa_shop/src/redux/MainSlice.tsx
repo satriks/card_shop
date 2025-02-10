@@ -5,7 +5,7 @@ const testCategory = ["Все", "Новый Год", "8 марта", "Свадь
 
 interface InitialStateType {
   cards: CardData[];
-  category: string[];
+  category: { all: string[]; isActive: string };
   userInfo: boolean;
   delivery: boolean;
   cart: {
@@ -17,7 +17,10 @@ interface InitialStateType {
 
 const initialState: InitialStateType = {
   cards: [],
-  category: testCategory,
+  category: {
+    all: testCategory,
+    isActive: testCategory[0],
+  },
   userInfo: false,
   delivery: false,
   cart: {
@@ -31,11 +34,14 @@ const MainSlice = createSlice({
   name: "main",
   initialState,
   reducers: {
-    setUserInfo(state: InitialStateType) {
+    setUserInfo: (state: InitialStateType) => {
       state.userInfo = !state.userInfo;
     },
     setCards: (state, action: PayloadAction<CardData[]>) => {
       state.cards = action.payload;
+    },
+    setActiveCategory: (state, action: PayloadAction<string>) => {
+      state.category.isActive = action.payload;
     },
     // startAuthorization(state) {
     //   state.authorization = true;
@@ -69,6 +75,6 @@ const MainSlice = createSlice({
 // export const get_users = createAction(GET_USERS);
 // export const GET_FILES = "main/getFiles";
 
-export const { setUserInfo, setCards } = MainSlice.actions;
+export const { setUserInfo, setCards, setActiveCategory } = MainSlice.actions;
 
 export default MainSlice.reducer;
