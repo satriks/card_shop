@@ -3,10 +3,15 @@ import logo from "../../assets/header/ava.png";
 import burger from "../../assets/header/burger.png";
 import Search from "./elements/Search/Search";
 import Catalog from "./elements/Catalog/Catalog";
+import { setUserInfo } from "../../redux/MainSlice";
+import { useAppDispatch, useAppSelector } from "../../models/hooks";
 
 export interface IAppProps {}
 
 export function Header(props: IAppProps) {
+  const cartCount = useAppSelector((state) => state.store.cart.items.length);
+  const dispatch = useAppDispatch();
+
   return (
     <div className="header_wrapper">
       <div className="header_main">
@@ -16,9 +21,9 @@ export function Header(props: IAppProps) {
         <Catalog />
         <div className="header_cart">
           <button className="header_cart_button"></button>
-          <div className="header_cart_counter">3</div>
+          {cartCount && <div className="header_cart_counter">{cartCount}</div>}
         </div>
-        <div className="header_user">
+        <div className="header_user" onClick={() => dispatch(setUserInfo())}>
           <button className="header_user_button"></button>
           <img
             className="header_user_button_burger"

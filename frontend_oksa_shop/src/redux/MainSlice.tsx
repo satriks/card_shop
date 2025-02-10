@@ -3,7 +3,10 @@ import { CardData } from "../models/models";
 
 interface InitialStateType {
   cards: CardData[];
+  userInfo: boolean;
+  delivery: boolean;
   cart: {
+    items: CardData[];
     isActive: boolean;
   };
   cardDetail: number | null;
@@ -11,7 +14,10 @@ interface InitialStateType {
 
 const initialState: InitialStateType = {
   cards: [],
+  userInfo: false,
+  delivery: false,
   cart: {
+    items: [],
     isActive: false,
   },
   cardDetail: null,
@@ -21,6 +27,9 @@ const MainSlice = createSlice({
   name: "main",
   initialState,
   reducers: {
+    setUserInfo(state: InitialStateType) {
+      state.userInfo = !state.userInfo;
+    },
     // startAuthorization(state) {
     //   state.authorization = true;
     // },
@@ -53,6 +62,6 @@ const MainSlice = createSlice({
 // export const get_users = createAction(GET_USERS);
 // export const GET_FILES = "main/getFiles";
 
-export const { startAuthorization } = MainSlice.actions;
+export const { setUserInfo } = MainSlice.actions;
 
 export default MainSlice.reducer;

@@ -1,0 +1,48 @@
+@use "../../main.scss";
+/* Личный кабинет  */
+.userPanel_wrapper {
+  width: 100vw;
+  height: 100vh;
+  //   margin: 5vh 5vw;
+  position: fixed;
+  background: linear-gradient(
+    180deg,
+    rgba(225, 248, 246, 0.6) 8%,
+    rgba(247, 206, 204, 0.6) 70%
+  );
+}
+
+.userPanel {
+  position: relative;
+  background-color: white;
+  width: 50%;
+  max-width: 700px;
+  height: 70vh;
+  margin: 10vh auto;
+  display: flex;
+  flex-direction: column;
+  //   justify-content: center;
+  align-items: center;
+
+  h2 {
+    // margin-top: 50px;
+    margin: 50px auto;
+  }
+  button {
+    @extend .TextLabel;
+    width: 420px;
+    height: 59px;
+    background: #c3abdb;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+
+  .cancel {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+  }
+}
