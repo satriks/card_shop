@@ -34,6 +34,9 @@ const MainSlice = createSlice({
     setUserInfo(state: InitialStateType) {
       state.userInfo = !state.userInfo;
     },
+    setCards: (state, action: PayloadAction<CardData[]>) => {
+      state.cards = action.payload;
+    },
     // startAuthorization(state) {
     //   state.authorization = true;
     // },
@@ -66,6 +69,6 @@ const MainSlice = createSlice({
 // export const get_users = createAction(GET_USERS);
 // export const GET_FILES = "main/getFiles";
 
-export const { setUserInfo } = MainSlice.actions;
+export const { setUserInfo, setCards } = MainSlice.actions;
 
 export default MainSlice.reducer;
