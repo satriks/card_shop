@@ -1,9 +1,9 @@
-export interface CardData {
+export interface CardDataDto {
   content: string;
   title: string;
   id: number;
   image: string;
-
+  tags: string[];
 }
 
 // export interface User {

@@ -4,31 +4,36 @@
       "id": 1,
       "title": "Card 1",
       "content": "Content 1",
-      "image": "https://via.placeholder.com/150"
+      "image": "https://via.placeholder.com/150",
+      "tags": ["новый год", "8 марта"]
     },
     {
       "id": 2,
       "title": "Card 2",
       "content": "Content 2",
-      "image": "https://via.placeholder.com/150"
+      "image": "https://via.placeholder.com/150",
+      "tags": ["свадьба", "8 марта"]
     },
     {
       "id": 3,
       "title": "Card 3",
       "content": "Content 3",
-      "image": "https://via.placeholder.com/150"
+      "image": "https://via.placeholder.com/150",
+      "tags": ["новый год", "8 марта"]
     },
     {
       "id": 4,
       "title": "Card 4",
       "content": "Content 4",
-      "image": "https://via.placeholder.com/150"
+      "image": "https://via.placeholder.com/150",
+      "tags": ["день рожденья", "8 марта"]
     },
     {
       "id": 5,
       "title": "Card 5",
       "content": "Content 5",
-      "image": "https://via.placeholder.com/150"
+      "image": "https://via.placeholder.com/150",
+      "tags": ["новый год", "юбилей"]
     }
   ]
 }

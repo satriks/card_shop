@@ -1,15 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CardData } from "../models/models";
-
-const testCategory = ["Все", "Новый Год", "8 марта", "Свадьба"];
+import { CardDataDto } from "../models/models";
 
 interface InitialStateType {
-  cards: CardData[];
-  category: { all: string[]; isActive: string };
+  cards: CardDataDto[];
+  category: { all: string[]; isActive: string | null };
   userInfo: boolean;
   delivery: boolean;
   cart: {
-    items: CardData[];
+    items: CardDataDto[];
     isActive: boolean;
   };
   cardDetail: number | null;
@@ -18,8 +16,8 @@ interface InitialStateType {
 const initialState: InitialStateType = {
   cards: [],
   category: {
-    all: testCategory,
-    isActive: testCategory[0],
+    all: [],
+    isActive: null,
   },
   userInfo: false,
   delivery: false,
@@ -37,44 +35,19 @@ const MainSlice = createSlice({
     setUserInfo: (state: InitialStateType) => {
       state.userInfo = !state.userInfo;
     },
-    setCards: (state, action: PayloadAction<CardData[]>) => {
+    setCards: (state, action: PayloadAction<CardDataDto[]>) => {
       state.cards = action.payload;
+    },
+    setCategory: (state, action: PayloadAction<string[]>) => {
+      state.category.all = action.payload;
     },
     setActiveCategory: (state, action: PayloadAction<string>) => {
       state.category.isActive = action.payload;
     },
-    // startAuthorization(state) {
-    //   state.authorization = true;
-    // },
-    // setIsChangeFile(
-    //   state,
-    //   action: PayloadAction<{
-    //     name?: string;
-    //     description?: string;
-    //     id?: string;
-    //   }>
-    // ) {
-    //   state.isChangeFile.isActive = !state.isChangeFile.isActive;
-    //   if (action.payload) {
-    //     state.isChangeFile.name = action.payload.name;
-    //     state.isChangeFile.description = action.payload.description;
-    //     state.isChangeFile.id = action.payload.id;
-    //   }
-    // },
   },
 });
 
-// export const GET_TOKEN = "main/getToken";
-// export const getToken = createAction<{
-//   username: string;
-//   password: string;
-// }>(GET_TOKEN);
-// export const REGISTRATION = "main/registration";
-// export const registration = createAction<RegistrationData>(REGISTRATION);
-// export const GET_USERS = "main/getUsers";
-// export const get_users = createAction(GET_USERS);
-// export const GET_FILES = "main/getFiles";
-
-export const { setUserInfo, setCards, setActiveCategory } = MainSlice.actions;
+export const { setUserInfo, setCards, setCategory, setActiveCategory } =
+  MainSlice.actions;
 
 export default MainSlice.reducer;

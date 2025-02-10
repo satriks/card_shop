@@ -12,7 +12,8 @@ import UserPanel from "./components/User/UserPanel";
 import { useGetCardQuery } from "./redux/cardAPI";
 import { useEffect } from "react";
 import Spinner from "./components/Common/Spiner/Spinner";
-import { setCards } from "./redux/MainSlice";
+import { setCards, setCategory } from "./redux/MainSlice";
+import { CardDataDto } from "./models/models";
 
 function App() {
   const { data = [], isLoading, isError } = useGetCardQuery("");
@@ -22,6 +23,11 @@ function App() {
   useEffect(() => {
     if (data.length > 0) {
       dispatch(setCards(data));
+      let category: string[] = [];
+      data.forEach((element: CardDataDto) => {
+        category.push(...element.tags);
+      });
+      dispatch(setCategory(["Все", ...new Set(category)]));
     }
   }, [data, dispatch]);
 

@@ -9,7 +9,7 @@ export default function Catalog({}: Props) {
   const catalog = useAppSelector((state) => state.store.category);
   const dispatch = useAppDispatch();
 
-  const [value, setValue] = useState("Каталог");
+  const [value, setValue] = useState("каталог");
   const options = catalog.all.map((category, index) => (
     <option key={index} value={category}>
       {" "}
@@ -18,7 +18,7 @@ export default function Catalog({}: Props) {
   ));
 
   useEffect(() => {
-    setValue(catalog.isActive);
+    catalog.isActive && setValue(catalog.isActive);
     // dispatch(setActiveCategory("Каталог"));
     // dispatch(fetchProducts("Каталог")); // fetch products on initial render and on category change
   }, [catalog]);

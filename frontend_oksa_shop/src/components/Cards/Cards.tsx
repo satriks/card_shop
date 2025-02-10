@@ -1,7 +1,7 @@
 import cardImg from "../../assets/testCard/card.png";
 import "./Cards.scss";
 import Spinner from "../Common/Spiner/Spinner";
-import { CardData } from "../../models/models";
+import { CardDataDto } from "../../models/models";
 import { useAppSelector } from "../../models/hooks";
 type Props = {};
 
@@ -14,7 +14,7 @@ export default function Cards({}: Props) {
       <h2>Открытки темы Title :</h2>
 
       <div className="cards">
-        {cards.map((card: CardData) => (
+        {cards.map((card: CardDataDto) => (
           <div key={card.id} className="cardItem">
             <img src={cardImg} alt={card.title} />
             <h2>{card.title}</h2>
