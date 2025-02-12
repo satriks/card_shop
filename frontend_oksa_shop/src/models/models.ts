@@ -4,6 +4,7 @@ export interface CardDataDto {
   id: number;
   image: string;
   tags: string[];
+  price: number;
 }
 
 // export interface User {

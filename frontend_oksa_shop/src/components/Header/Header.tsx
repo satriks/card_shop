@@ -3,7 +3,7 @@ import logo from "../../assets/header/ava.png";
 import burger from "../../assets/header/burger.png";
 import Search from "./elements/Search/Search";
 import Catalog from "./elements/Catalog/Catalog";
-import { setUserInfo } from "../../redux/MainSlice";
+import { setActiveCart, setUserInfo } from "../../redux/MainSlice";
 import { useAppDispatch, useAppSelector } from "../../models/hooks";
 
 export interface IAppProps {}
@@ -20,7 +20,12 @@ export function Header(props: IAppProps) {
         <Search />
         <Catalog />
         <div className="header_cart">
-          <button className="header_cart_button"></button>
+          <button
+            className="header_cart_button"
+            onClick={() => {
+              dispatch(setActiveCart());
+            }}
+          ></button>
           {Boolean(cartCount) && (
             <div className="header_cart_counter">{cartCount}</div>
           )}

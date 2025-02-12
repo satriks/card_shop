@@ -26,35 +26,40 @@
       "title": "Card 1",
       "content": "Content 1",
       "image": "https://via.placeholder.com/150",
-      "tags": ["новый год", "8 марта"]
+      "tags": ["новый год", "8 марта"],
+      "price": 2000
     },
     {
       "id": 2,
       "title": "Card 2",
       "content": "Content 2",
       "image": "https://via.placeholder.com/150",
-      "tags": ["свадьба", "8 марта"]
+      "tags": ["свадьба", "8 марта"],
+      "price": 2000
     },
     {
       "id": 3,
       "title": "Card 3",
       "content": "Content 3",
       "image": "https://via.placeholder.com/150",
-      "tags": ["новый год", "8 марта"]
+      "tags": ["новый год", "8 марта"],
+      "price": 2000
     },
     {
       "id": 4,
       "title": "Card 4",
       "content": "Content 4",
       "image": "https://via.placeholder.com/150",
-      "tags": ["день рожденья", "8 марта"]
+      "tags": ["день рожденья", "8 марта"],
+      "price": 2000
     },
     {
       "id": 5,
       "title": "Card 5",
       "content": "Content 5",
       "image": "https://via.placeholder.com/150",
-      "tags": ["новый год", "юбилей"]
+      "tags": ["новый год", "юбилей"],
+      "price": 2000
     }
   ]
 }

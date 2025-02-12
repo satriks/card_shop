@@ -19,6 +19,7 @@ import Cart from "./components/Cart/Cart";
 function App() {
   const { data = [], isLoading, isError } = useGetCardQuery("");
   const userInfo = useAppSelector((state) => state.store.userInfo);
+  const cartIsActive = useAppSelector((state) => state.store.cart.isActive);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -36,7 +37,7 @@ function App() {
     <div className="wrapper">
       <Header />
       <Title />
-      <Cart />
+      {cartIsActive && <Cart />}
       <Category />
       {isLoading ? <Spinner /> : <Cards />}
       <AboutMe />

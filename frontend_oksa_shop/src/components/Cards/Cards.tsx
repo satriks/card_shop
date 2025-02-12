@@ -2,12 +2,14 @@ import cardImg from "../../assets/testCard/card.png";
 import "./Cards.scss";
 import Spinner from "../Common/Spiner/Spinner";
 import { CardDataDto } from "../../models/models";
-import { useAppSelector } from "../../models/hooks";
+import { useAppDispatch, useAppSelector } from "../../models/hooks";
+import { addCard } from "../../redux/MainSlice";
 type Props = {};
 
 export default function Cards({}: Props) {
-  const cartActive = useAppSelector((state) => state.store.cart.isActive);
+  // const cartActive = useAppSelector((state) => state.store.cart.isActive);
   const cards = useAppSelector((state) => state.store.cards);
+  const dispatch = useAppDispatch();
 
   return (
     <div className="cards_wrapper">
@@ -19,7 +21,13 @@ export default function Cards({}: Props) {
             <img src={cardImg} alt={card.title} />
             <h2>{card.title}</h2>
             <div className="cardItem_price">
-              <button>В корзину</button>
+              <button
+                onClick={() => {
+                  dispatch(addCard(card));
+                }}
+              >
+                В корзину
+              </button>
               <p>2000 Р</p>
             </div>
           </div>

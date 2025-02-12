@@ -44,10 +44,36 @@ const MainSlice = createSlice({
     setActiveCategory: (state, action: PayloadAction<string>) => {
       state.category.isActive = action.payload;
     },
+    setActiveCart: (state) => {
+      state.cart.isActive = !state.cart.isActive;
+    },
+    addCard: (state, action: PayloadAction<CardDataDto>) => {
+      const cardData = action.payload;
+      if (state.cart.items.some((item) => item.id === cardData.id)) {
+        return;
+      }
+      state.cart.items.push(cardData);
+    },
+    delCard: (state, action: PayloadAction<CardDataDto>) => {
+      const index = state.cart.items.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      if (index === -1) {
+        return;
+      }
+      state.cart.items.splice(index, 1);
+    },
   },
 });
 
-export const { setUserInfo, setCards, setCategory, setActiveCategory } =
-  MainSlice.actions;
+export const {
+  setUserInfo,
+  setCards,
+  setCategory,
+  setActiveCategory,
+  addCard,
+  setActiveCart,
+  delCard,
+} = MainSlice.actions;
 
 export default MainSlice.reducer;
