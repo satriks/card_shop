@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import Spinner from "./components/Common/Spiner/Spinner";
 import { setCards, setCategory } from "./redux/MainSlice";
 import { CardDataDto } from "./models/models";
+import Cart from "./components/Cart/Cart";
 
 function App() {
   const { data = [], isLoading, isError } = useGetCardQuery("");
@@ -35,6 +36,7 @@ function App() {
     <div className="wrapper">
       <Header />
       <Title />
+      <Cart />
       <Category />
       {isLoading ? <Spinner /> : <Cards />}
       <AboutMe />
