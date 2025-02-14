@@ -10,7 +10,7 @@ interface InitialStateType {
     items: CardDataDto[];
     isActive: boolean;
   };
-  cardDetail: number | null;
+  cardDetail: CardDataDto | null;
 }
 
 const initialState: InitialStateType = {
@@ -47,6 +47,9 @@ const MainSlice = createSlice({
     setActiveCart: (state) => {
       state.cart.isActive = !state.cart.isActive;
     },
+    setCardDetail: (state, action: PayloadAction<CardDataDto>) => {
+      state.cardDetail = action.payload;
+    },
     addCard: (state, action: PayloadAction<CardDataDto>) => {
       const cardData = action.payload;
       if (state.cart.items.some((item) => item.id === cardData.id)) {
@@ -74,6 +77,7 @@ export const {
   addCard,
   setActiveCart,
   delCard,
+  setCardDetail,
 } = MainSlice.actions;
 
 export default MainSlice.reducer;

@@ -15,11 +15,13 @@ import Spinner from "./components/Common/Spiner/Spinner";
 import { setCards, setCategory } from "./redux/MainSlice";
 import { CardDataDto } from "./models/models";
 import Cart from "./components/Cart/Cart";
+import CardDetail from "./components/CardDetail/CardDetail";
 
 function App() {
   const { data = [], isLoading, isError } = useGetCardQuery("");
   const userInfo = useAppSelector((state) => state.store.userInfo);
   const cartIsActive = useAppSelector((state) => state.store.cart.isActive);
+  const activeCard = useAppSelector((state) => state.store.cardDetail);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -37,6 +39,7 @@ function App() {
     <div className="wrapper">
       <Header />
       <Title />
+      {activeCard && <CardDetail card={activeCard} />}
       {cartIsActive && <Cart />}
       <Category />
       {isLoading ? <Spinner /> : <Cards />}

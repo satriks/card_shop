@@ -2,6 +2,7 @@ import { useAppDispatch } from "../../models/hooks";
 import { setUserInfo } from "../../redux/MainSlice";
 import cancel from "../../assets/common/cancel.png";
 import "./UserPanel.scss";
+import CancelButton from "../Common/CancelButton/cancelButton";
 
 type Props = {};
 
@@ -18,10 +19,7 @@ export default function UserPanel({}: Props) {
         <button>Доставка</button>
         <button>Способы оплаты</button>
         <button>Мои заказы</button>
-        <img
-          className="cancel"
-          src={cancel}
-          alt="cancel-button"
+        <CancelButton
           onClick={() => {
             dispatch(setUserInfo());
           }}
