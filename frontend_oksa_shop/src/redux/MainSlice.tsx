@@ -47,7 +47,7 @@ const MainSlice = createSlice({
     setActiveCart: (state) => {
       state.cart.isActive = !state.cart.isActive;
     },
-    setCardDetail: (state, action: PayloadAction<CardDataDto>) => {
+    setCardDetail: (state, action: PayloadAction<CardDataDto | null>) => {
       state.cardDetail = action.payload;
     },
     addCard: (state, action: PayloadAction<CardDataDto>) => {
