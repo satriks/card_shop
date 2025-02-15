@@ -8,6 +8,7 @@ type Props = {};
 export default function Cards({}: Props) {
   // const cartActive = useAppSelector((state) => state.store.cart.isActive);
   const cards = useAppSelector((state) => state.store.cards);
+  const cart = useAppSelector((state) => state.store.cart.items);
   const activeCategory = useAppSelector(
     (state) => state.store.category.isActive
   );
@@ -18,7 +19,7 @@ export default function Cards({}: Props) {
       ? cards
       : cards.filter((card) => card.tags.includes(activeCategory))
     : cards;
-
+  cardsFiltered = cardsFiltered.filter((card) => !cart.includes(card));
   return (
     <div className="cards_wrapper">
       <h2>Открытки темы Title :</h2>

@@ -11,6 +11,9 @@ interface InitialStateType {
     isActive: boolean;
   };
   cardDetail: CardDataDto | null;
+  user: {
+    deliveryAddress: string | null;
+  };
 }
 
 const initialState: InitialStateType = {
@@ -26,6 +29,9 @@ const initialState: InitialStateType = {
     isActive: false,
   },
   cardDetail: null,
+  user: {
+    deliveryAddress: null,
+  },
 };
 
 const MainSlice = createSlice({
@@ -49,6 +55,9 @@ const MainSlice = createSlice({
     },
     setCardDetail: (state, action: PayloadAction<CardDataDto | null>) => {
       state.cardDetail = action.payload;
+    },
+    setDeliveryAddress: (state, action: PayloadAction<string>) => {
+      state.user.deliveryAddress = action.payload;
     },
     addCard: (state, action: PayloadAction<CardDataDto>) => {
       const cardData = action.payload;
