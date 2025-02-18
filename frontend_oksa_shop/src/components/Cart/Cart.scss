@@ -1,0 +1,62 @@
+@use "../../main.scss";
+
+.cart_wrapper {
+  margin-top: 150px;
+  margin-bottom: 150px;
+  overflow-y: auto;
+  position: fixed;
+  text-align: start;
+  background: linear-gradient(
+      180deg,
+      rgba(178, 145, 180, 0.18902) 54.4%,
+      rgba(51, 241, 231, 0.2) 100%
+    ),
+    #ffffff;
+  width: 100vw;
+  height: 85vh;
+  z-index: 2;
+
+  .cart_cancel {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 20px;
+    right: 40px;
+  }
+}
+
+.cart {
+  display: grid;
+  box-sizing: border-box;
+  grid-template-columns: 60% 30%;
+  gap: 20px;
+}
+
+.cart_title {
+  text-align: center;
+}
+
+.cart_detail {
+  margin: 0 50px;
+}
+
+.cart_delivery_not_active {
+  display: flex;
+  width: 80%;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 300px;
+}
+
+.cart_payment {
+  width: 80%;
+  @extend .TextLabel;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  img {
+    width: 180px;
+    height: 30px;
+  }
+}

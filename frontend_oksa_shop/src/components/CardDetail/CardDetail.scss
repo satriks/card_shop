@@ -1,0 +1,173 @@
+@use "../../main.scss" as *;
+
+.card_detail_wrapper {
+  position: fixed;
+  width: 100%;
+
+  background: linear-gradient(
+    180deg,
+    rgba(225, 248, 246, 0.6) 8%,
+    rgba(247, 206, 204, 0.6) 70%
+  );
+}
+
+.card_detail {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  margin: 0 auto;
+  padding: 30px 0;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  width: 80%;
+  justify-content: space-around;
+  background: linear-gradient(360deg, #e1f8f6 8%, #f7cecc 70%);
+}
+
+.card_detail_gallery {
+  width: 50%;
+  // padding-top: 10%;
+  display: flex;
+  align-items: center;
+}
+
+.card_detail_info {
+  @extend .TextLabel;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+
+  p {
+    margin: 0;
+    padding: 20px;
+  }
+
+  h2 {
+    margin: 0;
+  }
+
+  h3 {
+    font-weight: normal;
+  }
+
+  .card_detail_info_buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+
+    button {
+      height: 30px;
+      background-color: #c3abdb;
+      border-radius: 16px;
+      color: #000;
+      border: 1px solid black;
+      cursor: pointer;
+      padding: 0 10px;
+      @extend .TextLabel;
+    }
+
+    button:hover {
+      border: 2px solid $borderColor;
+    }
+  }
+
+  .card_detail_info_delivery {
+    display: flex;
+
+    width: 100%;
+    justify-content: space-between;
+    @extend .TextBody;
+    text-align: center;
+
+    .card_detail_info_delivery_detail {
+      width: 70%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      h3 {
+        font-size: 16px;
+        opacity: 0.4;
+      }
+    }
+  }
+
+  .card_detail_info_description {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 30px;
+    // align-items: flex-start;
+    // padding-top: 0;
+
+    .card_detail_info_description_size,
+    .card_detail_info_description_material {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+
+      .card_detail_info_description_material_elements {
+        @extend .TextBody;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  }
+
+  .card_detail_info_similar {
+    width: 100%;
+    @extend .TextBody;
+
+    h3 {
+      text-align: center;
+      @extend .TextLabel;
+    }
+
+    .card_detail_info_similar_cards {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      .card_detail_info_similar_cardItem {
+        display: flex;
+        flex-direction: column;
+
+        h2 {
+          padding: 0;
+          margin: 0;
+          text-align: center;
+        }
+
+        img {
+          width: 170px;
+        }
+
+        .cardItem_price {
+          display: flex;
+          flex-direction: column;
+
+          button {
+            width: 100px;
+            font-size: 0.8em;
+          }
+
+          p {
+            padding: 5px;
+            margin: 0;
+            font-weight: normal;
+          }
+        }
+      }
+    }
+  }
+}
+
+.card_detail_cancel {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 30px;
+  height: 30px;
+}

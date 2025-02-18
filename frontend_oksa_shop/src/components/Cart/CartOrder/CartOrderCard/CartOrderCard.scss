@@ -1,0 +1,22 @@
+@use "../../../../main.scss";
+
+.cart_order_card {
+  @extend .TextLabel;
+  display: flex;
+  justify-content: space-between;
+
+  align-items: center;
+  margin: 10px 0;
+
+  img {
+    width: 50px;
+  }
+}
+
+.cart_order_card > .cancel {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+
+  transition: all 0.3s ease;
+}

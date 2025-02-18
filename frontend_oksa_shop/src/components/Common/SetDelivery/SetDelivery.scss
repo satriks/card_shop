@@ -1,0 +1,27 @@
+@use "../../../main.scss";
+
+.set_delivery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 40px;
+
+  h2 {
+    margin-bottom: 10px;
+    @extend .TextBody;
+  }
+
+  button {
+    min-width: 200px;
+    height: 30px;
+    background-color: #c3abdb;
+    border-radius: 16px;
+    color: #000;
+    border: 1px solid black;
+    cursor: pointer;
+    padding: 0 10px;
+    @extend .TextLabel;
+    font-size: 1.2em;
+  }
+}

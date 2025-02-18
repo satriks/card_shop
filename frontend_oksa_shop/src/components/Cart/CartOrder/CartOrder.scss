@@ -1,0 +1,25 @@
+@use "../../../main.scss";
+
+.cart_order {
+  @extend .TextH2;
+
+  h2 {
+    text-align: center;
+  }
+
+  h3 {
+    @extend .TextH2;
+  }
+}
+
+.cart_order_delivery_detail,
+.cart_order_total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  @extend .TextLabel;
+}
+
+.cart_order_total {
+  font-weight: bold;
+}
