@@ -16,6 +16,7 @@ import { setCards, setCategory } from "./redux/MainSlice";
 import { CardDataDto } from "./models/models";
 import Cart from "./components/Cart/Cart";
 import CardDetail from "./components/CardDetail/CardDetail";
+import CityInput from "./components/Delivery/Delivery";
 
 function App() {
   const { data = [], isLoading, isError } = useGetCardQuery("");
@@ -39,6 +40,7 @@ function App() {
     <div className="wrapper">
       <Header />
       <Title />
+      <CityInput />
       {activeCard && <CardDetail card={activeCard} />}
       {cartIsActive && <Cart />}
       <Category />

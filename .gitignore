@@ -3,7 +3,7 @@ logs
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
+frontend_oksa_shop/yarn-error.log
 pnpm-debug.log*
 lerna-debug.log*
 
@@ -13,6 +13,9 @@ dist-ssr
 *.local
 plot.md
 .plot
+sdek.md
+.env
+todo.md
 
 # Editor directories and files
 .vscode/*
