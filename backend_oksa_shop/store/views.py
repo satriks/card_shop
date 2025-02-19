@@ -11,6 +11,8 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     # Здесь можно переопределить методы, если нужно
     pass
