@@ -3,6 +3,7 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
+    patronymic = models.CharField(max_length=30, blank=True, null=True)
     # Добавьте дополнительные поля, если необходимо
 
 
