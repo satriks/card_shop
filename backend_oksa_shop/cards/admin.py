@@ -11,9 +11,10 @@ class PostcardImageInline(admin.TabularInline):
 
 class PostcardAdmin(admin.ModelAdmin):
     inlines = [PostcardImageInline, ]
-    fields = ["title", "price","categories","materials", "available", "length", "width", "weight"]
+    fields = ["title", "price","categories","materials", "available", "length", "width", "weight", ]
+
+
 
 admin.site.register(Postcard, PostcardAdmin)
-
 admin.site.register(Category)
 admin.site.register(Materials)

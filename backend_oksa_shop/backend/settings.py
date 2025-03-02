@@ -27,7 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+CORS_ALLOWED_ORIGINS = [
+       "http://localhost:5173",  # Замените на ваш фронтенд-домен
+       "http://127.0.0.1:8000",
+   ]
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "admin_interface",
+    'corsheaders',
     "colorfield",
     'rest_framework',
     'store',
@@ -50,6 +54,7 @@ SILENCED_SYSTEM_CHECKS = ["security.W019"]
 ADMIN_INTERFACE_THEME = 'purple'  # Выберите тему: 'default', 'light', 'dark'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

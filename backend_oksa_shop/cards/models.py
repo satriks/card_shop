@@ -1,4 +1,5 @@
-
+import os
+from django.utils.html import mark_safe
 from django.db import models
 from django.templatetags.static import static
 
@@ -11,7 +12,8 @@ class Category(models.Model):
 
 class Materials(models.Model):
     name = models.CharField(max_length=255)
-
+    def __str__(self):
+        return self.name
 
 class Postcard(models.Model):
 
@@ -28,10 +30,17 @@ class Postcard(models.Model):
     weight = models.PositiveIntegerField(blank=True, null=True)
     materials = models.ManyToManyField(Materials, related_name='postcards')
 
-
     def __str__(self):
         return self.title
 
+
+# def get_image_upload_path(instance, filename):
+#     # Получаем ID открытки
+#     postcard_id = instance.product.id
+#     # Создаем путь с использованием ID открытки
+#     return os.path.join('cards', str(postcard_id), filename)
+
+# Добавить сохранение по папкам, нужно продумать логику что делать при создании открытки когда еще нет ID
 
 class Gallery(models.Model):
     image = models.ImageField(upload_to='cards/')
