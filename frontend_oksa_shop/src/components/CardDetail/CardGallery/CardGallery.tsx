@@ -1,29 +1,19 @@
-import React from "react";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
-import card from "../../../assets/testCard/card.png";
+import "./CardGallery.scss";
 
-const images = [
-  {
-    original: card,
-    thumbnail: card,
-  },
-  {
-    original: card,
-    thumbnail: card,
-  },
-  {
-    original: card,
-    thumbnail: card,
-  },
-];
+type Props = { images: string[] };
 
-type Props = {};
+export default function CardGallery({ images }: Props) {
+  const url = import.meta.env.VITE_BASE_URL;
+  const data = images.map((image) => ({
+    original: url + image,
+    thumbnail: url + image,
+  }));
 
-export default function CardGallery({}: Props) {
   return (
     <div>
-      <ImageGallery items={images} showThumbnails={true} />
+      <ImageGallery items={data} showThumbnails={true} />
     </div>
   );
 }

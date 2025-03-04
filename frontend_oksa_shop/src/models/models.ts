@@ -2,9 +2,12 @@ export interface CardDataDto {
   content: string;
   title: string;
   id: number;
-  image: string;
-  tags: string[];
+  images: string[];
+  categories: string[];
+  materials: string[];
   price: number;
+  width: number;
+  length: number;
 }
 
 // export interface User {

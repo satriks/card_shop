@@ -16,7 +16,6 @@ import { setCards, setCategory } from "./redux/MainSlice";
 import { CardDataDto } from "./models/models";
 import Cart from "./components/Cart/Cart";
 import CardDetail from "./components/CardDetail/CardDetail";
-import CityInput from "./components/Delivery/Delivery";
 
 function App() {
   const { data = [], isLoading, isError } = useGetCardQuery("");
@@ -29,8 +28,10 @@ function App() {
     if (data.length > 0) {
       dispatch(setCards(data));
       let category: string[] = [];
+      console.log(data);
+
       data.forEach((element: CardDataDto) => {
-        category.push(...element.tags);
+        category.push(...element.categories);
       });
       dispatch(setCategory(["Все", ...new Set(category)]));
     }
@@ -40,7 +41,6 @@ function App() {
     <div className="wrapper">
       <Header />
       <Title />
-      <CityInput />
       {activeCard && <CardDetail card={activeCard} />}
       {cartIsActive && <Cart />}
       <Category />

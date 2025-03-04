@@ -28,7 +28,12 @@ export default function CartOrder({}: Props) {
       <hr />
       <div className="cart_order_total">
         <h3>Итого</h3>
-        <p>4000 Р</p>
+        <p>
+          {order.reduce((summ, card) => {
+            return summ + card.price;
+          }, 0)}{" "}
+          Р
+        </p>
       </div>
     </div>
   );

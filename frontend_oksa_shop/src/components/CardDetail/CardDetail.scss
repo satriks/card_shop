@@ -3,6 +3,7 @@
 .card_detail_wrapper {
   position: fixed;
   width: 100%;
+  z-index: 3;
 
   background: linear-gradient(
     180deg,
@@ -26,9 +27,11 @@
 
 .card_detail_gallery {
   width: 50%;
+  // margin: 0 auto;
   // padding-top: 10%;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .card_detail_info {
@@ -138,10 +141,13 @@
           padding: 0;
           margin: 0;
           text-align: center;
+          font-size: 16px;
+          min-height: 40px;
+          max-width: 120px;
         }
 
         img {
-          width: 170px;
+          width: 120px;
         }
 
         .cardItem_price {

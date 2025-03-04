@@ -35,7 +35,7 @@ export default function CardDetail({ card }: Props) {
   let cardsFiltered = activeCategory
     ? activeCategory == "Все"
       ? cards
-      : cards.filter((card) => card.tags.includes(activeCategory))
+      : cards.filter((card) => card.categories.includes(activeCategory))
     : cards;
   cardsFiltered = cardsFiltered.filter(
     (card) => !cart.includes(card) && card !== cardDetail
@@ -56,7 +56,7 @@ export default function CardDetail({ card }: Props) {
     >
       <div className="card_detail">
         <div className="card_detail_gallery">
-          <CardGallery />
+          <CardGallery images={card.images} />
         </div>
         <div className="card_detail_info">
           <h2>{card.title}</h2>
@@ -92,19 +92,16 @@ export default function CardDetail({ card }: Props) {
             <div className="card_detail_info_description_material">
               <h3>Материалы:</h3>
               <div className="card_detail_info_description_material_elements">
-                <span>скрапбумага</span>
-                <span>блестки</span>
-                <span>блестки</span>
-                <span>блестки</span>
-                <span>клей</span>
-                <span>бумага акварельная</span>
+                {card.materials.map((material) => (
+                  <span key={material}>{material}</span>
+                ))}
               </div>
             </div>
 
             <div className="card_detail_info_description_size">
               <h3>Размер:</h3>
-              <span>длинна -14 см</span>
-              <span>высота - 15 см</span>
+              <span>длинна -{card.width} см</span>
+              <span>высота -{card.length} см</span>
             </div>
           </div>
           <div className="card_detail_info_similar">
@@ -115,10 +112,13 @@ export default function CardDetail({ card }: Props) {
                   key={card.id}
                   className="card_detail_info_similar_cardItem"
                 >
-                  <img src={cardImg} alt={card.title} />
+                  <img
+                    src={import.meta.env.VITE_BASE_URL + card.images[0]}
+                    alt={card.title}
+                  />
                   <h2>{card.title}</h2>
                   <div className="cardItem_price">
-                    <p>2000 Р</p>
+                    <p>{card.price} Р</p>
                     <button
                       onClick={() => {
                         dispatch(addCard(card));

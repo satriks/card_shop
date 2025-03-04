@@ -24,9 +24,12 @@
   transition: box-shadow 0.3s ease;
 }
 
-.cardItem > h2 {
+.cardItem_title {
+  max-width: 250px;
+  min-height: 78px;
   margin: 10px auto;
   text-align: center;
+  font-size: 22px;
 }
 
 .cardItem > img {

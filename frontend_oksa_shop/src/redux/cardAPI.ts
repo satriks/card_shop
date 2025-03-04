@@ -3,10 +3,10 @@ import { CardDataDto } from "../models/models";
 
 export const cardApi = createApi({
   reducerPath: "cardApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3001/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_BASE_URL }),
   endpoints: (build) => ({
     getCard: build.query({
-      query: () => "cards",
+      query: () => "cards/postcards/",
     }),
   }),
 });

@@ -17,7 +17,7 @@ export default function Cards({}: Props) {
   let cardsFiltered = activeCategory
     ? activeCategory == "Все"
       ? cards
-      : cards.filter((card) => card.tags.includes(activeCategory))
+      : cards.filter((card) => card.categories.includes(activeCategory))
     : cards;
   cardsFiltered = cardsFiltered.filter((card) => !cart.includes(card));
   return (
@@ -31,8 +31,11 @@ export default function Cards({}: Props) {
             className="cardItem"
             onClick={(e) => setActiveCard(e, card)}
           >
-            <img src={cardImg} alt={card.title} />
-            <h2>{card.title}</h2>
+            <img
+              src={import.meta.env.VITE_BASE_URL + card.images[0]}
+              alt={card.title}
+            />
+            <h2 className="cardItem_title">{card.title}</h2>
             <div className="cardItem_price">
               <button
                 className="cardItem_button"
@@ -42,7 +45,7 @@ export default function Cards({}: Props) {
               >
                 В корзину
               </button>
-              <p>2000 Р</p>
+              <p>{card.price} Р</p>
             </div>
           </div>
         ))}
