@@ -14,6 +14,7 @@ export default function UserPanel({}: Props) {
       <div className="userPanel">
         <h2>Личный кабинет </h2>
         <button>ФИО</button>
+        <button>Изменить пароль</button>
         <button>Телефон</button>
         <button>Электронный адрес</button>
         <button>Доставка</button>

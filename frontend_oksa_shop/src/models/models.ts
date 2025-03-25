@@ -10,6 +10,26 @@ export interface CardDataDto {
   length: number;
 }
 
+export interface DeliveryDataDto {
+  code?: number;
+  city_uuid?: string;
+  city?: "string";
+  country_code?: "string";
+  country?: "string";
+  region?: "string";
+  region_code?: number;
+  sub_region?: "string";
+  longitude?: number;
+  latitude?: number;
+  time_zone?: "string";
+  address?: "string";
+  postal_code?: "string";
+}
+
+export interface DeliveryAddressDto {
+  [key: string]: string | DeliveryDataDto;
+}
+
 // export interface User {
 //   id: number;
 //   username: string;

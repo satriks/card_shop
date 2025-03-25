@@ -16,11 +16,13 @@ import { setCards, setCategory } from "./redux/MainSlice";
 import { CardDataDto } from "./models/models";
 import Cart from "./components/Cart/Cart";
 import CardDetail from "./components/CardDetail/CardDetail";
+import Delivery from "./components/Delivery/Delivery";
 
 function App() {
   const { data = [], isLoading, isError } = useGetCardQuery("");
   const userInfo = useAppSelector((state) => state.store.userInfo);
   const cartIsActive = useAppSelector((state) => state.store.cart.isActive);
+  const delivery = useAppSelector((state) => state.store.delivery);
   const activeCard = useAppSelector((state) => state.store.cardDetail);
   const dispatch = useAppDispatch();
 
@@ -41,6 +43,7 @@ function App() {
     <div className="wrapper">
       <Header />
       <Title />
+      {delivery && <Delivery />}
       {activeCard && <CardDetail card={activeCard} />}
       {cartIsActive && <Cart />}
       <Category />

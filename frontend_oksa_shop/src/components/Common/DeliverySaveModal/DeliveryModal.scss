@@ -1,0 +1,41 @@
+.modal_overlay {
+  position: fixed;
+  top: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .cancel {
+    width: 20px;
+    height: 20px;
+  }
+}
+.modal_content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  .modal_content_button {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 30px;
+
+    button {
+      min-width: 100px;
+      height: 30px;
+      background-color: #dfb4e2;
+      border-radius: 16px;
+      color: white;
+    }
+    .error {
+      background-color: #dfb4e2;
+    }
+  }
+}
+.modal_cancel {
+  width: 50px;
+  height: 10px;
+}

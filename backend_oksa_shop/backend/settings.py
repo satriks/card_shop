@@ -10,7 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+import environ
 from pathlib import Path
+# from dotenv import load_dotenv
+# load_dotenv()
+
+# print(os.getenv('SDEK_API_URL'))
+# env = environ.Env()
+# environ.Env.read_env()
+# SDEK_API_URL = env('SDEK_API_URL')
+# SDEK_API_ID = env('SDEK_API_ID')
+# SDEK_API_SECRET = env('SDEK_API_SECRET')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'store',
     'cards',
+    'delivery',
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"

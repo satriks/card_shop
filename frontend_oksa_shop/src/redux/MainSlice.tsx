@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CardDataDto } from "../models/models";
+import { CardDataDto, DeliveryAddressDto } from "../models/models";
 
 interface InitialStateType {
   cards: CardDataDto[];
@@ -12,7 +12,7 @@ interface InitialStateType {
   };
   cardDetail: CardDataDto | null;
   user: {
-    deliveryAddress: string | null;
+    deliveryAddress: DeliveryAddressDto | null;
   };
 }
 
@@ -23,7 +23,7 @@ const initialState: InitialStateType = {
     isActive: null,
   },
   userInfo: false,
-  delivery: false,
+  delivery: true,
   cart: {
     items: [],
     isActive: false,
@@ -40,6 +40,9 @@ const MainSlice = createSlice({
   reducers: {
     setUserInfo: (state: InitialStateType) => {
       state.userInfo = !state.userInfo;
+    },
+    setDelivery: (state: InitialStateType) => {
+      state.delivery = !state.delivery;
     },
     setCards: (state, action: PayloadAction<CardDataDto[]>) => {
       state.cards = action.payload;
@@ -80,6 +83,7 @@ const MainSlice = createSlice({
 
 export const {
   setUserInfo,
+  setDelivery,
   setCards,
   setCategory,
   setActiveCategory,

@@ -28,6 +28,11 @@ class PostcardSerializer(serializers.ModelSerializer):
 
     def get_materials(self, obj):
         return [material.name for material in obj.materials.all()]
-
+    
+    def create(self, validated_data):
+        images_data = validated_data.pop('images')  # Извлекаем данные изображений
+        postcard = Postcard.objects.create(**validated_data)  # Создаем объект Postcard
+        # Сохраняем изображения
+        
     def get_images(self, obj):
         return [image.image.url for image in obj.images.all()]
