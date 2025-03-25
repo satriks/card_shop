@@ -1,0 +1,21 @@
+@use "../../../main.scss";
+.modal_wrapper {
+  position: fixed;
+  top: 50%;
+  background-color: rgba(228, 24, 225, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  h3 {
+    @extend .TextLabel;
+    font-weight: 400;
+  }
+
+  .modal_content {
+    background: rgb(247, 184, 184);
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+}

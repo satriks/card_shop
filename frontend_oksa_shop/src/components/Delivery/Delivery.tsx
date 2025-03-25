@@ -3,7 +3,7 @@ import "./Delivery.scss";
 import CancelButton from "../Common/CancelButton/cancelButton";
 import { Map, Placemark, YMaps } from "@pbe/react-yandex-maps";
 import { useAppDispatch } from "../../models/hooks";
-import { setDelivery } from "../../redux/MainSlice";
+import { setDelivery, setDeliveryAddress } from "../../redux/MainSlice";
 import {
   useLazyGetCityDetailQuery,
   useLazyGetCityQuery,
@@ -11,6 +11,8 @@ import {
   useLazyGetTariffsQuery,
 } from "../../redux/cardAPI";
 import DeliveryModal from "../Common/DeliverySaveModal/DeliveryModal";
+import Spinner from "../Common/Spiner/Spinner";
+import ModalAlert from "../Common/ModalAlert/ModalAlert";
 
 type DeliveryName = {
   "Посылка склад-дверь": string;
@@ -31,17 +33,17 @@ type Props = {};
 export default function Delivery({}: Props) {
   const dispatch = useAppDispatch();
   const deliveryWindow = useRef(null);
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [sdekOffice, setSdekOffice] = useState<string>("");
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [tariffCode, setTariffCode] = useState<string>("");
   const [cityInfo, setCityInfo] = useState();
   const [cityInput, setCityInput] = useState<string>("");
   const [cityCurrent, setCityCurrent] = useState();
+  const [deliveryCost, setDeliveryCost] = useState<number>();
   const [selectedCoordinates, setSelectedCoordinates] = useState<
     number[] | null
   >(null);
-  const [selectedCity, setSelectedCity] = useState();
   // для доставки
   const [postCode, setPostCode] = useState<string | undefined>("");
   // стейты для формы
@@ -54,11 +56,10 @@ export default function Delivery({}: Props) {
   const clearDeliveryForm = () => {
     setStreet("");
     setBuilding("");
-    // setFlat("");
-    // setFloor("");
-    // setEntrance("");
     setComment("");
   };
+  // Сообщения
+  const [alertMessage, setAlertMessage] = useState(false);
 
   // стейты балуна
   const [baloonStreet, setBaloonStreet] = useState<string>("");
@@ -141,7 +142,7 @@ export default function Delivery({}: Props) {
       setBaloonHouse(bHouse);
       setStreet(bStreet);
       setBuilding(bHouse);
-      setTariffCode("137");
+      setHandleTariffCode("137");
     });
   };
   const handleChange = (event: React.ChangeEvent) => {
@@ -168,7 +169,15 @@ export default function Delivery({}: Props) {
       deliveryWindow.current.scrollBy(0, shift);
     }
   };
-
+  const setHandleTariffCode = (code) => {
+    setTariffCode(code);
+    if (tariffData.length > 0) {
+      const cost = tariffData.filter((tariff) => {
+        return tariff.tariff_code == Number(code);
+      })[0];
+      setDeliveryCost(cost.delivery_sum * 1.2);
+    }
+  };
   const saveDelivery = (name: string) => {
     let value;
     let key = name;
@@ -206,14 +215,27 @@ export default function Delivery({}: Props) {
     const data = {
       [key]: value,
     };
-    console.log(data);
+    dispatch(setDeliveryAddress(data));
+  };
+  const checkSave = () => {
+    if (["136", "483"].includes(tariffCode)) {
+      console.log(sdekOffice);
+      if (sdekOffice) {
+        setIsModalOpen(true);
+      } else {
+        setAlertMessage(true);
+      }
+    } else {
+      setIsModalOpen(true);
+    }
   };
 
   useEffect(() => {
     if (!isLoading && !isOfficesLoading && cityDetail) {
       setCityCurrent(true); // Устанавливаем cityCurrent в true только после загрузки данных
     }
-  }, [isLoading, cityDetail, isOfficesLoading]);
+    console.log(deliveryCost);
+  }, [isLoading, cityDetail, isOfficesLoading, deliveryCost]);
 
   return (
     <div className="delivery_wrapper" onClick={wrapperCancel}>
@@ -378,7 +400,8 @@ export default function Delivery({}: Props) {
                         setStreet(data[0]);
                         setBuilding(data[1]);
                         setComment(office.note);
-                        setTariffCode("136");
+                        // setTariffCode("136");
+                        setHandleTariffCode("136");
                         scrollDown();
                         setSdekOffice(office.code);
                       }}
@@ -396,7 +419,9 @@ export default function Delivery({}: Props) {
                         setStreet(baloonStreet);
                         setBuilding(baloonHouse);
                         setComment(baloonComment);
-                        setTariffCode("137");
+                        // setTariffCode("137");
+                        setHandleTariffCode("137");
+                        setTariffCode;
                         scrollDown();
                       }}
                     />
@@ -405,8 +430,8 @@ export default function Delivery({}: Props) {
               </div>
             </YMaps>
           )}
-
-        {selectedOption === "delivery" && (
+        {isLoadingTariff && <Spinner />}
+        {selectedOption === "delivery" && !isLoadingTariff && (
           <div className="delivery_select_detail">
             {selectedOption === "delivery" &&
               tariffData &&
@@ -417,9 +442,9 @@ export default function Delivery({}: Props) {
                     value={tariff.tariff_code}
                     checked={tariffCode === String(tariff.tariff_code)}
                     onChange={(event) => {
-                      console.log(tariff.tariff_code, "tariff code");
-
-                      setTariffCode((event.target as HTMLInputElement).value);
+                      setHandleTariffCode(
+                        (event.target as HTMLInputElement).value
+                      );
                     }}
                   />
 
@@ -436,7 +461,7 @@ export default function Delivery({}: Props) {
           </div>
         )}
 
-        {selectedOption === "delivery" && tariffData && (
+        {selectedOption === "delivery" && !isLoadingTariff && tariffData && (
           <div className="delivery_info">
             <h2>Информация по доставке</h2>
             <div className="delivery_info_row1">
@@ -500,10 +525,19 @@ export default function Delivery({}: Props) {
                 }}
               />
             </div>
-            <button onClick={() => setIsModalOpen(true)}>Сохранить</button>
+            <button onClick={checkSave}>Сохранить</button>
           </div>
         )}
         {/* конец Доставка секция */}
+        {alertMessage && (
+          <ModalAlert
+            message="Выберите пункт получения"
+            duration={1500}
+            onClose={() => {
+              setAlertMessage(false);
+            }}
+          />
+        )}
         <DeliveryModal
           isOpen={isModalOpen}
           onClose={() => {

@@ -59,7 +59,7 @@ const MainSlice = createSlice({
     setCardDetail: (state, action: PayloadAction<CardDataDto | null>) => {
       state.cardDetail = action.payload;
     },
-    setDeliveryAddress: (state, action: PayloadAction<string>) => {
+    setDeliveryAddress: (state, action: PayloadAction<DeliveryAddressDto>) => {
       state.user.deliveryAddress = action.payload;
     },
     addCard: (state, action: PayloadAction<CardDataDto>) => {
@@ -86,6 +86,7 @@ export const {
   setDelivery,
   setCards,
   setCategory,
+  setDeliveryAddress,
   setActiveCategory,
   addCard,
   setActiveCart,

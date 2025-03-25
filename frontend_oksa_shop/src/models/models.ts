@@ -11,19 +11,19 @@ export interface CardDataDto {
 }
 
 export interface DeliveryDataDto {
-  code?: number;
-  city_uuid?: string;
-  city?: "string";
-  country_code?: "string";
-  country?: "string";
-  region?: "string";
-  region_code?: number;
-  sub_region?: "string";
-  longitude?: number;
-  latitude?: number;
-  time_zone?: "string";
-  address?: "string";
-  postal_code?: "string";
+  code?: number | undefined;
+  city_uuid?: string | undefined;
+  city?: string | undefined;
+  country_code?: string | undefined;
+  country?: string | undefined;
+  region?: string | undefined;
+  region_code?: number | undefined;
+  sub_region?: string | undefined;
+  longitude?: number | undefined;
+  latitude?: number | undefined;
+  time_zone?: string | undefined;
+  address?: string | undefined;
+  postal_code?: string | undefined;
 }
 
 export interface DeliveryAddressDto {
