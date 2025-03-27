@@ -1,5 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { CardDataDto } from "../models/models";
+import {
+  CardDataDto,
+  CityDataDto,
+  OfficeDto,
+  TariffDto,
+} from "../models/models";
 
 export const cardApi = createApi({
   reducerPath: "cardApi",
@@ -8,16 +13,16 @@ export const cardApi = createApi({
     getCard: build.query({
       query: () => "cards/postcards/",
     }),
-    getCity: build.query({
+    getCity: build.query<CityDataDto[], string>({
       query: (params) => `sdek/city/?city_name=${params}`,
     }),
     getCityDetail: build.query({
       query: (params) => `sdek/city/detail/?city_code=${params}`,
     }),
-    getOffices: build.query({
+    getOffices: build.query<OfficeDto[], number>({
       query: (params) => `sdek/offices/?city_code=${params}`,
     }),
-    getTariffs: build.query({
+    getTariffs: build.query<TariffDto[], number>({
       query: (params) => `sdek/tariff/?city_code=${params}`,
     }),
   }),

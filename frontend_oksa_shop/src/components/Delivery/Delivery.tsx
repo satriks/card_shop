@@ -20,6 +20,12 @@ import {
 import DeliveryModal from "../Common/DeliverySaveModal/DeliveryModal";
 import Spinner from "../Common/Spiner/Spinner";
 import ModalAlert from "../Common/ModalAlert/ModalAlert";
+import {
+  CityDataDto,
+  DeliveryDataDto,
+  GeoObjectCollectionDto,
+  TariffDto,
+} from "../../models/models";
 
 type DeliveryName = {
   "Посылка склад-дверь": string;
@@ -35,18 +41,22 @@ const deliveryName: DeliveryName = {
   "Экспресс склад-склад": "Экспресс в пункт выдачи заказов",
 };
 
+interface MapClickEvent {
+  get: (key: string) => number[];
+}
+
 type Props = {};
 
 export default function Delivery({}: Props) {
   const dispatch = useAppDispatch();
-  const deliveryWindow = useRef(null);
+  const deliveryWindow = useRef<HTMLDivElement | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sdekOffice, setSdekOffice] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [tariffCode, setTariffCode] = useState<string>("");
-  const [cityInfo, setCityInfo] = useState();
+  const [cityInfo, setCityInfo] = useState<CityDataDto>();
   const [cityInput, setCityInput] = useState<string>("");
-  const [cityCurrent, setCityCurrent] = useState();
+  const [cityCurrent, setCityCurrent] = useState<boolean>();
   const [deliveryCost, setDeliveryCost] = useState<number>();
   const [selectedCoordinates, setSelectedCoordinates] = useState<
     number[] | null
@@ -88,7 +98,10 @@ export default function Delivery({}: Props) {
     getTariffs,
     { data: tariffData, error: tariffError, isLoading: isLoadingTariff },
   ] = useLazyGetTariffsQuery();
-  const getAddressFromCoordinates = async (latitude, longitude) => {
+  const getAddressFromCoordinates = async (
+    latitude: string,
+    longitude: string
+  ) => {
     const apiKey = import.meta.env.VITE_YMAPS_KEY; // Замените на ваш API-ключ
     const url = `https://geocode-maps.yandex.ru/1.x/?apikey=${apiKey}&geocode=${longitude},${latitude}&format=json`;
     try {
@@ -129,28 +142,30 @@ export default function Delivery({}: Props) {
       }
     }
   };
-  const handleMapClick = (event) => {
-    const coords = event.get("coords");
+  const handleMapClick = (event: MapClickEvent) => {
+    const coords: number[] = event.get("coords");
     setSelectedCoordinates(coords); // Сохраняем координаты
     console.log("Выбранные координаты:", coords);
 
     // Получаем адрес по координатам
-    getAddressFromCoordinates(coords[0], coords[1]).then((address) => {
-      console.log(address);
+    getAddressFromCoordinates(coords[0].toString(), coords[1].toString()).then(
+      (address: GeoObjectCollectionDto) => {
+        console.log(address, "this is adr");
 
-      clearDeliveryForm();
-      const bStreet = address.Components.filter(
-        (item) => item.kind == "street"
-      )[0]?.name;
-      const bHouse = address.Components.filter(
-        (item) => item.kind == "house"
-      )[0]?.name;
-      setBaloonStreet(bStreet);
-      setBaloonHouse(bHouse);
-      setStreet(bStreet);
-      setBuilding(bHouse);
-      setHandleTariffCode("137");
-    });
+        clearDeliveryForm();
+        const bStreet = address.Components.filter(
+          (item) => item.kind == "street"
+        )[0]?.name;
+        const bHouse = address.Components.filter(
+          (item) => item.kind == "house"
+        )[0]?.name;
+        setBaloonStreet(bStreet);
+        setBaloonHouse(bHouse);
+        setStreet(bStreet);
+        setBuilding(bHouse);
+        setHandleTariffCode("137");
+      }
+    );
   };
   const handleChange = (event: React.ChangeEvent) => {
     setSelectedOption((event.target as HTMLInputElement).value);
@@ -176,17 +191,17 @@ export default function Delivery({}: Props) {
       deliveryWindow.current.scrollBy(0, shift);
     }
   };
-  const setHandleTariffCode = (code) => {
+  const setHandleTariffCode = (code: string) => {
     setTariffCode(code);
-    if (tariffData.length > 0) {
-      const cost = tariffData.filter((tariff) => {
+    if (tariffData && tariffData.length > 0) {
+      const tariffs = tariffData as TariffDto[];
+      const cost = tariffs.filter((tariff) => {
         return tariff.tariff_code == Number(code);
       })[0];
       setDeliveryCost(cost.delivery_sum * 1.2);
     }
   };
   const saveDelivery = (name: string) => {
-    let value;
     let key = name;
 
     if (selectedOption === "self") {
@@ -204,7 +219,7 @@ export default function Delivery({}: Props) {
       if (["137", "482"].includes(tariffCode)) {
         dispatch(setDeliveryOfficeState(null));
         const city = cityDetail[0];
-        value = {
+        const value: DeliveryDataDto = {
           code: cityInfo?.code,
           city_uuid: cityInfo?.city_uuid,
           city: city.city,
@@ -246,7 +261,16 @@ export default function Delivery({}: Props) {
       setCityCurrent(true); // Устанавливаем cityCurrent в true только после загрузки данных
     }
     console.log(deliveryCost);
-  }, [isLoading, cityDetail, isOfficesLoading, deliveryCost]);
+    console.log(officesData, " off");
+    console.log(tariffData, " tsr data");
+  }, [
+    isLoading,
+    cityDetail,
+    isOfficesLoading,
+    deliveryCost,
+    tariffData,
+    officesData,
+  ]);
 
   return (
     <div className="delivery_wrapper" onClick={wrapperCancel}>
@@ -381,7 +405,7 @@ export default function Delivery({}: Props) {
                     height: "40vh",
                     margin: "30px auto",
                   }}
-                  onLoad={(e) => {
+                  onLoad={() => {
                     scrollDown();
                     setCityInput(cityInput.split(",")[0]);
                   }}
@@ -425,12 +449,11 @@ export default function Delivery({}: Props) {
                         preset: "islands#icon",
                         iconColor: "#b17ae8",
                       }}
-                      onClick={(e) => {
+                      onClick={() => {
                         clearDeliveryForm();
                         setStreet(baloonStreet);
                         setBuilding(baloonHouse);
                         setComment(baloonComment);
-                        // setTariffCode("137");
                         setHandleTariffCode("137");
                         setTariffCode;
                         scrollDown();

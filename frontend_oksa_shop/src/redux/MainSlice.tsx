@@ -14,7 +14,7 @@ interface InitialStateType {
   user: {
     deliverySelf: boolean;
     deliveryAddress: DeliveryAddressDto | null;
-    deliveryCost: number | null;
+    deliveryCost: number | null | undefined;
     deliveryOffice: string | null;
     deliveryTariffCode: string | null;
   };
@@ -70,7 +70,10 @@ const MainSlice = createSlice({
     setDeliveryAddress: (state, action: PayloadAction<DeliveryAddressDto>) => {
       state.user.deliveryAddress = action.payload;
     },
-    setDeliveryCostState: (state, action: PayloadAction<number | null>) => {
+    setDeliveryCostState: (
+      state,
+      action: PayloadAction<number | null | undefined>
+    ) => {
       state.user.deliveryCost = action.payload;
     },
     setDeliveryOfficeState: (state, action) => {
