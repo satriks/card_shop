@@ -3,7 +3,14 @@ import "./Delivery.scss";
 import CancelButton from "../Common/CancelButton/cancelButton";
 import { Map, Placemark, YMaps } from "@pbe/react-yandex-maps";
 import { useAppDispatch } from "../../models/hooks";
-import { setDelivery, setDeliveryAddress } from "../../redux/MainSlice";
+import {
+  setDelivery,
+  setDeliveryAddress,
+  setDeliveryCostState,
+  setDeliveryOfficeState,
+  setDeliverySelfState,
+  setDeliveryTariffCodeState,
+} from "../../redux/MainSlice";
 import {
   useLazyGetCityDetailQuery,
   useLazyGetCityQuery,
@@ -34,7 +41,7 @@ export default function Delivery({}: Props) {
   const dispatch = useAppDispatch();
   const deliveryWindow = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [sdekOffice, setSdekOffice] = useState<string>("");
+  const [sdekOffice, setSdekOffice] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [tariffCode, setTariffCode] = useState<string>("");
   const [cityInfo, setCityInfo] = useState();
@@ -181,18 +188,21 @@ export default function Delivery({}: Props) {
   const saveDelivery = (name: string) => {
     let value;
     let key = name;
-    console.log(sdekOffice, " sdek");
 
     if (selectedOption === "self") {
-      key = "Самовывоз";
-      value = "Братиславская д.6 ";
+      dispatch(setDeliverySelfState(true));
     }
     if (selectedOption === "delivery") {
+      dispatch(setDeliverySelfState(false));
+      dispatch(setDeliveryTariffCodeState(tariffCode));
+      dispatch(setDeliveryCostState(deliveryCost));
+
       if (["136", "483"].includes(tariffCode)) {
-        value = sdekOffice;
+        dispatch(setDeliveryOfficeState(sdekOffice));
       }
 
       if (["137", "482"].includes(tariffCode)) {
+        dispatch(setDeliveryOfficeState(null));
         const city = cityDetail[0];
         value = {
           code: cityInfo?.code,
@@ -209,13 +219,14 @@ export default function Delivery({}: Props) {
           address: `${street}, ${building}, квартира ${flat}, этаж ${floor}, подъезд ${entrance}`,
           postal_code: postCode,
         };
+
+        const data = {
+          [key]: value,
+        };
+
+        dispatch(setDeliveryAddress(data));
       }
     }
-
-    const data = {
-      [key]: value,
-    };
-    dispatch(setDeliveryAddress(data));
   };
   const checkSave = () => {
     if (["136", "483"].includes(tariffCode)) {

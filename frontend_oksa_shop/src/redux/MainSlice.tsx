@@ -12,7 +12,11 @@ interface InitialStateType {
   };
   cardDetail: CardDataDto | null;
   user: {
+    deliverySelf: boolean;
     deliveryAddress: DeliveryAddressDto | null;
+    deliveryCost: number | null;
+    deliveryOffice: string | null;
+    deliveryTariffCode: string | null;
   };
 }
 
@@ -30,7 +34,11 @@ const initialState: InitialStateType = {
   },
   cardDetail: null,
   user: {
+    deliverySelf: false,
     deliveryAddress: null,
+    deliveryCost: null,
+    deliveryOffice: null,
+    deliveryTariffCode: null,
   },
 };
 
@@ -62,6 +70,18 @@ const MainSlice = createSlice({
     setDeliveryAddress: (state, action: PayloadAction<DeliveryAddressDto>) => {
       state.user.deliveryAddress = action.payload;
     },
+    setDeliveryCostState: (state, action: PayloadAction<number | null>) => {
+      state.user.deliveryCost = action.payload;
+    },
+    setDeliveryOfficeState: (state, action) => {
+      state.user.deliveryOffice = action.payload;
+    },
+    setDeliveryTariffCodeState: (state, action) => {
+      state.user.deliveryTariffCode = action.payload;
+    },
+    setDeliverySelfState: (state, action) => {
+      state.user.deliverySelf = action.payload;
+    },
     addCard: (state, action: PayloadAction<CardDataDto>) => {
       const cardData = action.payload;
       if (state.cart.items.some((item) => item.id === cardData.id)) {
@@ -87,6 +107,10 @@ export const {
   setCards,
   setCategory,
   setDeliveryAddress,
+  setDeliveryCostState,
+  setDeliveryOfficeState,
+  setDeliverySelfState,
+  setDeliveryTariffCodeState,
   setActiveCategory,
   addCard,
   setActiveCart,
