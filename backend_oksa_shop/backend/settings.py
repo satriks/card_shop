@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+from datetime import timedelta
+
 import environ
 from pathlib import Path
 # from dotenv import load_dotenv
@@ -36,7 +38,7 @@ SECRET_KEY = 'django-insecure-o85pa2&rco30tehse=_@7nc95!yxq9wyt%mm9l-o#p+&2%2xt&
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
        "http://localhost:5173",  # Замените на ваш фронтенд-домен
        "http://127.0.0.1:8000",
@@ -54,6 +56,8 @@ INSTALLED_APPS = [
     'corsheaders',
     "colorfield",
     'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'store',
     'cards',
     'delivery',
@@ -96,7 +100,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
+SIMPLE_JWT = {
 
+    'ROTATE_REFRESH_TOKENS': True,
+
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=60),
+
+}
 
 
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

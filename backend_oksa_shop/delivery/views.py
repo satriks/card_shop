@@ -1,7 +1,28 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .sdek_api import SdekApiClient
+from rest_framework import generics
+from .models import Delivery
+from .serializers import DeliverySerializer
+
+
+class DeliveryListCreateView(generics.ListCreateAPIView):
+    queryset = Delivery.objects.all()
+    serializer_class = DeliverySerializer
+    permission_classes = [IsAuthenticated]
+
+class DeliveryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Delivery.objects.all()
+    serializer_class = DeliverySerializer
+    permission_classes = [IsAuthenticated]
+    def get_serializer_context(self):
+        # Получаем базовый контекст
+        context = super().get_serializer_context()
+        # Добавляем текущего пользователя в контекст
+        context['request'] = self.request
+        return context
 
 
 class CityView(APIView):
