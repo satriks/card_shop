@@ -2,6 +2,13 @@
 
 .cart_order {
   @extend .TextH2;
+  display: flex;
+  flex-direction: column;
+
+  button {
+    @extend .Btn;
+    margin: 10px 0;
+  }
 
   h2 {
     text-align: center;

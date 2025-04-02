@@ -7,6 +7,7 @@ import { CardDataDto } from "../../models/models";
 import { addCard, setActiveCart, setCardDetail } from "../../redux/MainSlice";
 import cardImg from "../../assets/testCard/card.png";
 import CancelButton from "../Common/CancelButton/cancelButton";
+import DeliveryDetail from "./DeliveryDetail/DeliveryDetail";
 
 type Props = { card: CardDataDto };
 
@@ -14,11 +15,12 @@ export default function CardDetail({ card }: Props) {
   const cards = useAppSelector((state) => state.store.cards);
   const cart = useAppSelector((state) => state.store.cart.items);
   const cardDetail = useAppSelector((state) => state.store.cardDetail);
+  const delivery = useAppSelector((state) => state.store.delivery);
   const activeCategory = useAppSelector(
     (state) => state.store.category.isActive
   );
   const deliveryAddress = useAppSelector(
-    (state) => state.store.user.deliveryAddress
+    (state) => state.store.delivery.deliveryAddress
   );
   const dispatch = useAppDispatch();
 
@@ -65,6 +67,7 @@ export default function CardDetail({ card }: Props) {
             <button
               onClick={() => {
                 dispatch(addCard(card));
+                dispatch(setCardDetail(null));
               }}
             >
               в корзину
@@ -73,17 +76,18 @@ export default function CardDetail({ card }: Props) {
               onClick={() => {
                 dispatch(addCard(card));
                 dispatch(setActiveCart());
+                dispatch(setCardDetail(null));
               }}
             >
               купить сейчас
             </button>
           </div>
           <div className="card_detail_info_delivery">
-            <h3>Доставка</h3>
-            {deliveryAddress ? (
-              <div className="card_detail_info_delivery_detail">
-                <h3>{deliveryAddress}</h3> <p>2000 Р</p>
-              </div>
+            <h3>Доставка : </h3>
+            {delivery.deliverySelf ||
+            delivery.deliveryAddress ||
+            delivery.deliveryOffice ? (
+              <DeliveryDetail />
             ) : (
               <SetDelivery />
             )}

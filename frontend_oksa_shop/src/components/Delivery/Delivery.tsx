@@ -7,9 +7,12 @@ import {
   setDelivery,
   setDeliveryAddress,
   setDeliveryCostState,
+  setDeliveryName,
+  setDeliveryOfficeDetail,
   setDeliveryOfficeState,
   setDeliverySelfState,
   setDeliveryTariffCodeState,
+  setDeliveryTime,
 } from "../../redux/MainSlice";
 import {
   useLazyGetCityDetailQuery,
@@ -18,11 +21,11 @@ import {
   useLazyGetTariffsQuery,
 } from "../../redux/cardAPI";
 import DeliveryModal from "../Common/DeliverySaveModal/DeliveryModal";
-import Spinner from "../Common/Spiner/Spinner";
+import Spinner from "../Common/Spinner/Spinner";
 import ModalAlert from "../Common/ModalAlert/ModalAlert";
 import {
   CityDataDto,
-  DeliveryDataDto,
+  DeliveryAddressDto,
   GeoObjectCollectionDto,
   TariffDto,
 } from "../../models/models";
@@ -182,7 +185,7 @@ export default function Delivery({}: Props) {
   };
   const wrapperCancel = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).className == "delivery_wrapper") {
-      dispatch(setDelivery());
+      dispatch(setDelivery(false));
     }
   };
   const scrollDown = (shift = 0) => {
@@ -195,10 +198,13 @@ export default function Delivery({}: Props) {
     setTariffCode(code);
     if (tariffData && tariffData.length > 0) {
       const tariffs = tariffData as TariffDto[];
-      const cost = tariffs.filter((tariff) => {
+      const tariff = tariffs.filter((tariff) => {
         return tariff.tariff_code == Number(code);
       })[0];
-      setDeliveryCost(cost.delivery_sum * 1.2);
+      // console.log("tarif from handle tarif", tariff);
+
+      setDeliveryCost(tariff.delivery_sum * 1.2);
+      dispatch(setDeliveryTime([tariff.calendar_min, tariff.calendar_max]));
     }
   };
   const saveDelivery = (name: string) => {
@@ -206,6 +212,8 @@ export default function Delivery({}: Props) {
 
     if (selectedOption === "self") {
       dispatch(setDeliverySelfState(true));
+      dispatch(setDeliveryCostState(0));
+      dispatch(setDeliveryName("Самовывоз"));
     }
     if (selectedOption === "delivery") {
       dispatch(setDeliverySelfState(false));
@@ -214,12 +222,14 @@ export default function Delivery({}: Props) {
 
       if (["136", "483"].includes(tariffCode)) {
         dispatch(setDeliveryOfficeState(sdekOffice));
+        dispatch(setDeliveryName(name));
       }
 
-      if (["137", "482"].includes(tariffCode)) {
+      if (cityDetail && ["137", "482"].includes(tariffCode)) {
+        dispatch(setDeliveryOfficeDetail(null));
         dispatch(setDeliveryOfficeState(null));
         const city = cityDetail[0];
-        const value: DeliveryDataDto = {
+        const value: DeliveryAddressDto = {
           code: cityInfo?.code,
           city_uuid: cityInfo?.city_uuid,
           city: city.city,
@@ -235,13 +245,11 @@ export default function Delivery({}: Props) {
           postal_code: postCode,
         };
 
-        const data = {
-          [key]: value,
-        };
-
-        dispatch(setDeliveryAddress(data));
+        dispatch(setDeliveryAddress(value));
+        dispatch(setDeliveryName(name));
       }
     }
+    dispatch(setDelivery(false));
   };
   const checkSave = () => {
     if (["136", "483"].includes(tariffCode)) {
@@ -261,7 +269,7 @@ export default function Delivery({}: Props) {
       setCityCurrent(true); // Устанавливаем cityCurrent в true только после загрузки данных
     }
     console.log(deliveryCost);
-    console.log(officesData, " off");
+    console.log(cityDetail, " detail");
     console.log(tariffData, " tsr data");
   }, [
     isLoading,
@@ -427,9 +435,10 @@ export default function Delivery({}: Props) {
                         "geoObject.addon.hint",
                       ]}
                       onClick={() => {
-                        const adress = office.location.address_full.split(", ");
+                        const address =
+                          office.location.address_full.split(", ");
                         const city = cityInput.split(",")[0];
-                        const data = adress.slice(adress.indexOf(city) + 1);
+                        const data = address.slice(address.indexOf(city) + 1);
                         // const point =
                         clearDeliveryForm();
                         setStreet(data[0]);
@@ -439,6 +448,7 @@ export default function Delivery({}: Props) {
                         setHandleTariffCode("136");
                         scrollDown();
                         setSdekOffice(office.code);
+                        dispatch(setDeliveryOfficeDetail(office));
                       }}
                     />
                   ))}
@@ -581,7 +591,7 @@ export default function Delivery({}: Props) {
         />
         <CancelButton
           onClick={() => {
-            dispatch(setDelivery());
+            dispatch(setDelivery(false));
           }}
         />
       </div>

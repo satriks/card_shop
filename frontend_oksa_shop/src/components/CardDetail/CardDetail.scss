@@ -72,7 +72,7 @@
     }
 
     button:hover {
-      border: 2px solid $borderColor;
+      border: 2px solid borderColor;
     }
   }
 
@@ -136,6 +136,7 @@
       .card_detail_info_similar_cardItem {
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
 
         h2 {
           padding: 0;

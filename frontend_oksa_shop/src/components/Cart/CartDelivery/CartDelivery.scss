@@ -27,6 +27,12 @@
     padding: 0 10px;
     @extend .TextBody;
   }
+  .cart_delivery_name {
+    margin: 0;
+    // margin-bottom: 10px;
+    @extend .TextLabel;
+    opacity: 0.3;
+  }
 
   .cart_delivery_address {
     display: grid;
@@ -62,6 +68,6 @@
 
 .cart_delivery_price {
   @extend .TextLabel;
-  align-self: end;
+  align-self: center;
   justify-self: center;
 }

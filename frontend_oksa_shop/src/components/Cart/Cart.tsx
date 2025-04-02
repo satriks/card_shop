@@ -42,7 +42,7 @@ export default function Cart({}: Props) {
       <CancelButton
         className="cart_cancel"
         onClick={() => {
-          dispatch(setActiveCart());
+          dispatch(setActiveCart(false));
         }}
       />
     </div>

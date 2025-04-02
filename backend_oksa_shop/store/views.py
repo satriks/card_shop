@@ -4,10 +4,10 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from .models import CustomUser
 from .serializers import UserSerializer, CustomTokenObtainPairSerializer
+from rest_framework.exceptions import ValidationError
 
 
 class RegisterView(generics.CreateAPIView):
@@ -15,50 +15,36 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+    def create(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        # Проверка на существование пользователя с таким же email
+        if CustomUser.objects.filter(email=email).exists():
+            raise ValidationError({"email": "Пользователь с таким адресом электронной почты уже существует."})
+
+        # Создание нового пользователя
+        user = super().create(request, *args, **kwargs).data
+
+        # Получаем пользователя из базы данных
+        user_instance = CustomUser.objects.get(email=email)
+
+        # Генерация токенов
+        refresh = RefreshToken.for_user(user_instance)
+        access = str(refresh.access_token)
+        # Формируем ответ
+        response_data = {
+            'user': user,
+            'refresh': str(refresh),
+            'access': access,
+        }
+
+        return Response(response_data, status=status.HTTP_201_CREATED)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
-    # Здесь можно переопределить методы, если нужно
-    # def post(self, request, *args, **kwargs):
-    #     # Получаем ответ от родительского метода
-    #     response = super().post(request, *args, **kwargs)
-    #
-    #     # Получаем refresh токен из ответа
-    #     refresh_token = response.data['refresh']
-    #
-    #     # Устанавливаем cookie с refresh токеном
-    #     expires = timezone.now() + timedelta(days=7)  # Установите срок действия cookie
-    #     response.set_cookie(
-    #         key='Kailin_card_rt',
-    #         value=refresh_token,
-    #         # httponly=True,  # Запретить доступ к cookie через JavaScript
-    #         # secure=False,  # Используйте True, если у вас HTTPS
-    #         # samesite='Lax',
-    #         expires=expires
-    #     )
-    #
-    #     return response
+
 
 class CustomTokenRefreshView(TokenRefreshView):
 
     pass
 
-    # @method_decorator(csrf_exempt)  # Если вы используете CSRF, уберите эту строку
-    # def post(self, request, *args, **kwargs):
-    #     # Извлекаем refresh токен из cookie
-    #     refresh = request.COOKIES.get('Kailin_card_rt')  # Замените на имя вашего cookie
-    #     print(request.COOKIES)
-    #     print(refresh, "это рефреш из куки")  # Для отладки
-    #     if not refresh:
-    #         return Response({'detail': 'Refresh token is required.'}, status=status.HTTP_400_BAD_REQUEST)
-    #
-    #     # Обновляем токен, используя стандартную логику
-    #     data = {'refresh': refresh}  # Создаем словарь с refresh токеном
-    #     try:
-    #         # Используем метод super() для обновления токена
-    #         response = super().post(request, data=data, *args, **kwargs)
-    #     except Exception as e:
-    #         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    #
-    #     return response

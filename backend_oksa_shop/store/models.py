@@ -1,12 +1,17 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from .managers import UserManager
+
+
 class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
-    patronymic = models.CharField(max_length=30, blank=True, null=True)
+    middle_name = models.CharField(max_length=30, blank=True, null=True)
     email = models.EmailField(unique=True)  # Убедитесь, что email уникален
+    username = None  # Убираем поле username
     USERNAME_FIELD = 'email'  # Установите email как поле для аутентификации
-    REQUIRED_FIELDS = []  # Оставьте пустым, если не хотите, чтобы другие поля были обязательными
+    REQUIRED_FIELDS = []
+    objects = UserManager()# Оставьте пустым, если не хотите, чтобы другие поля были обязательными
 
     def __str__(self):
         return self.email

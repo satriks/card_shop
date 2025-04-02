@@ -10,7 +10,7 @@ export interface CardDataDto {
   length: number;
 }
 
-export interface DeliveryDataDto {
+export interface DeliveryAddressDto {
   code?: number | undefined;
   city_uuid?: string | undefined;
   city?: string | undefined;
@@ -26,9 +26,9 @@ export interface DeliveryDataDto {
   postal_code?: string | undefined;
 }
 
-export interface DeliveryAddressDto {
-  [key: string]: string | DeliveryDataDto;
-}
+// export interface DeliveryAddressDto {
+//   [key: string]: DeliveryDataDto;
+// }
 
 export interface TariffDto {
   calendar_max: number;
@@ -46,6 +46,22 @@ export interface CityDataDto {
   city_uuid: string;
   code: number;
   full_name: string;
+}
+
+export interface CityDetailDto {
+  code: number;
+  city_uuid: string;
+  city: string;
+  kladr_code: string;
+  country_code: string;
+  country: string;
+  region: string;
+  region_code: number;
+  sub_region: string;
+  longitude: number;
+  latitude: number;
+  time_zone: string;
+  payment_limit: number;
 }
 
 export interface OfficeDto {
@@ -156,6 +172,19 @@ export interface GeoObjectCollectionDto {
       name: string;
     }
   ];
+}
+
+export interface DeliveryDto {
+  id: number;
+  delivery_self: boolean;
+  delivery_address: DeliveryAddressDto;
+  delivery_cost: string; // Используется строка, так как в примере указана с десятичной точкой
+  delivery_office: string;
+  delivery_tariff_code: string;
+  delivery_name: string;
+  delivery_office_detail: OfficeDto;
+  min_delivery_time: number; // Время в минутах
+  max_delivery_time: number; // Время в минутах
 }
 // export interface User {
 //   id: number;

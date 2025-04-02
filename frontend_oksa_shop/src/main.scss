@@ -1,5 +1,5 @@
-// @use "./cssVariables/variables.scss" as *;
-@import "./cssVariables//variables.scss";
+@use "./cssVariables/variables.scss";
+// @import "./cssVariables//variables.scss";
 
 body {
   font-family: "Alegreya SC", sans-serif;
@@ -23,7 +23,7 @@ h2 {
 
 .container {
   display: flex;
-  background-color: $secondFontColor;
+  background-color: secondFontColor;
 }
 
 .wrapper {
@@ -33,5 +33,5 @@ h2 {
 }
 
 button:hover {
-  border: 2px solid $borderColor;
+  border: 2px solid borderColor;
 }

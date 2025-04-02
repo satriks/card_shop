@@ -22,7 +22,11 @@ export default function Cards({}: Props) {
   cardsFiltered = cardsFiltered.filter((card) => !cart.includes(card));
   return (
     <div className="cards_wrapper">
-      <h2>Открытки темы Title :</h2>
+      {activeCategory ? (
+        <h2>Открытки категории " {activeCategory} " :</h2>
+      ) : (
+        <h2>Открытки :</h2>
+      )}
 
       <div className="cards">
         {cardsFiltered.map((card: CardDataDto) => (

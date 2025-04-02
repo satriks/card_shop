@@ -8,6 +8,7 @@ type Props = {};
 
 export default function CartOrder({}: Props) {
   const order = useAppSelector((state) => state.store.cart.items);
+  const user = useAppSelector((state) => state.store.delivery);
 
   return (
     <div className="cart_order">
@@ -21,8 +22,8 @@ export default function CartOrder({}: Props) {
       <div className="cart_order_delivery">
         <h3>Доставка</h3>
         <div className="cart_order_delivery_detail">
-          <p>Способ доставки</p>
-          <p>2000 Р</p>
+          <p>Доставка</p>
+          <p>{user.deliveryCost} руб.</p>
         </div>
       </div>
       <hr />
@@ -31,10 +32,11 @@ export default function CartOrder({}: Props) {
         <p>
           {order.reduce((summ, card) => {
             return summ + card.price;
-          }, 0)}{" "}
-          Р
+          }, user.deliveryCost)}{" "}
+          руб.
         </p>
       </div>
+      <button>Заказать</button>
     </div>
   );
 }

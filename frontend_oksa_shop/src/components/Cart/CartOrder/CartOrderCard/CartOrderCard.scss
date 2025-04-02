@@ -7,6 +7,7 @@
 
   align-items: center;
   margin: 10px 0;
+  gap: 20px;
 
   img {
     width: 50px;
@@ -19,4 +20,9 @@
   height: 30px;
 
   transition: all 0.3s ease;
+}
+
+.cart_order_card > p:nth-child(2n) {
+  flex-grow: 1;
+  text-align: center;
 }

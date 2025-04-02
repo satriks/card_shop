@@ -37,3 +37,11 @@ $borderColor: #33f1e7;
   font-family: "Alegreya SC", "Alegreya", "Times New Roman", "serif";
   font-weight: 500;
 }
+
+.Btn {
+  min-width: 150px;
+  height: 45px;
+  background-color: #c3abdb;
+  border-radius: 16px;
+  @extend .TextBody;
+}

@@ -1,32 +1,80 @@
-import axios from "axios";
-import { ChangeUser } from "../models/models";
+import axios, { AxiosError } from "axios";
+import Cookies from "js-cookie";
 
 const connect = axios.create({
-  baseURL: import.meta.env.VITE_HOST || "http://localhost:8000/",
+  baseURL: import.meta.env.VITE_BASE_URL || "http://localhost:8000/",
 });
 
-//login or get token
-export const loginApi = (username: string, password: string) => {
+//login, get token
+export const loginApi = async (email: string, password: string) => {
+  try {
+    const access = await connect
+      .post("api/login/", { email, password })
+      .then((response) => {
+        const { access, refresh } = response.data;
+        Cookies.set("_wp_kcrt", refresh, { expires: 30 });
+        return [response.status, access];
+      });
+    return access;
+  } catch (error: AxiosError) {
+    if (error.response) {
+      throw new Error(Object.values(error.response.data).flat()[0]);
+    }
+  }
+};
+
+export const refreshApi = (refresh: string) => {
   return connect
-    .post("api-token-auth/", { username, password })
-    .then((response) => response.data);
+    .post("api/token/refresh/", { refresh: refresh })
+    .then((response) => {
+      response.data;
+    })
+    .catch((error) => {
+      console.error("Ошибка при обновлении:", error);
+      throw new Error(error);
+    });
 };
 
 //Registration user
-export const registrationApi = (
-  username: string,
-  password: string,
+export const registrationApi = async (
   email: string,
-  firstName: string,
-  lastName: string
-) => {
-  return connect.post("api/users/", {
-    username,
-    password,
-    email,
-    first_name: firstName,
-    last_name: lastName,
-  });
+  password: string,
+  firstName: string = "",
+  lastName: string = "",
+  middleName: string = "",
+  phone: string = ""
+): Promise<[number, any]> => {
+  try {
+    const response = await connect.post("api/register/", {
+      password,
+      email,
+      first_name: firstName,
+      last_name: lastName,
+      phone_number: phone,
+      middle_name: middleName,
+    });
+    console.log(response.data, " from refr");
+
+    return [response.status, response.data];
+  } catch (error) {
+    // Обработка ошибок
+    if (error instanceof AxiosError) {
+      // Проверяем, является ли ошибка экземпляром AxiosError
+      console.error("Ошибка ответа:", error.response?.data);
+      console.error("Статус:", error.response?.status);
+      throw new Error(error.response?.data.email);
+
+      // } else if (error instanceof Error) {
+      //   // Обработка других ошибок
+      //   console.error("Ошибка:", error.message);
+      //   throw new Error(`Ошибка регистрации: ${error.message}`);
+      // } else {
+      //   // Произошла ошибка, но она не является экземпляром Error
+      //   console.error("Неизвестная ошибка:", error);
+      //   throw new Error("Ошибка регистрации: Неизвестная ошибка");
+      // }
+    }
+  }
 };
 
 //Get users

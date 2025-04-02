@@ -18,8 +18,8 @@ export default function UserPanel({}: Props) {
         <button>Телефон</button>
         <button>Электронный адрес</button>
         <button>Доставка</button>
-        <button>Способы оплаты</button>
         <button>Мои заказы</button>
+        <button>Выход</button>
         <CancelButton
           onClick={() => {
             dispatch(setUserInfo());

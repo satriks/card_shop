@@ -17,7 +17,7 @@ export default function CartOrderCard({ card }: Props) {
         onClick={() => dispatch(setCardDetail(card))}
       />
       <p>{card.title}</p>
-      <p>{String(card.price) + " Р"}</p>
+      <p>{String(card.price) + " руб."}</p>
       <CancelButton onClick={() => dispatch(delCard(card))} />
     </div>
   );

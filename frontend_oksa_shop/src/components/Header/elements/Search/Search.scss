@@ -8,10 +8,10 @@
   border: 0;
   border-radius: 16px;
   padding: 0 10px;
-  border: 1px solid $borderColor;
+  border: 1px solid borderColor;
 }
 .header_search:hover {
-  border: 2px solid $borderColor;
+  border: 2px solid borderColor;
 }
 
 .header_search_img {
