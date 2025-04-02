@@ -1,16 +1,28 @@
 import Cookies from "js-cookie";
-import { setUserActiveState } from "../redux/MainSlice";
+import { setUserAccess, setUserActiveState } from "../redux/MainSlice";
 import { useAppDispatch } from "../models/hooks";
+import { refreshApi } from "./api";
 
 export const useRememberUser = () => {
   const dispatch = useAppDispatch();
   const token = Cookies.get("_wp_kcrt");
-  const remmemberUser = () => {
+  const rememberUser = async () => {
     if (token) {
-      // Получение данных от сервера
-      dispatch(setUserActiveState(true));
+      try {
+        const response = await refreshApi(token);
+        // Проверка на успешность ответа
+        if (response?.status == 200) {
+          dispatch(setUserActiveState(true));
+          dispatch(setUserAccess(response.data.access));
+        } else {
+          console.error("Ошибка обновления токена:", response?.message);
+        }
+      } catch (error) {
+        console.error("Произошла ошибка при обновлении токена:", error);
+      }
+    } else {
+      console.log("Токен отсутствует");
     }
-    console.log(token);
   };
-  return { remmemberUser, token };
+  return { rememberUser, token };
 };

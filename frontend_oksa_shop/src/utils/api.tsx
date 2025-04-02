@@ -22,17 +22,25 @@ export const loginApi = async (email: string, password: string) => {
     }
   }
 };
-
-export const refreshApi = (refresh: string) => {
-  return connect
-    .post("api/token/refresh/", { refresh: refresh })
-    .then((response) => {
-      response.data;
-    })
-    .catch((error) => {
-      console.error("Ошибка при обновлении:", error);
-      throw new Error(error);
+// refresh token
+export const refreshApi = async (refresh) => {
+  try {
+    const response = await connect.post("api/token/refresh/", {
+      refresh: refresh,
     });
+    if (response.status === 200) {
+      const { access, refresh } = response.data;
+      Cookies.set("_wp_kcrt", refresh, { expires: 30 });
+      return response; // Возвращаем response
+    }
+  } catch (error) {
+    // Проверяем статус ошибки, если он 401, удаляем токен
+    if (error.response && error.response.status === 401) {
+      Cookies.remove("_wp_kcrt");
+    }
+    console.error("Ошибка при обновлении:", error);
+    throw new Error(error.message || "Ошибка при обновлении токена");
+  }
 };
 
 //Registration user
@@ -78,10 +86,18 @@ export const registrationApi = async (
 };
 
 //Get users
-export const getUsersApi = (token: string) => {
-  return connect
-    .get("api/users/", { headers: { Authorization: "token " + token } })
-    .then((response) => response.data);
+export const getUserApi = async (token: string): Promise<any> => {
+  try {
+    const response = await connect.get("api/user/", {
+      headers: { Authorization: "Bearer " + token }, // Используйте Bearer для JWT
+    });
+    return response.data; // Возвращаем данные
+  } catch (error) {
+    console.error("Ошибка при получении пользователей:", error);
+    throw new Error(
+      error.response?.data?.message || "Ошибка при получении пользователей"
+    );
+  }
 };
 //Get user detail
 export const getUserDetailApi = (token: string) => {
@@ -90,14 +106,14 @@ export const getUserDetailApi = (token: string) => {
     .then((response) => response.data);
 };
 
-//Get user
-export const getUserApi = (token: string, id: number | string) => {
-  return connect
-    .get(`api/users/${id}/`, {
-      headers: { Authorization: "token " + token },
-    })
-    .then((response) => response.data);
-};
+// //Get user
+// export const getUserApi = (token: string, id: number | string) => {
+//   return connect
+//     .get(`api/users/${id}/`, {
+//       headers: { Authorization: "token " + token },
+//     })
+//     .then((response) => response.data);
+// };
 
 //Del user
 export const delUserApi = (token: string, id: number) => {
