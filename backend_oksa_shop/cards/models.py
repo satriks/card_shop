@@ -17,18 +17,18 @@ class Materials(models.Model):
 
 class Postcard(models.Model):
 
-    title = models.CharField(max_length=200)  # Название открытки
-    description = models.TextField(blank=True)  # Описание открытки
-    price = models.PositiveIntegerField(blank=True, null=True)  # Цена открытки
+    title = models.CharField(max_length=200, verbose_name="Название открытки") # Название открытки
+    description = models.TextField(blank=True, verbose_name="Описание открытки")  # Описание открытки
+    price = models.PositiveIntegerField(blank=True, null=True, verbose_name="Цена открытки")  # Цена открытки
     # image = models.ImageField(upload_to='postcards/', default=static("cards/default.png"))  # Изображение открытки     Добавить дефалтное изображение открытки
-    created_at = models.DateTimeField(auto_now_add=True)  # Дата создания
-    updated_at = models.DateTimeField(auto_now=True)  # Дата последнего обновления
-    available = models.BooleanField(default=True)  # Доступность открытки
-    categories = models.ManyToManyField(Category, related_name='postcards')  # Связь с категориями
-    length = models.PositiveIntegerField(blank=True, null=True)
-    width = models.PositiveIntegerField(blank=True, null=True)
-    weight = models.PositiveIntegerField(blank=True, null=True)
-    materials = models.ManyToManyField(Materials, related_name='postcards')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создана :")  # Дата создания
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновлена :")  # Дата последнего обновления
+    available = models.BooleanField(default=True, verbose_name="В наличии")  # Доступность открытки
+    categories = models.ManyToManyField(Category, related_name='postcards', verbose_name="Категории")  # Связь с категориями
+    length = models.PositiveIntegerField(blank=True, null=True, verbose_name="Длинна")
+    width = models.PositiveIntegerField(blank=True, null=True, verbose_name="Ширина")
+    weight = models.PositiveIntegerField(blank=True, null=True, verbose_name="Вес")
+    materials = models.ManyToManyField(Materials, related_name='postcards', verbose_name="Материалы")
 
     def __str__(self):
         return self.title

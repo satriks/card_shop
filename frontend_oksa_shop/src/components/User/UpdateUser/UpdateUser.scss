@@ -1,0 +1,45 @@
+.update_user_wrapper {
+  width: 100vw;
+  height: 100vh;
+  //   margin: 5vh 5vw;
+  position: fixed;
+  background: linear-gradient(
+    180deg,
+    rgba(225, 248, 246, 0.6) 8%,
+    rgba(247, 206, 204, 0.6) 70%
+  );
+}
+
+.update_user {
+  position: relative;
+  background-color: white;
+  border-radius: 20px;
+  width: 50%;
+  max-width: 700px;
+  //   height: 80vh;
+  margin: 10vh auto;
+  display: flex;
+  flex-direction: column;
+  //   justify-content: center;
+  align-items: center;
+  z-index: 5;
+
+  .success {
+    background-color: rgb(121, 177, 121);
+  }
+
+  .update_user_save {
+    margin-bottom: 40px;
+  }
+
+  .update_user_form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}

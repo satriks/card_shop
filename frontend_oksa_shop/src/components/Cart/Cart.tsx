@@ -16,7 +16,7 @@ export default function Cart({}: Props) {
 
   return (
     <div className="cart_wrapper">
-      <h2 className="cart_title">Заказ №4355</h2>
+      {/* <h2 className="cart_title">Заказ №4355</h2> */}
       <div className="cart">
         <div className="cart_detail">
           <div className="cart_delivery">

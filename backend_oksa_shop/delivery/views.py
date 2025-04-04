@@ -12,6 +12,9 @@ class DeliveryListCreateView(generics.ListCreateAPIView):
     queryset = Delivery.objects.all()
     serializer_class = DeliverySerializer
     permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        # Возвращаем только те объекты Delivery, которые принадлежат текущему пользователю
+        return Delivery.objects.filter(user=self.request.user)
 
 class DeliveryDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Delivery.objects.all()
@@ -23,7 +26,13 @@ class DeliveryDetailView(generics.RetrieveUpdateDestroyAPIView):
         # Добавляем текущего пользователя в контекст
         context['request'] = self.request
         return context
-
+    def perform_destroy(self, instance):
+        # Проверяем, принадлежит ли адрес текущему пользователю
+        if instance.user == self.request.user:  # Предполагается, что у вас есть поле user в модели Delivery
+            instance.delete()
+        else:
+            # Если адрес не принадлежит текущему пользователю, возвращаем ошибку
+            return Response({'detail': 'У вас нет прав для удаления этого адреса.'}, status=status.HTTP_403_FORBIDDEN)
 
 class CityView(APIView):
     def get(self, request):

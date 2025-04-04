@@ -119,6 +119,9 @@ export default function CardDetail({ card }: Props) {
                   <img
                     src={import.meta.env.VITE_BASE_URL + card.images[0]}
                     alt={card.title}
+                    onClick={() => {
+                      dispatch(setCardDetail(card));
+                    }}
                   />
                   <h2>{card.title}</h2>
                   <div className="cardItem_price">

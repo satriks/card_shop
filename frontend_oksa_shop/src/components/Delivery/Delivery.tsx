@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Delivery.scss";
+import Cookies from "js-cookie";
 import CancelButton from "../Common/CancelButton/cancelButton";
 import { Map, Placemark, YMaps } from "@pbe/react-yandex-maps";
-import { useAppDispatch } from "../../models/hooks";
+import { useAppDispatch, useAppSelector } from "../../models/hooks";
 import {
+  setAddresses,
   setDelivery,
   setDeliveryAddress,
   setDeliveryCostState,
@@ -26,9 +28,11 @@ import ModalAlert from "../Common/ModalAlert/ModalAlert";
 import {
   CityDataDto,
   DeliveryAddressDto,
+  DeliveryDto,
   GeoObjectCollectionDto,
   TariffDto,
 } from "../../models/models";
+import { createAddress, deleteAddress, getDeliversApi } from "../../utils/api";
 
 type DeliveryName = {
   "Посылка склад-дверь": string;
@@ -52,6 +56,9 @@ type Props = {};
 
 export default function Delivery({}: Props) {
   const dispatch = useAppDispatch();
+  const addresses = useAppSelector((state) => state.store.addresses);
+  const delivery = useAppSelector((state) => state.store.delivery);
+  const user = useAppSelector((state) => state.store.user);
   const deliveryWindow = useRef<HTMLDivElement | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sdekOffice, setSdekOffice] = useState<string | null>(null);
@@ -64,6 +71,7 @@ export default function Delivery({}: Props) {
   const [selectedCoordinates, setSelectedCoordinates] = useState<
     number[] | null
   >(null);
+
   // для доставки
   const [postCode, setPostCode] = useState<string | undefined>("");
   // стейты для формы
@@ -80,6 +88,10 @@ export default function Delivery({}: Props) {
   };
   // Сообщения
   const [alertMessage, setAlertMessage] = useState(false);
+  const [successDelAddress, setSuccessDelAddress] = useState<string | null>(
+    null
+  );
+  const [errorDelAddress, setErrorDelAddress] = useState<string | null>(null);
 
   // стейты балуна
   const [baloonStreet, setBaloonStreet] = useState<string>("");
@@ -207,27 +219,100 @@ export default function Delivery({}: Props) {
       dispatch(setDeliveryTime([tariff.calendar_min, tariff.calendar_max]));
     }
   };
+  const sendAddress = (deliveryAddressDetail: DeliveryDto) => {
+    console.log(deliveryAddressDetail, "данные для отправки");
+
+    if (user.access) {
+      const token = user.access;
+      console.log(token);
+
+      try {
+        const result = createAddress(token, deliveryAddressDetail);
+        console.log("Доставка успешно создана:", result);
+        const timeout = setTimeout(() => {
+          getDeliversApi(user.access).then((response) => {
+            dispatch(setAddresses(response));
+          });
+        }, 3000);
+      } catch (error) {
+        console.error("Ошибка при создании доставки:", error);
+      }
+    }
+  };
+  const delAddress = (id) => {
+    const newAddresses = addresses?.filter((address) => {
+      return address.id != id;
+    });
+    if (newAddresses) dispatch(setAddresses(newAddresses));
+    const token = user.access;
+    if (token) {
+      deleteAddress(token, id)
+        .then((response) => {
+          if (response.status == 204)
+            setSuccessDelAddress("Адресс успешно удален");
+        })
+        .catch((error) => {
+          setErrorDelAddress(error.message);
+        });
+    }
+  };
+  // проверка на имена ток же нужно сделать(при создании)
+
+  const setAddress = (address: DeliveryDto) => {
+    if (address) {
+      dispatch(setDeliverySelfState(address.delivery_self || false));
+      dispatch(setDeliveryCostState(Number(address.delivery_cost)));
+      dispatch(setDeliveryName(address.delivery_name));
+      dispatch(setDeliveryTariffCodeState(address.delivery_tariff_code));
+      dispatch(setDeliveryOfficeState(address.delivery_office));
+      dispatch(setDeliveryOfficeDetail(address.delivery_office_detail));
+      dispatch(setDeliveryAddress(address.delivery_address));
+      dispatch(
+        setDeliveryTime([
+          Number(address.min_delivery_time),
+          Number(address.max_delivery_time),
+        ])
+      );
+      dispatch(setDelivery(false));
+      if (address.delivery_name) Cookies.set("_da", address.delivery_name);
+    }
+  };
+
   const saveDelivery = (name: string) => {
     let key = name;
+    const deliveryAddressDetail: DeliveryDto = {};
 
     if (selectedOption === "self") {
       dispatch(setDeliverySelfState(true));
+      deliveryAddressDetail.delivery_self = true;
       dispatch(setDeliveryCostState(0));
+      deliveryAddressDetail.delivery_cost = "0";
       dispatch(setDeliveryName("Самовывоз"));
+      deliveryAddressDetail.delivery_name = "Самовывоз";
     }
     if (selectedOption === "delivery") {
       dispatch(setDeliverySelfState(false));
+      deliveryAddressDetail.delivery_self = false;
       dispatch(setDeliveryTariffCodeState(tariffCode));
+      deliveryAddressDetail.delivery_tariff_code = tariffCode;
       dispatch(setDeliveryCostState(deliveryCost));
+      deliveryAddressDetail.delivery_cost = deliveryCost?.toString();
 
       if (["136", "483"].includes(tariffCode)) {
         dispatch(setDeliveryOfficeState(sdekOffice));
+        deliveryAddressDetail.delivery_office = sdekOffice;
         dispatch(setDeliveryName(name));
+        deliveryAddressDetail.delivery_name = name;
+        deliveryAddressDetail.delivery_office_detail =
+          delivery.deliveryOfficeDetail;
       }
 
       if (cityDetail && ["137", "482"].includes(tariffCode)) {
         dispatch(setDeliveryOfficeDetail(null));
+        deliveryAddressDetail.delivery_office_detail = null;
         dispatch(setDeliveryOfficeState(null));
+        deliveryAddressDetail.delivery_office = null;
+
         const city = cityDetail[0];
         const value: DeliveryAddressDto = {
           code: cityInfo?.code,
@@ -246,9 +331,19 @@ export default function Delivery({}: Props) {
         };
 
         dispatch(setDeliveryAddress(value));
+        deliveryAddressDetail.delivery_address = value;
         dispatch(setDeliveryName(name));
+        deliveryAddressDetail.delivery_name = name;
       }
+      deliveryAddressDetail.min_delivery_time =
+        delivery.deliveryTime.minDeliveryTime;
+      deliveryAddressDetail.max_delivery_time =
+        delivery.deliveryTime.maxDeliveryTime;
     }
+
+    sendAddress(deliveryAddressDetail);
+    if (deliveryAddressDetail.delivery_name)
+      Cookies.set("_da", deliveryAddressDetail.delivery_name);
     dispatch(setDelivery(false));
   };
   const checkSave = () => {
@@ -263,27 +358,52 @@ export default function Delivery({}: Props) {
       setIsModalOpen(true);
     }
   };
+  // const setActiveDelivery = () => {
+  //   const name = Cookies.get("_da");
+  //   if (name) {
+  //     const address = addresses?.filter((address) => {
+  //       address.delivery_name === name;
+  //     });
+  //     if (address) {
+  //       setAddress(address[0]);
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     if (!isLoading && !isOfficesLoading && cityDetail) {
       setCityCurrent(true); // Устанавливаем cityCurrent в true только после загрузки данных
     }
-    console.log(deliveryCost);
-    console.log(cityDetail, " detail");
-    console.log(tariffData, " tsr data");
-  }, [
-    isLoading,
-    cityDetail,
-    isOfficesLoading,
-    deliveryCost,
-    tariffData,
-    officesData,
-  ]);
+  }, [isLoading, isOfficesLoading, officesData]);
 
   return (
     <div className="delivery_wrapper" onClick={wrapperCancel}>
       <div className="delivery">
         <h2>Выбор доставки</h2>
+        <div className="delivery_addresses">
+          {addresses &&
+            addresses.map((address) => {
+              return (
+                <div
+                  className="delivery_address"
+                  key={address.delivery_name + address.id}
+                >
+                  <button
+                    onClick={() => {
+                      setAddress(address);
+                    }}
+                  >
+                    {address.delivery_name}
+                  </button>
+                  <CancelButton
+                    onClick={() => {
+                      delAddress(address.id);
+                    }}
+                  />
+                </div>
+              );
+            })}
+        </div>
         <div className="delivery_select">
           <label>
             <input
@@ -333,9 +453,7 @@ export default function Delivery({}: Props) {
                       "geoObject.addon.balloon",
                       "geoObject.addon.hint",
                     ]}
-                    onClick={() => {
-                      console.log(42);
-                    }}
+                    onClick={() => {}}
                   />
                 }
               </Map>
@@ -349,7 +467,13 @@ export default function Delivery({}: Props) {
               <span>г.Москва ул.Братиславская д.6 </span>
               <span>0 руб</span>
             </div>
-            <button onClick={() => saveDelivery("Самовывоз")}>Сохранить</button>
+            <button
+              onClick={() => {
+                saveDelivery("Самовывоз");
+              }}
+            >
+              Сохранить
+            </button>
           </div>
         )}
         {/* конец Самовывоз секция */}
@@ -573,6 +697,25 @@ export default function Delivery({}: Props) {
           </div>
         )}
         {/* конец Доставка секция */}
+        {errorDelAddress && (
+          <ModalAlert
+            message={errorDelAddress}
+            duration={1500}
+            onClose={() => {
+              setErrorDelAddress(null);
+            }}
+          />
+        )}
+        {successDelAddress && (
+          <ModalAlert
+            addClass="success"
+            message={successDelAddress}
+            duration={1500}
+            onClose={() => {
+              setSuccessDelAddress(null);
+            }}
+          />
+        )}
         {alertMessage && (
           <ModalAlert
             message="Выберите пункт получения"
@@ -582,6 +725,7 @@ export default function Delivery({}: Props) {
             }}
           />
         )}
+
         <DeliveryModal
           isOpen={isModalOpen}
           onClose={() => {

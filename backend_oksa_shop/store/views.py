@@ -1,8 +1,10 @@
 from datetime import  timedelta
 from django.utils import timezone
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from .models import CustomUser
@@ -40,11 +42,37 @@ class RegisterView(generics.CreateAPIView):
         return Response(response_data, status=status.HTTP_201_CREATED)
 
 
+class UserProfileView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)  # Используем сериализатор для возврата данных пользователя
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        user = request.user
+        new_password = request.data.get("password", None)
+        # Если новый пароль предоставлен, устанавливаем его
+        if new_password:
+            user.set_password(new_password)  # Устанавливаем новый пароль
+        # Создаем сериализатор для обновления данных пользователя
+        serializer = UserSerializer(user, data=request.data,
+                                    partial=True)  # Используем partial=True для частичного обновления
+        if serializer.is_valid():
+            serializer.save()  # Сохраняем обновленные данные
+            user.save()  # Сохраняем изменения пользователя
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 
 class CustomTokenRefreshView(TokenRefreshView):
-
     pass
+
 

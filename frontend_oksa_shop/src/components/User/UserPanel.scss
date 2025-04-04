@@ -1,6 +1,6 @@
 @use "../../main.scss";
 /* Личный кабинет  */
-.userPanel_wrapper {
+.user_panel_wrapper {
   width: 100vw;
   height: 100vh;
   //   margin: 5vh 5vw;
@@ -10,9 +10,10 @@
     rgba(225, 248, 246, 0.6) 8%,
     rgba(247, 206, 204, 0.6) 70%
   );
+  z-index: 3;
 }
 
-.userPanel {
+.user_panel {
   position: relative;
   background-color: white;
   width: 50%;
@@ -23,6 +24,20 @@
   flex-direction: column;
   //   justify-content: center;
   align-items: center;
+
+  .userPanel_button_wrapper {
+    position: relative;
+    // width: 50%;
+    // max-width: 700px;
+    width: 420px;
+
+    label {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      opacity: 0.5;
+    }
+  }
 
   h2 {
     // margin-top: 50px;

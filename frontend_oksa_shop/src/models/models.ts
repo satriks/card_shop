@@ -175,16 +175,25 @@ export interface GeoObjectCollectionDto {
 }
 
 export interface DeliveryDto {
-  id: number;
-  delivery_self: boolean;
-  delivery_address: DeliveryAddressDto;
-  delivery_cost: string; // Используется строка, так как в примере указана с десятичной точкой
-  delivery_office: string;
-  delivery_tariff_code: string;
-  delivery_name: string;
-  delivery_office_detail: OfficeDto;
-  min_delivery_time: number; // Время в минутах
-  max_delivery_time: number; // Время в минутах
+  id?: number;
+  delivery_self?: boolean | null;
+  delivery_address?: DeliveryAddressDto | null;
+  delivery_cost?: string | null;
+  delivery_office?: string | null;
+  delivery_tariff_code?: string | null;
+  delivery_name?: string | null;
+  delivery_office_detail?: OfficeDto | null;
+  min_delivery_time?: number | null;
+  max_delivery_time?: number | null;
+}
+
+export interface ChangeUserDto {
+  first_name?: string;
+  last_name?: string;
+  middle_name?: string;
+  email?: string;
+  phone_number?: string;
+  password?: string;
 }
 // export interface User {
 //   id: number;

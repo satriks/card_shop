@@ -1,0 +1,16 @@
+@use "../../../main.scss";
+
+.delivery_detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-grow: 1;
+  margin-left: 15px;
+  button {
+    min-width: 80px;
+    height: 45px;
+    background-color: #c3abdb;
+    border-radius: 16px;
+    @extend .TextBody;
+  }
+}

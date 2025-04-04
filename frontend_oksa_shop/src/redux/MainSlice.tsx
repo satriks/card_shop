@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CardDataDto, DeliveryAddressDto, OfficeDto } from "../models/models";
+import {
+  CardDataDto,
+  DeliveryAddressDto,
+  DeliveryDto,
+  OfficeDto,
+} from "../models/models";
 
 interface InitialStateType {
   cards: CardDataDto[];
@@ -20,6 +25,7 @@ interface InitialStateType {
     phone: string | null;
     email: string | null;
   };
+  addresses: DeliveryDto[] | null;
   delivery: {
     deliverySelf: boolean;
     deliveryAddress: DeliveryAddressDto | null;
@@ -37,12 +43,12 @@ interface InitialStateType {
 
 const initialState: InitialStateType = {
   cards: [],
+  isUserInfo: false,
+  isDelivery: false,
   category: {
     all: [],
     isActive: null,
   },
-  isUserInfo: false,
-  isDelivery: false,
   cart: {
     items: [],
     isActive: false,
@@ -57,6 +63,7 @@ const initialState: InitialStateType = {
     phone: null,
     email: null,
   },
+  addresses: null,
   delivery: {
     deliverySelf: false,
     deliveryAddress: null,
@@ -106,6 +113,10 @@ const MainSlice = createSlice({
     },
     setDelivery: (state: InitialStateType, action: PayloadAction<boolean>) => {
       state.isDelivery = action.payload;
+    },
+
+    setAddresses: (state, action: PayloadAction<DeliveryDto[] | null>) => {
+      state.addresses = action.payload;
     },
     setCards: (state, action: PayloadAction<CardDataDto[]>) => {
       state.cards = action.payload;
@@ -189,6 +200,7 @@ export const {
   setUserEmail,
   setUserInfo,
   setDelivery,
+  setAddresses,
   setCards,
   setCategory,
   setDeliveryAddress,
