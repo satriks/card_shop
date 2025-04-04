@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import { setUserAccess, setUserActiveState } from "../redux/MainSlice";
 import { useAppDispatch } from "../models/hooks";
 import { refreshApi } from "./api";
+// import { DeliveryDto } from "../models/models";
 
 export const useRememberUser = () => {
   const dispatch = useAppDispatch();
@@ -26,3 +27,7 @@ export const useRememberUser = () => {
   };
   return { rememberUser, token };
 };
+
+// export const setAddress = (address: DeliveryDto) => {
+//   const dispatch = useAppDispatch();
+// }

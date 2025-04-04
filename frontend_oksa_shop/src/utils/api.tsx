@@ -1,5 +1,7 @@
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
+import { ChangeUserDto, DeliveryDto } from "../models/models";
+import { validatePassword } from "./validators";
 
 const connect = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL || "http://localhost:8000/",
@@ -52,16 +54,21 @@ export const registrationApi = async (
   middleName: string = "",
   phone: string = ""
 ): Promise<[number, any]> => {
+  const requestData: ChangeUserDto = {
+    email: email,
+    first_name: firstName,
+    last_name: lastName,
+    phone_number: phone,
+    middle_name: middleName,
+  };
+  if (validatePassword(password)) {
+    requestData.password = password;
+  }
+
+  validatePassword(password);
   try {
-    const response = await connect.post("api/register/", {
-      password,
-      email,
-      first_name: firstName,
-      last_name: lastName,
-      phone_number: phone,
-      middle_name: middleName,
-    });
-    console.log(response.data, " from refr");
+    const response = await connect.post("api/register/", requestData);
+    Cookies.set("_wp_kcrt", response.data.refresh, { expires: 30 });
 
     return [response.status, response.data];
   } catch (error) {
@@ -85,7 +92,7 @@ export const registrationApi = async (
   }
 };
 
-//Get users
+//Get user
 export const getUserApi = async (token: string): Promise<any> => {
   try {
     const response = await connect.get("api/user/", {
@@ -99,12 +106,75 @@ export const getUserApi = async (token: string): Promise<any> => {
     );
   }
 };
-//Get user detail
-export const getUserDetailApi = (token: string) => {
-  return connect
-    .get("api/users/detail", { headers: { Authorization: "token " + token } })
-    .then((response) => response.data);
+//Update user
+export const updateUserApi = (token: string, body: ChangeUserDto) => {
+  return connect.patch(`api/user/profile/`, body, {
+    headers: { Authorization: "Bearer " + token },
+  });
 };
+
+//Get delivers
+export const getDeliversApi = async (token: string) => {
+  try {
+    const response = await connect.get(`sdek/deliveries/`, {
+      headers: { Authorization: "Bearer " + token },
+    });
+
+    // Проверяем, успешно ли выполнен запрос
+    if (response.status === 200) {
+      return response.data; // Возвращаем данные адресов
+    } else {
+      throw new Error(`Ошибка при получении адресов: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Ошибка:", error);
+    throw error; // Пробрасываем ошибку дальше
+  }
+};
+
+//Create address
+export const createAddress = async (token: string, data: DeliveryDto) => {
+  try {
+    const response = await connect.post(`sdek/deliveries/`, data, {
+      headers: { Authorization: "Bearer " + token },
+    });
+
+    // Проверяем, успешно ли выполнен запрос
+    if (response.status === 201) {
+      return response.data; // Возвращаем данные адресов
+    } else {
+      throw new Error(`Адрес создан: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Ошибка:", error);
+    throw error; // Пробрасываем ошибку дальше
+  }
+};
+
+//Delete address
+export const deleteAddress = async (token: string, id: number) => {
+  try {
+    const response = await connect.delete(`sdek/deliveries/${id}/`, {
+      headers: { Authorization: "Bearer " + token },
+    });
+    // Проверяем, успешно ли выполнен запрос
+    if (response.status === 204) {
+      return response;
+    } else {
+      throw new Error(`Шибка: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Ошибка:", error);
+    throw error; // Пробрасываем ошибку дальше
+  }
+};
+
+// //Get user detail
+// export const getUserDetailApi = (token: string) => {
+//   return connect
+//     .get("api/users/detail", { headers: { Authorization: "token " + token } })
+//     .then((response) => response.data);
+// };
 
 // //Get user
 // export const getUserApi = (token: string, id: number | string) => {
@@ -115,54 +185,49 @@ export const getUserDetailApi = (token: string) => {
 //     .then((response) => response.data);
 // };
 
-//Del user
-export const delUserApi = (token: string, id: number) => {
-  return connect.delete(`api/users/${id}/`, {
-    headers: { Authorization: "token " + token },
-  });
-};
-//Update user
-export const updateUserApi = (token: string, body: ChangeUser, id: number) => {
-  return connect.patch(`api/users/${id}/`, body, {
-    headers: { Authorization: "token " + token },
-  });
-};
-//Get files
-export const getFilesApi = (token: string) => {
-  return connect
-    .get("api/files/", { headers: { Authorization: "token " + token } })
-    .then((response) => response.data);
-};
-//Add file
-export const addFileApi = (
-  token: string,
-  body: { name: string; description?: string; file: File }
-) => {
-  const formData = new FormData();
-  formData.append("name", body.name);
-  body.description && formData.append("description", body.description);
-  formData.append("file", body.file);
+// //Del user
+// export const delUserApi = (token: string, id: number) => {
+//   return connect.delete(`api/users/${id}/`, {
+//     headers: { Authorization: "token " + token },
+//   });
+// };
 
-  return connect.post(`api/files/`, formData, {
-    headers: {
-      Authorization: "token " + token,
-      "content-type": "multipart/form-data",
-    },
-  });
-};
-//Delete file
-export const deleteFileApi = (token: string, fileId: string | number) => {
-  return connect.delete(`api/files/${fileId}/`, {
-    headers: { Authorization: "token " + token },
-  });
-};
-//Update file
-export const updateFileApi = (
-  token: string,
-  fileId: string | number,
-  body: { name?: string; description?: string }
-) => {
-  return connect.patch(`api/files/${fileId}/`, body, {
-    headers: { Authorization: "token " + token },
-  });
-};
+// //Get files
+// export const getFilesApi = (token: string) => {
+//   return connect
+//     .get("api/files/", { headers: { Authorization: "token " + token } })
+//     .then((response) => response.data);
+// };
+// //Add file
+// export const addFileApi = (
+//   token: string,
+//   body: { name: string; description?: string; file: File }
+// ) => {
+//   const formData = new FormData();
+//   formData.append("name", body.name);
+//   body.description && formData.append("description", body.description);
+//   formData.append("file", body.file);
+
+//   return connect.post(`api/files/`, formData, {
+//     headers: {
+//       Authorization: "token " + token,
+//       "content-type": "multipart/form-data",
+//     },
+//   });
+// };
+// //Delete file
+// export const deleteFileApi = (token: string, fileId: string | number) => {
+//   return connect.delete(`api/files/${fileId}/`, {
+//     headers: { Authorization: "token " + token },
+//   });
+// };
+// //Update file
+// export const updateFileApi = (
+//   token: string,
+//   fileId: string | number,
+//   body: { name?: string; description?: string }
+// ) => {
+//   return connect.patch(`api/files/${fileId}/`, body, {
+//     headers: { Authorization: "token " + token },
+//   });
+// };
