@@ -9,6 +9,11 @@ type Props = {};
 export default function CartOrder({}: Props) {
   const order = useAppSelector((state) => state.store.cart.items);
   const user = useAppSelector((state) => state.store.delivery);
+  const receiver = useAppSelector((state) => state.store.receiver);
+  const getOrder = () => {
+    console.log(42);
+    console.log(receiver, " resiver");
+  };
 
   return (
     <div className="cart_order">
@@ -36,7 +41,7 @@ export default function CartOrder({}: Props) {
           руб.
         </p>
       </div>
-      <button>Заказать</button>
+      <button onClick={getOrder}>Заказать</button>
     </div>
   );
 }

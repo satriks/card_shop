@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Cart.scss";
 import payment from "../../assets/cart/payment.png";
 import SetDelivery from "../Common/SetDelivery/SetDelivery";
@@ -13,6 +13,11 @@ type Props = {};
 
 export default function Cart({}: Props) {
   const dispatch = useAppDispatch();
+  const [receiverData, setReceiverData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+  });
 
   return (
     <div className="cart_wrapper">
@@ -30,7 +35,7 @@ export default function Cart({}: Props) {
             )}
           </div>
           <div className="cart_receiver">
-            <CartReceiver />
+            <CartReceiver setReceiverData={setReceiverData} />
           </div>
           <div className="cart_payment">
             <p>Оплатить с помощью</p>

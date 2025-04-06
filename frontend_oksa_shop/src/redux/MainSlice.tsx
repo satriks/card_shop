@@ -16,6 +16,11 @@ interface InitialStateType {
     isActive: boolean;
   };
   cardDetail: CardDataDto | null;
+  receiver: {
+    name: string | null;
+    phone: string | null;
+    email: string | null;
+  };
   user: {
     isActive: boolean;
     access: string | null;
@@ -54,6 +59,11 @@ const initialState: InitialStateType = {
     isActive: false,
   },
   cardDetail: null,
+  receiver: {
+    name: null,
+    phone: null,
+    email: null,
+  },
   user: {
     isActive: false,
     access: null,
@@ -171,6 +181,18 @@ const MainSlice = createSlice({
     setDeliverySelfState: (state, action) => {
       state.delivery.deliverySelf = action.payload;
     },
+    // Редьюсер для установки имени получателя
+    setReceiverName: (state, action: PayloadAction<string | null>) => {
+      state.receiver.name = action.payload;
+    },
+    // Редьюсер для установки телефона получателя
+    setReceiverPhone: (state, action: PayloadAction<string | null>) => {
+      state.receiver.phone = action.payload;
+    },
+    // Редьюсер для установки email получателя
+    setReceiverEmail: (state, action: PayloadAction<string | null>) => {
+      state.receiver.email = action.payload;
+    },
     addCard: (state, action: PayloadAction<CardDataDto>) => {
       const cardData = action.payload;
       if (state.cart.items.some((item) => item.id === cardData.id)) {
@@ -216,6 +238,9 @@ export const {
   setActiveCart,
   delCard,
   setCardDetail,
+  setReceiverName,
+  setReceiverEmail,
+  setReceiverPhone,
 } = MainSlice.actions;
 
 export default MainSlice.reducer;

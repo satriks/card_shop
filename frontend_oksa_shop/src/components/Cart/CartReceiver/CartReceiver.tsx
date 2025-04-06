@@ -1,32 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./CartReceiver.scss";
-import { useAppSelector } from "../../../models/hooks";
+import { useAppDispatch, useAppSelector } from "../../../models/hooks";
+import {
+  setReceiverEmail,
+  setReceiverName,
+  setReceiverPhone,
+} from "../../../redux/MainSlice";
 
-type Props = {};
+type Props = {
+  setReceiverData: (data: {
+    name: string;
+    phone: string;
+    email: string;
+  }) => void;
+};
 
-export default function CartReceiver({}: Props) {
+export default function CartReceiver({ setReceiverData }: Props) {
   const user = useAppSelector((state) => state.store.user);
   const [isOtherReceiver, setIsOtherReceiver] = useState(false);
-  const [fullName, setFullName] = useState(
+  const dispatch = useAppDispatch();
+  const [name, setName] = useState(
     [user.firstName, user.middleName, user.lastName].filter(Boolean).join(" ")
   );
   const [phone, setPhone] = useState(user.phone);
   const [email, setEmail] = useState(user.email);
   const handleOtherReceiverClick = () => {
     setIsOtherReceiver(true);
-    setFullName("");
+    setName("");
     setPhone("");
     setEmail("");
   };
   const handleMyOrderClick = () => {
     setIsOtherReceiver(false);
     // Заполняем поля данными из user
-    setFullName(
+    setName(
       [user.firstName, user.middleName, user.lastName].filter(Boolean).join(" ")
     );
     setPhone(user.phone);
     setEmail(user.email);
   };
+
+  useEffect(() => {
+    dispatch(setReceiverName(name));
+    dispatch(setReceiverPhone(phone));
+    dispatch(setReceiverEmail(email));
+    console.log(42);
+  }, [name, phone, email, dispatch]);
+
   return (
     <div className="cart_receiver">
       <h2>Получатель</h2>
@@ -51,8 +71,8 @@ export default function CartReceiver({}: Props) {
           </p>
           <input
             type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </label>
         <label>
