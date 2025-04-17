@@ -7,11 +7,15 @@ class DeliverySerializer(serializers.ModelSerializer):
         # fields = '__all__'
 
     def create(self, validated_data):
-        print(self.context['request'].data, " данные")
-        print(validated_data, " это валидированные данные ")
-        user = self.context['request'].user
+        user = None
+        user_data = self.context.get("request")
+
+        if user_data is not None:
+            user = self.context['request'].user
+
         if user is None:
-            raise serializers.ValidationError("Пользователь не аутентифицирован.")
-        # Создаем новый объект Delivery с установленным полем user
-        delivery = Delivery.objects.create(user=user, **validated_data)
+            delivery = Delivery.objects.create(**validated_data)
+            # raise serializers.ValidationError("Пользователь не аутентифицирован.")
+        else:
+            delivery = Delivery.objects.create(user=user, **validated_data)
         return delivery

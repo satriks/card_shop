@@ -1,9 +1,7 @@
-import os
 from datetime import datetime, timedelta
 import requests
 from django.conf import settings
-from dotenv import load_dotenv
-load_dotenv()
+
 
 
 
@@ -16,9 +14,9 @@ class SdekApiClient:
             cls._instance.expires_at = None
         return cls._instance
     def __init__(self):
-        self.base_url = os.getenv("SDEK_API_URL")
-        self.client_id = os.getenv("SDEK_API_ID")
-        self.client_secret = os.getenv("SDEK_API_SECRET")
+        self.base_url = settings.SDEK_API_URL
+        self.client_id = settings.SDEK_API_ID
+        self.client_secret = settings.SDEK_API_SECRET
     def get_auth_token(self):
         if self.token and self.is_token_valid():
             return self.token

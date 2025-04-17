@@ -4,6 +4,7 @@ import {
   DeliveryAddressDto,
   DeliveryDto,
   OfficeDto,
+  ReceiverDto,
 } from "../models/models";
 
 interface InitialStateType {
@@ -16,11 +17,7 @@ interface InitialStateType {
     isActive: boolean;
   };
   cardDetail: CardDataDto | null;
-  receiver: {
-    name: string | null;
-    phone: string | null;
-    email: string | null;
-  };
+  receiver: ReceiverDto;
   user: {
     isActive: boolean;
     access: string | null;

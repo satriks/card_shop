@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import { ChangeUserDto, DeliveryDto } from "../models/models";
+import { ChangeUserDto, DeliveryDto, ReceiverDto } from "../models/models";
 import { validatePassword } from "./validators";
 
 const connect = axios.create({
@@ -166,6 +166,70 @@ export const deleteAddress = async (token: string, id: number) => {
   } catch (error) {
     console.error("Ошибка:", error);
     throw error; // Пробрасываем ошибку дальше
+  }
+};
+
+// Create payment
+// export const createPaymentApi = async (
+//   receiver: string,
+//   delivery: string,
+//   cartItems: Array<{ id: number }>
+// ): Promise<[number, any]> => {
+//   try {
+//     const response = await fetch("http://localhost:8000/payments/create/", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json; charset=utf-8",
+//       },
+//       body: JSON.stringify({
+//         receiver,
+//         delivery,
+//         cart: cartItems.map((card) => card.id),
+//       }),
+//     });
+//     // Проверяем, успешно ли выполнен запрос
+//     if (!response.ok) {
+//       throw new Error(`Ошибка при создании платежа: ${response.status}`);
+//     }
+//     const data = await response.json();
+//     return [response.status, data];
+//   } catch (error) {
+//     console.error("Ошибка при создании платежа:", error);
+//     throw new Error(error.message || "Ошибка при создании платежа");
+//   }
+// };
+// Get Order
+export const getOrderApi = async (
+  token: string = "",
+  receiver: ReceiverDto,
+  delivery: DeliveryDto,
+  cartItems: number[]
+): Promise<[number, any]> => {
+  const headers: { [key: string]: string } = {
+    "Content-Type": "application/json",
+  };
+  // Если токен предоставлен, добавляем заголовок авторизации
+  if (token) {
+    headers.Authorization = "Bearer " + token;
+  }
+  try {
+    const response = await fetch("http://localhost:8000/payments/create/", {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        receiver,
+        delivery,
+        cart: cartItems,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(`Ошибка при создании платежа: ${response.status}`);
+    }
+    const data = await response.json();
+    return [response.status, data];
+  } catch (error) {
+    console.error("Ошибка при создании платежа:", error);
+    throw new Error(error.message || "Ошибка при создании платежа");
   }
 };
 

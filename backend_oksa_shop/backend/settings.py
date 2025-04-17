@@ -14,15 +14,20 @@ from datetime import timedelta
 
 import environ
 from pathlib import Path
-# from dotenv import load_dotenv
-# load_dotenv()
 
-# print(os.getenv('SDEK_API_URL'))
-# env = environ.Env()
-# environ.Env.read_env()
-# SDEK_API_URL = env('SDEK_API_URL')
-# SDEK_API_ID = env('SDEK_API_ID')
-# SDEK_API_SECRET = env('SDEK_API_SECRET')
+import os
+from dotenv import load_dotenv
+# Загружаем переменные окружения из файла .env
+load_dotenv()
+
+# Настройки для API YOOKASSA
+YOOKASSA_SHOP_ID = os.getenv('YKASSA_ID')
+YOOKASSA_API_KEY = os.getenv('YKASSA_SECRET')
+
+# Настройки для API СДЭК
+SDEK_API_URL = os.getenv("SDEK_API_URL")
+SDEK_API_ID = os.getenv("SDEK_API_ID")
+SDEK_API_SECRET = os.getenv("SDEK_API_SECRET")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,11 +42,18 @@ SECRET_KEY = 'django-insecure-o85pa2&rco30tehse=_@7nc95!yxq9wyt%mm9l-o#p+&2%2xt&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "fleshly-slick-wildcat.cloudpub.ru",
+    "hourly-adroit-crab.cloudpub.ru",  # Укажите домен без протокола
+    "localhost",
+    "127.0.0.1",]
+
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
        "http://localhost:5173",  # Замените на ваш фронтенд-домен
        "http://127.0.0.1:8000",
+        "https://fleshly-slick-wildcat.cloudpub.ru",
+        "https://hourly-adroit-crab.cloudpub.ru",
    ]
 # Application definition
 
@@ -59,8 +71,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'store',
-    'cards',
+    'cards.apps.CardsConfig',
     'delivery',
+    "payments",
+    "yookassa",
+    "orders",
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"

@@ -8,6 +8,7 @@ import CartOrder from "./CartOrder/CartOrder";
 import CancelButton from "../Common/CancelButton/cancelButton";
 import { useAppDispatch } from "../../models/hooks";
 import { setActiveCart } from "../../redux/MainSlice";
+import PaymentComponent from "../Common/PaymentComponent/PaymentComponent";
 
 type Props = {};
 
@@ -50,6 +51,7 @@ export default function Cart({}: Props) {
           dispatch(setActiveCart(false));
         }}
       />
+      <PaymentComponent />
     </div>
   );
 }

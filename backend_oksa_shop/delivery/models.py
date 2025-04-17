@@ -3,7 +3,7 @@ from django.conf import settings
 
 
 class Delivery(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='deliveries')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='deliveries', null=True, blank=True)
     delivery_self = models.BooleanField(default=False)
     delivery_address = models.JSONField(null=True, blank=True)
     delivery_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
