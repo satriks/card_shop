@@ -1,4 +1,3 @@
-import React from "react";
 import "./CartOrder.scss";
 
 import CartOrderCard from "./CartOrderCard/CartOrderCard";
@@ -38,14 +37,15 @@ export default function CartOrder({}: Props) {
       deliveryData,
       cardData
     );
-    if (responseStatus === 200) {
-      const data = await response.json();
-      if (data.payment_url) {
-        window.location.href = data.payment_url; // Перенаправление на страницу оплаты
+
+    if (responseStatus === 201) {
+      if (response.payment_url) {
+        window.location.href = response.payment_url; // Перенаправление на страницу оплаты
       }
+    } else {
+      console.error("Ошибка при создании заказа, статус:", responseStatus);
     }
   };
-
   return (
     <div className="cart_order">
       <h2>Ваш заказ</h2>

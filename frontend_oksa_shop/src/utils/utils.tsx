@@ -28,6 +28,28 @@ export const useRememberUser = () => {
   return { rememberUser, token };
 };
 
+export const formatDate = (
+  dateString: string,
+  minute: boolean = false
+): string => {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear()).slice(-2);
+  if (minute) {
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
+  } else {
+    return `${day}.${month}.${year}`;
+  }
+};
+
+export const deliveryDate = (day: string, shift: number): string => {
+  const date = new Date(day);
+  date.setDate(date.getDate() + shift);
+  return formatDate(date.toDateString());
+};
 // export const setAddress = (address: DeliveryDto) => {
 //   const dispatch = useAppDispatch();
 // }

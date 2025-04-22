@@ -1,13 +1,17 @@
 export interface CardDataDto {
-  content: string;
-  title: string;
   id: number;
-  images: string[];
   categories: string[];
   materials: string[];
+  images: string[];
+  title: string;
+  description: string;
   price: number;
-  width: number;
+  created_at?: string;
+  updated_at?: string;
+  available?: boolean;
   length: number;
+  width: number;
+  weight: number;
 }
 
 export interface DeliveryAddressDto {
@@ -200,6 +204,29 @@ export interface ReceiverDto {
   name: string;
   phone: string;
   email: string;
+}
+
+export interface PaymentDto {
+  id: number;
+  amount: string;
+  created_at: string;
+  status: string;
+  payment_id: string;
+}
+
+export interface OrderDto {
+  id: number;
+  user: number;
+  recipient_name: string;
+  recipient_phone: string;
+  recipient_email: string;
+  delivery_status: string;
+  delivery: DeliveryDto;
+  payment_status: string;
+  payment_id: PaymentDto;
+  postcards: CardDataDto[];
+  created_at: string;
+  postcards_total?: number;
 }
 // export interface User {
 //   id: number;

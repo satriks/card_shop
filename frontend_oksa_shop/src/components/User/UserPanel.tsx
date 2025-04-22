@@ -16,6 +16,7 @@ import CancelButton from "../Common/CancelButton/cancelButton";
 import UpdateUser from "./UpdateUser/UpdateUser";
 import { useState } from "react";
 import Cookies from "js-cookie";
+import Orders from "./Orders/Orders";
 
 type Props = {};
 
@@ -24,6 +25,7 @@ export default function UserPanel({}: Props) {
   const user = useAppSelector((state) => state.store.user);
   const delivery = useAppSelector((state) => state.store.delivery);
   const [updateUser, setUpdateUser] = useState(false);
+  const [isOrders, setIsOrders] = useState(false);
   const isChange = () => {
     setUpdateUser(true);
   };
@@ -86,7 +88,7 @@ export default function UserPanel({}: Props) {
           {delivery.deliveryName ? delivery.deliveryName : "Доставка"}
         </button>
         <button onClick={isChange}>Изменить пароль</button>
-        <button>Мои заказы</button>
+        <button onClick={() => setIsOrders(!isOrders)}>Мои заказы</button>
         <button onClick={logout}>Выход</button>
         <CancelButton
           onClick={() => {
@@ -94,6 +96,7 @@ export default function UserPanel({}: Props) {
           }}
         />
         {updateUser && <UpdateUser onClose={() => setUpdateUser(false)} />}
+        {isOrders && <Orders onClose={setIsOrders} />}
       </div>
     </div>
   );

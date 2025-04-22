@@ -5,11 +5,13 @@ import {
   CityDetailDto,
   DeliveryDto,
   OfficeDto,
+  OrderDto,
   TariffDto,
 } from "../models/models";
 
 export const cardApi = createApi({
   reducerPath: "cardApi",
+
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_BASE_URL }),
   endpoints: (build) => ({
     getCard: build.query({
@@ -30,6 +32,14 @@ export const cardApi = createApi({
     getAddresses: build.query<DeliveryDto, void>({
       query: () => "sdek/deliveries/",
     }),
+    getOrders: build.query<OrderDto[], void>({
+      query: (token) => ({
+        url: "orders/get/",
+        headers: {
+          Authorization: `Bearer ${token}`, // Замените yourToken на ваш токен
+        },
+      }),
+    }),
   }),
 });
 
@@ -40,4 +50,5 @@ export const {
   useLazyGetCityDetailQuery,
   useLazyGetOfficesQuery,
   useLazyGetTariffsQuery,
+  useGetOrdersQuery,
 } = cardApi;

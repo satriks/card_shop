@@ -21,6 +21,12 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def postcards_total(self):
+        postcards_cost  = sum(postcard.price for postcard in self.postcards.all())
+        delivery_cost = self.delivery.delivery_cost if self.delivery else 0
+        return postcards_cost + delivery_cost
+
     def save(self, *args, **kwargs):
         # postcards_total = sum(postcard.price for postcard in self.postcards.all())  # Сумма цен открыток
         # delivery_cost = self.delivery.delivery_cost if self.delivery else 0  # Стоимость доставки

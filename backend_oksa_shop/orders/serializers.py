@@ -23,7 +23,8 @@ class OrderSerializer(serializers.ModelSerializer):
             'payment_status',
             'payment_id',
             'postcards',
-            'created_at'
+            'created_at',
+            "postcards_total",
         ]
 
     def create(self, validated_data):
