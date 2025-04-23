@@ -8,15 +8,21 @@ import "./Orders.scss";
 import React, { useState } from "react";
 
 interface IconStatus {
-  success: string;
+  succeeded: string;
   pending: string;
-  cancel: string;
+  canceled: string;
 }
 
 const iconStatus: IconStatus = {
-  success: "icon_success",
+  succeeded: "icon_success",
   pending: "icon_pending",
-  cancel: "icon_cancel",
+  canceled: "icon_cancel",
+};
+
+const titleStatus: IconStatus = {
+  succeeded: "Оплачено",
+  pending: "Ожидает оплаты",
+  canceled: "Отменен",
 };
 
 type Props = {
@@ -70,18 +76,28 @@ const OrderItem = ({ order }: OrderItemProps) => {
   // }
 
   const iconСurrent: string = iconStatus[order.payment_status] || "";
-  const minDeliveryDate = deliveryDate(
-    order.created_at,
-    order.delivery.min_delivery_time
-  );
-  const maxDeliveryDate = deliveryDate(
-    order.created_at,
-    order.delivery.max_delivery_time
-  );
-  const deliveryDateDisplay =
-    minDeliveryDate === maxDeliveryDate
-      ? minDeliveryDate // Если даты равны, отображаем одну дату
-      : `${minDeliveryDate} - ${maxDeliveryDate}`;
+  let deliveryDateDisplay: string | undefined; // Определяем переменную здесь
+  // console.log(order, "order");
+  // console.log(order.delivery, "deliv");
+  // console.log(order.delivery.delivery_self, " diliv self");
+
+  if (order.delivery && order.delivery.delivery_self !== undefined) {
+    if (order.delivery.delivery_self == false) {
+      const minDeliveryDate = deliveryDate(
+        order.created_at,
+        order.delivery.min_delivery_time
+      );
+      const maxDeliveryDate = deliveryDate(
+        order.created_at,
+        order.delivery.max_delivery_time
+      );
+
+      deliveryDateDisplay =
+        minDeliveryDate === maxDeliveryDate
+          ? minDeliveryDate // Если даты равны, отображаем одну дату
+          : `${minDeliveryDate} - ${maxDeliveryDate}`;
+    }
+  }
 
   return (
     <div className="order-item">
@@ -91,7 +107,7 @@ const OrderItem = ({ order }: OrderItemProps) => {
         <div className="icons">
           <div
             className={`icon payment_icon ${iconСurrent}`}
-            title={`Статус оплаты: ${order.payment_status}`}
+            title={`Статус оплаты: ${titleStatus[order.payment_status]}`}
           >
             💳
           </div>
@@ -106,11 +122,11 @@ const OrderItem = ({ order }: OrderItemProps) => {
       {isOpen && (
         <div className="order-details">
           <h3>Подробная информация о заказе:</h3>
-          <p>
+          <div>
             Товары:{" "}
             {order.postcards.map((postcard) => {
               return (
-                <div className="order_cards">
+                <div className="order_cards" key={order.id}>
                   <img
                     className="order_cards_img"
                     src={import.meta.env.VITE_BASE_URL + postcard.images[0]}
@@ -126,7 +142,7 @@ const OrderItem = ({ order }: OrderItemProps) => {
                 </div>
               );
             })}
-          </p>
+          </div>
           <div>
             <p>Доставка: {order.delivery.delivery_name}</p>
             <p>
@@ -139,10 +155,12 @@ const OrderItem = ({ order }: OrderItemProps) => {
                 ? `Пункт выдачи: ${order.delivery.delivery_office_detail.location.address_full}`
                 : ""}
             </p>
-            <p>Стоимость доставки: {order.delivery.delivery_cost} руб.</p>
+            {!order.delivery.delivery_self && (
+              <p>Стоимость доставки: {order.delivery.delivery_cost} руб.</p>
+            )}
           </div>
           <p>Дата заказа: {formatDate(order.created_at, true)}</p>
-          {!order.delivery.delivery_self && (
+          {!order.delivery.delivery_self && deliveryDateDisplay && (
             <p>Планируемая дата доставки {deliveryDateDisplay}</p>
           )}
         </div>

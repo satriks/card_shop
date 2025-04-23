@@ -15,7 +15,7 @@ class Order(models.Model):
     delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE, related_name='orders', null=True, blank=True)
 
     payment_status = models.CharField(max_length=20)
-    payment_id = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True)
+    payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True)
 
     postcards = models.ManyToManyField(Postcard, related_name='orders', blank=True)
 
@@ -32,7 +32,7 @@ class Order(models.Model):
         # delivery_cost = self.delivery.delivery_cost if self.delivery else 0  # Стоимость доставки
         # self.total = postcards_total + delivery_cost
         if self.payment_id:
-            self.payment_status = self.payment_id.status  # Предполагается, что в модели Payment есть поле status
+            self.payment_status = self.payment.status  # Предполагается, что в модели Payment есть поле status
         super().save(*args, **kwargs)
 
     def __str__(self):

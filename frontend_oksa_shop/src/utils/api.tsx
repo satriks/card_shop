@@ -198,7 +198,43 @@ export const deleteAddress = async (token: string, id: number) => {
 //     throw new Error(error.message || "Ошибка при создании платежа");
 //   }
 // };
+
 // Get Order
+
+// export const getOrderApi = async (
+//   token: string = "",
+//   receiver: ReceiverDto,
+//   delivery: DeliveryDto,
+//   cartItems: number[]
+// ): Promise<[number, any]> => {
+//   const headers: { [key: string]: string } = {
+//     "Content-Type": "application/json",
+//   };
+//   // Если токен предоставлен, добавляем заголовок авторизации
+//   if (token) {
+//     headers.Authorization = "Bearer " + token;
+//   }
+//   try {
+//     const response = await fetch("http://localhost:8000/payments/create/", {
+//       method: "POST",
+//       headers: headers,
+//       body: JSON.stringify({
+//         receiver,
+//         delivery,
+//         cart: cartItems,
+//       }),
+//     });
+//     if (!response.ok) {
+//       throw new Error(`Ошибка при создании платежа: ${response.status}`);
+//     }
+//     const data = await response.json();
+//     return [response.status, data];
+//   } catch (error) {
+//     console.error("Ошибка при создании платежа:", error);
+//     throw new Error(error.message || "Ошибка при создании платежа");
+//   }
+// };
+
 export const getOrderApi = async (
   token: string = "",
   receiver: ReceiverDto,
@@ -213,85 +249,20 @@ export const getOrderApi = async (
     headers.Authorization = "Bearer " + token;
   }
   try {
-    const response = await fetch("http://localhost:8000/payments/create/", {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
+    const response = await connect.post(
+      "payments/create/",
+      {
         receiver,
         delivery,
         cart: cartItems,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error(`Ошибка при создании платежа: ${response.status}`);
-    }
-    const data = await response.json();
-    return [response.status, data];
+      },
+      { headers }
+    );
+    return [response.status, response.data];
   } catch (error) {
     console.error("Ошибка при создании платежа:", error);
-    throw new Error(error.message || "Ошибка при создании платежа");
+    throw new Error(
+      error.response?.data?.message || "Ошибка при создании платежа"
+    );
   }
 };
-
-// //Get user detail
-// export const getUserDetailApi = (token: string) => {
-//   return connect
-//     .get("api/users/detail", { headers: { Authorization: "token " + token } })
-//     .then((response) => response.data);
-// };
-
-// //Get user
-// export const getUserApi = (token: string, id: number | string) => {
-//   return connect
-//     .get(`api/users/${id}/`, {
-//       headers: { Authorization: "token " + token },
-//     })
-//     .then((response) => response.data);
-// };
-
-// //Del user
-// export const delUserApi = (token: string, id: number) => {
-//   return connect.delete(`api/users/${id}/`, {
-//     headers: { Authorization: "token " + token },
-//   });
-// };
-
-// //Get files
-// export const getFilesApi = (token: string) => {
-//   return connect
-//     .get("api/files/", { headers: { Authorization: "token " + token } })
-//     .then((response) => response.data);
-// };
-// //Add file
-// export const addFileApi = (
-//   token: string,
-//   body: { name: string; description?: string; file: File }
-// ) => {
-//   const formData = new FormData();
-//   formData.append("name", body.name);
-//   body.description && formData.append("description", body.description);
-//   formData.append("file", body.file);
-
-//   return connect.post(`api/files/`, formData, {
-//     headers: {
-//       Authorization: "token " + token,
-//       "content-type": "multipart/form-data",
-//     },
-//   });
-// };
-// //Delete file
-// export const deleteFileApi = (token: string, fileId: string | number) => {
-//   return connect.delete(`api/files/${fileId}/`, {
-//     headers: { Authorization: "token " + token },
-//   });
-// };
-// //Update file
-// export const updateFileApi = (
-//   token: string,
-//   fileId: string | number,
-//   body: { name?: string; description?: string }
-// ) => {
-//   return connect.patch(`api/files/${fileId}/`, body, {
-//     headers: { Authorization: "token " + token },
-//   });
-// };

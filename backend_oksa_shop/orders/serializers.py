@@ -8,7 +8,7 @@ from payments.serializers import PaymentSerializer
 class OrderSerializer(serializers.ModelSerializer):
     postcards = PostcardSerializer(many=True, read_only=True )
     delivery = DeliverySerializer(read_only=True)
-    payment_id = PaymentSerializer(read_only=True)
+    payment = PaymentSerializer(read_only=True)
 
     class Meta:
         model = Order
@@ -21,7 +21,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'delivery_status',
             'delivery',
             'payment_status',
-            'payment_id',
+            'payment',
             'postcards',
             'created_at',
             "postcards_total",
@@ -34,7 +34,7 @@ class OrderSerializer(serializers.ModelSerializer):
         print(order.postcards)
         order.delivery = self.initial_data['delivery']
         order.postcards.set(self.initial_data['postcards'])
-        order.payment_id = self.initial_data['payment_id']
+        order.payment = self.initial_data['payment']
         order.save()
 
         return order

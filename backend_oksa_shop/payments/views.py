@@ -12,6 +12,7 @@ from django.conf import settings
 from cards.models import Postcard
 from orders.serializers import OrderSerializer
 from delivery.models import Delivery
+from orders.models import Order
 import uuid
 
 
@@ -133,8 +134,8 @@ class CreatePaymentView(APIView):
             **receiver_data,
             "delivery_status": "ожидает отправки",
             "delivery" : delivery_addres,
-            "payment_status": "Ожидает оплату",
-            "payment_id": payment_data,
+            "payment_status": payment.status,
+            "payment": payment_data,
             "postcards": cards
         }
         if (user and user.is_authenticated):
@@ -162,13 +163,24 @@ class PaymentWebhookView(APIView):
         #обавить удаление открыток из наличия при успешной оплате
 
         # Проверяем, что это уведомление о статусе платежа
-        if 'event' in payload and payload['event'] == 'payment.succeeded':
+        if 'event' in payload:
+            payment_object = payload['object']
             payment_id = payload['object']['id']
             # Обновляем статус платежа в базе данных
             try:
                 payment_model = PaymentModel.objects.get(payment_id=payment_id)
-                payment_model.status = 'succeeded'  # Обновляем статус на успешный
+                payment_model.status = payment_object['status']  # Обновляем статус на успешный
                 payment_model.save()
+                order = Order.objects.get(payment=payment_model)
+                order.save()
+                if payment_object['status'] == 'succeeded':
+                    print(order.postcards)
+                    postcards = order.postcards.all()
+                    # Измените атрибут available для каждой открытки
+                    for postcard in postcards:
+                        postcard.available = False  # Или любое другое значение, которое вам нужно
+                        postcard.save()
+
                 return Response(status=status.HTTP_200_OK)
             except PaymentModel.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
