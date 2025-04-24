@@ -226,10 +226,8 @@ class SdekApiClient:
         ], }
         wheare = pvz if order.delivery.delivery_office else to
         data = {**main_data, **wheare, **recip, **pack}
-        print(data)
-        print(42)
         response = requests.post(url, headers=headers, json=data)
-        print(response)
+
         if response.status_code == 202:
             print(response.json())
             sdek_id = response.json()['entity']['uuid']
