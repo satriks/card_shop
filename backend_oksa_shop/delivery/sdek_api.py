@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import requests
 from django.conf import settings
+from django.db.models import Sum, Max
 
 
 
@@ -142,82 +143,102 @@ class SdekApiClient:
         else:
             return None  # Обработка ошибки
 
-    def oreder(self, tariff_code, delivery_point=None, to_location=None):
+    def oreder(self, order):
         """Заказ доставки"""
         token = self.get_auth_token()
         if not token:
             return None
+
         url = f"{self.base_url}/v2/orders"
         headers = {
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json"
         }
 
+
+
         main_data = {
             "type": 1,
-            "tariff_code": tariff_code,  # Код тарифа
-            "shipment_point": "MSK2336",
+            "tariff_code": order.delivery.delivery_tariff_code,  # Код тарифа
+            "shipment_point": "MSK7",
             "print": "WAYBILL",
         }
 
-        if delivery_point :
+        if order.delivery.delivery_office :
             # код ПВЗ куда отправляем
             pvz = {
-                "delivery_point": delivery_point,
+                "delivery_point": order.delivery.delivery_office,
             }
 
         # Обязательно адресс, можно city_uuid, город, fias, postal_code, longitude, latitude
-        to = {"to_location": {
-            "code": 0,
-            "city_uuid": "061925d2-e3ae-4fc4-b824-0a1be89f77be",
-            "city": "string",
-            "country_code": "string",
-            "country": "string",
-            "region": "string",
-            "region_code": 0,
-            "sub_region": "string",
-            "longitude": 0.1,
-            "latitude": 0.1,
-            "time_zone": "string",
-            "address": "string",  # обязательное поле
-            "postal_code": "string"
-        }, }
+        else:
+            to = {"to_location": order.delivery.delivery_address}
+
+
+
 
         # ФИО, Емайл, телефон(можно несколько)
         recip = {"recipient": {
-            "name": "string",
+            "name": order.recipient_name,
             "contragent_type": "INDIVIDUAL",
-            "email": "string",
+            "email": order.recipient_email,
             "phones": [
                 {
-                    "number": "string",
-                    "additional": "string"
+                    "number": order.recipient_phone,
+
                 }
             ]
         }, }
+        # габариты коробки  17*28*5
+        postcards = order.postcards.all()
+        total_weight = postcards.aggregate(total_weight=Sum('weight'))['total_weight']
+        count_cards = postcards.count()
+        max_width = 18
+        max_length = 30
+        height = count_cards * 5
+        total_weight += count_cards * 100
+
+
+        items = [{
+            "name": postcard.title,  # Наименование товара
+            "ware_key": str(postcard.id),  # Идентификатор/артикул товара
+            "payment": {
+                "value": 0
+            },
+            "weight": postcard.weight ,  # Вес
+            "amount": 1,
+            "cost": postcard.price if postcard.price else 0,  # Стоимость для расчета страховки
+        } for postcard in postcards ]
+
+
         # Номер заказа, вес общ, длинна, ширина, высота, по товарам: Навание ,артикул, вес, сколько, стоимость
         pack = {"packages": [
             {
-                "number": "string",
+                "number": order.id,
                 # Номер упаковки (можно использовать порядковый номер упаковки заказа или номер заказа), уникален в пределах заказа. Идентификатор заказа в ИС Клиента
-                "weight": 0,  # Общий вес (в граммах)
-                "length": 0,
-                "width": 0,
-                "height": 0,
-                "comment": "string",
-                "items": [
-                    {
-                        "name": "string",  # Наименование товара
-                        "ware_key": "string",  # Идентификатор/артикул товара.
-                        "payment": {
-                            "value": 0
-                        },
-                        "weight": 0,  # Вес
-                        "amount": 0,  # колчество едениц
-                        "cost": 0,  # Стоимость , С данного значения рассчитывается страховка.
-                    }
-                ]
+                "weight": total_weight, # Общий вес (в граммах)
+                "length": max_length,
+                "width": max_width,
+                "height": height,
+                # "comment": "string",
+                "items": items
             }
         ], }
+        wheare = pvz if order.delivery.delivery_office else to
+        data = {**main_data, **wheare, **recip, **pack}
+        print(data)
+        print(42)
+        response = requests.post(url, headers=headers, json=data)
+        print(response)
+        if response.status_code == 202:
+            print(response.json())
+            sdek_id = response.json()['entity']['uuid']
+            # установить id в заказ и подумать где хранить статус (нужна ли отдельная таблица в БД)
 
-        data = {**main_data, **pvz, **to, **recip, **pack}
+            return response.json()
+
+        else:
+            error = response.json()['requests'][0]['errors']
+            print(error)
+            # logger error
+            return None

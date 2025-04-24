@@ -5,6 +5,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from yookassa import Configuration, Payment, Webhook, Receipt
+
+from delivery.sdek_api import SdekApiClient
 from .models import Payment as PaymentModel
 from delivery.serializers import DeliverySerializer
 from .serializers import PaymentSerializer, ReceiverSerializer
@@ -174,12 +176,15 @@ class PaymentWebhookView(APIView):
                 order = Order.objects.get(payment=payment_model)
                 order.save()
                 if payment_object['status'] == 'succeeded':
-                    print(order.postcards)
                     postcards = order.postcards.all()
                     # Измените атрибут available для каждой открытки
                     for postcard in postcards:
                         postcard.available = False  # Или любое другое значение, которое вам нужно
                         postcard.save()
+
+                    if not order.delivery.delivery_self:
+                        sdek = SdekApiClient()
+                        sdek.oreder(order)
 
                 return Response(status=status.HTTP_200_OK)
             except PaymentModel.DoesNotExist:

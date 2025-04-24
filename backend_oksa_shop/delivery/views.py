@@ -81,3 +81,43 @@ class TariffView(APIView):
             return Response(tarrifs, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Не удалось рассчитать тариф."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeliveryWebhookView(APIView):
+    def post(self, request):
+        # Получаем данные из запроса
+        payload = request.data
+        print(request)
+        return Response(42)
+
+        # Проверяем, что это уведомление о статусе доставки
+        # if 'event' in payload:
+        #     delivery_object = payload['object']
+        #     delivery_id = delivery_object['id']
+        #
+        #     # Обновляем статус доставки в базе данных
+        #     try:
+        #         delivery_model = DeliveryModel.objects.get(delivery_id=delivery_id)
+        #         delivery_model.status = delivery_object['status']  # Обновляем статус на полученный
+        #         delivery_model.save()
+        #
+        #         # Если доставка успешна, можно выполнить дополнительные действия
+        #         if delivery_object['status'] == 'delivered':
+        #             order = Order.objects.get(delivery=delivery_model)
+        #             # Например, можно изменить статус заказа или выполнить другие действия
+        #             order.status = 'completed'  # Обновляем статус заказа
+        #             order.save()
+        #
+        #             # Дополнительно, если нужно, можно изменить доступность открыток
+        #             postcards = order.postcards.all()
+        #             for postcard in postcards:
+        #                 postcard.available = False  # Или любое другое значение, которое вам нужно
+        #                 postcard.save()
+        #
+        #         return Response(status=status.HTTP_200_OK)
+        #     except DeliveryModel.DoesNotExist:
+        #         return Response(status=status.HTTP_404_NOT_FOUND)
+        #     except Order.DoesNotExist:
+        #         return Response(status=status.HTTP_404_NOT_FOUND)
+
+        # return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -47,9 +47,6 @@ class Gallery(models.Model):
     product = models.ForeignKey(Postcard, on_delete=models.CASCADE, related_name='images')
 
     def get_image_upload_path(self, instance, filename):
-        print(filename)
-        print(instance)
-        print(self)
         postcard_id = self.product.id
         # Создаем путь с использованием ID открытки
         return os.path.join('cards', str(postcard_id), filename)
