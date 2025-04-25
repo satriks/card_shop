@@ -134,7 +134,7 @@ class CreatePaymentView(APIView):
         data_order = {
 
             **receiver_data,
-            "delivery_status": "ожидает отправки",
+            "delivery_status": "пока нет информации",
             "delivery" : delivery_addres,
             "payment_status": payment.status,
             "payment": payment_data,

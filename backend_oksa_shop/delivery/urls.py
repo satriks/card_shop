@@ -9,5 +9,5 @@ urlpatterns = [
     path('city/detail/', CityDetailView.as_view(), name='get_city'),
     path('offices/', OfficeView.as_view(), name='get_offices'),  # Получение офисов по коду города
     path('tariff/', TariffView.as_view(), name='calculate_tariff'),  # Расчет стоимости доставки
-    path('sdek/webhook/', DeliveryWebhookView.as_view(), name='sdek-webhook'),
+    path('webhook/', DeliveryWebhookView.as_view(), name='sdek-webhook'),
 ]

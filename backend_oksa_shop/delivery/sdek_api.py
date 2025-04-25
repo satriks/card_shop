@@ -18,6 +18,7 @@ class SdekApiClient:
         self.base_url = settings.SDEK_API_URL
         self.client_id = settings.SDEK_API_ID
         self.client_secret = settings.SDEK_API_SECRET
+
     def get_auth_token(self):
         if self.token and self.is_token_valid():
             return self.token
@@ -142,6 +143,25 @@ class SdekApiClient:
             return response.json()  # Возвращаем информацию о тарифах
         else:
             return None  # Обработка ошибки
+    def setWebhook(self):
+        token = self.get_auth_token()
+        if not token:
+            return None
+
+        url = f"{self.base_url}/v2/webhooks"
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json"
+        }
+
+        request_data = {
+                        "type": "ORDER_STATUS",
+                        "url": "https://hourly-adroit-crab.cloudpub.ru/sdek/webhook/"
+                        }
+        response = requests.post(url, json=request_data, headers=headers)
+        print(response.json())
+        #logger
+
 
     def oreder(self, order):
         """Заказ доставки"""
@@ -232,7 +252,8 @@ class SdekApiClient:
             print(response.json())
             sdek_id = response.json()['entity']['uuid']
             # установить id в заказ и подумать где хранить статус (нужна ли отдельная таблица в БД)
-
+            order.sdek_id = sdek_id
+            order.save()
             return response.json()
 
         else:

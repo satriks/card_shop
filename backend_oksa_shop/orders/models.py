@@ -15,7 +15,7 @@ class Order(models.Model):
     delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE, related_name='orders', null=True, blank=True)
 
     sdek_id = models.CharField(max_length=100, null=True, blank=True)
-    sdek_status = models.CharField(max_length=50, null=True, blank=True)
+    sdek_number = models.CharField(max_length=50, null=True, blank=True)
 
     payment_status = models.CharField(max_length=20)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True)

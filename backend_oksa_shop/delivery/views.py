@@ -6,7 +6,50 @@ from .sdek_api import SdekApiClient
 from rest_framework import generics
 from .models import Delivery
 from .serializers import DeliverySerializer
+from orders.models import Order
 
+status_dict = {
+    "CREATED": "Заказ зарегистрирован в базе данных СДЭК",
+    "REMOVED": "Заказ отменен ИМ после регистрации в системе до прихода груза на склад СДЭК в городе-отправителе",
+    "RECEIVED_AT_SHIPMENT_WAREHOUSE": "Оформлен приход на склад СДЭК в городе-отправителе",
+    "READY_TO_SHIP_AT_SENDING_OFFICE": "Выдан на отправку в г. отправителе",
+    "READY_FOR_SHIPMENT_IN_TRANSIT_CITY": "Выдан на отправку в г. отправителе",
+    "RETURNED_TO_SENDER_CITY_WAREHOUSE": "Возвращен на склад отправителя",
+    "PASSED_TO_CARRIER_AT_SENDING_OFFICE": "Сдан перевозчику в г. отправителе",
+    "SEND_TO_TRANSIT_OFFICE": "Отправлен в г. транзит",
+    "MET_AT_TRANSIT_OFFICE": "Встречен в г. транзите",
+    "ACCEPTED_AT_TRANSIT_WAREHOUSE": "Принят на склад транзита",
+    "RETURNED_TO_TRANSIT_WAREHOUSE": "Возвращен на склад транзита",
+    "READY_TO_SHIP_IN_TRANSIT_OFFICE": "Выдан на отправку в г. транзите",
+    "PASSED_TO_CARRIER_AT_TRANSIT_OFFICE": "Сдан перевозчику в г. транзите",
+    "SENT_TO_SENDER_CITY": "Отправлен в г. отправитель",
+    "MET_AT_SENDING_OFFICE": "Встречен в г. отправителе",
+    "MET_AT_RECIPIENT_OFFICE": "Встречен в г. получателе",
+    "ACCEPTED_AT_RECIPIENT_CITY_WAREHOUSE": "Принят на склад доставки",
+    "ACCEPTED_AT_PICK_UP_POINT": "Принят на склад до востребования",
+    "TAKEN_BY_COURIER": "Выдан на доставку",
+    "RETURNED_TO_RECIPIENT_CITY_WAREHOUSE": "Возвращен на склад доставки",
+    "DELIVERED": "Вручен",
+    "NOT_DELIVERED": "Не вручен",
+    "ENTERED_TO_OFFICE_TRANSIT_WAREHOUSE": "Поступил в г. транзита",
+    "ENTERED_TO_DELIVERY_WAREHOUSE": "Поступил на склад доставки",
+    "ENTERED_TO_WAREHOUSE_ON_DEMAND": "Поступил на склад до востребования",
+    "IN_CUSTOMS_INTERNATIONAL": "Таможенное оформление в стране отправления",
+    "SHIPPED_TO_DESTINATION": "Отправлено в страну назначения",
+    "PASSED_TO_TRANSIT_CARRIER": "Передано транзитному перевозчику",
+    "IN_CUSTOMS_LOCAL": "Таможенное оформление в стране назначения",
+    "CUSTOMS_COMPLETE": "Таможенное оформление завершено",
+    "POSTOMAT_POSTED": "Заложен в постамат",
+    "POSTOMAT_SEIZED": "Изъят из постамата курьером",
+    "POSTOMAT_RECEIVED": "Изъят из постамата клиентом",
+    "READY_FOR_SHIPMENT_IN_SENDER_CITY": "Готов к отправке в городе отправителе",
+    "TAKEN_BY_TRANSPORTER_FROM_SENDER_CITY": "Сдан перевозчику в городе отправителе",
+    "SENT_TO_TRANSIT_CITY": "Отправлен в город-транзит",
+    "ACCEPTED_IN_TRANSIT_CITY": "Встречен в городе-транзите",
+    "TAKEN_BY_TRANSPORTER_FROM_TRANSIT_CITY": "Сдан перевозчику в городе-транзите",
+    "SENT_TO_RECIPIENT_CITY": "Отправлен в город-получатель",
+    "ACCEPTED_IN_RECIPIENT_CITY": "Встречен в городе-получателе"
+}
 
 class DeliveryListCreateView(generics.ListCreateAPIView):
     queryset = Delivery.objects.all()
@@ -87,37 +130,14 @@ class DeliveryWebhookView(APIView):
     def post(self, request):
         # Получаем данные из запроса
         payload = request.data
-        print(request)
-        return Response(42)
+        #logger
+        try :
+            order = Order.objects.get(sdek_id=payload['uuid'])
+            order.sdek_number = payload['attributes']['number']
+            order.delivery_status = status_dict[payload['attributes']['code']]
+            order.save()
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-        # Проверяем, что это уведомление о статусе доставки
-        # if 'event' in payload:
-        #     delivery_object = payload['object']
-        #     delivery_id = delivery_object['id']
-        #
-        #     # Обновляем статус доставки в базе данных
-        #     try:
-        #         delivery_model = DeliveryModel.objects.get(delivery_id=delivery_id)
-        #         delivery_model.status = delivery_object['status']  # Обновляем статус на полученный
-        #         delivery_model.save()
-        #
-        #         # Если доставка успешна, можно выполнить дополнительные действия
-        #         if delivery_object['status'] == 'delivered':
-        #             order = Order.objects.get(delivery=delivery_model)
-        #             # Например, можно изменить статус заказа или выполнить другие действия
-        #             order.status = 'completed'  # Обновляем статус заказа
-        #             order.save()
-        #
-        #             # Дополнительно, если нужно, можно изменить доступность открыток
-        #             postcards = order.postcards.all()
-        #             for postcard in postcards:
-        #                 postcard.available = False  # Или любое другое значение, которое вам нужно
-        #                 postcard.save()
-        #
-        #         return Response(status=status.HTTP_200_OK)
-        #     except DeliveryModel.DoesNotExist:
-        #         return Response(status=status.HTTP_404_NOT_FOUND)
-        #     except Order.DoesNotExist:
-        #         return Response(status=status.HTTP_404_NOT_FOUND)
 
-        # return Response(status=status.HTTP_400_BAD_REQUEST)
