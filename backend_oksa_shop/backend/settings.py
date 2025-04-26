@@ -130,7 +130,15 @@ SIMPLE_JWT = {
 
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://localhost:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
 
 # Database
 DATABASES = {

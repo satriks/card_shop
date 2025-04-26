@@ -1,6 +1,9 @@
+from django.core.cache import cache
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+
+from backend.decorators import cache_response
 from .models import Postcard, Gallery
 from .serializers import PostcardSerializer
 
@@ -19,3 +22,6 @@ class PostcardViewSet(viewsets.ModelViewSet):
             Gallery.objects.create(image=image, product=postcard)  # Создаем объект Gallery
         # Возвращаем ответ с сериализованным объектом Postcard
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    @cache_response(timeout=60)  # Используем декоратор
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)

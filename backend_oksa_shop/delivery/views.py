@@ -1,7 +1,10 @@
+from django.core.cache import cache
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
+from backend.decorators import cache_response
 from .sdek_api import SdekApiClient
 from rest_framework import generics
 from .models import Delivery
@@ -56,8 +59,17 @@ class DeliveryListCreateView(generics.ListCreateAPIView):
     serializer_class = DeliverySerializer
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
+        # cache_key = f'delivery_list_{self.request.user.id}'
+        # cached_data = cache.get(cache_key)
+        # if cached_data is not None:
+        #     return cached_data
         # Возвращаем только те объекты Delivery, которые принадлежат текущему пользователю
-        return Delivery.objects.filter(user=self.request.user)
+        queryset  =  Delivery.objects.filter(user=self.request.user)
+        # cache.set(cache_key, queryset, timeout=60)
+        return queryset
+    # @cache_response(timeout=60)  # Используем декоратор
+
+
 
 class DeliveryDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Delivery.objects.all()
@@ -78,17 +90,24 @@ class DeliveryDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Response({'detail': 'У вас нет прав для удаления этого адреса.'}, status=status.HTTP_403_FORBIDDEN)
 
 class CityView(APIView):
+
     def get(self, request):
         """Получение информации о городе по его названию."""
-        sdek_client = SdekApiClient()  # Создаем экземпляр клиента
         city_name = request.GET.get('city_name')
-        city_data = sdek_client.get_city(city_name)
+        sdek_client = SdekApiClient()
+        cache_city = cache.get(city_name)
+        if cache_city is not None:
+            city_data = cache_city
+        else :
+            city_data = sdek_client.get_city(city_name)
+            cache.set(city_name, city_data, timeout=60)
         if city_data is not None:
             return Response(city_data, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Не удалось получить данные о городе."}, status=status.HTTP_400_BAD_REQUEST)
 
 class CityDetailView(APIView):
+    @cache_response(timeout=60)
     def get(self, request):
         sdek_client = SdekApiClient()  # Создаем экземпляр клиента
         city_code = request.GET.get('city_code')
@@ -100,6 +119,7 @@ class CityDetailView(APIView):
 
 
 class OfficeView(APIView):
+    @cache_response(timeout=60)
     def get(self, request):
         """Получение офисов по коду города."""
         sdek_client = SdekApiClient()
@@ -110,6 +130,7 @@ class OfficeView(APIView):
         else:
             return Response({"error": "Не удалось получить данные об офисах."}, status=status.HTTP_400_BAD_REQUEST)
 class TariffView(APIView):
+    @cache_response(timeout=60)
     def get(self, request):
         """Расчет стоимости доставки."""
         city_code = request.GET.get('city_code')
