@@ -89,13 +89,18 @@ class CreatePaymentView(APIView):
                 delivery_addres = Delivery.objects.get(delivery_name=delivery_serializer.validated_data["delivery_name"], user=user)
 
             else:
-                delivery_addres = Delivery.objects.create(**delivery_serializer.validated_data)
+                if delivery_serializer.validated_data["delivery_name"] == "Самовывоз":
+                    delivery_addres = Delivery.objects.get(
+                        delivery_name=delivery_serializer.validated_data["delivery_name"], user=None)
+                else :
+                    delivery_addres = Delivery.objects.create(**delivery_serializer.validated_data)
 
 
         else:
             print(delivery_serializer.errors)
 
         print(delivery_addres)
+
 
         idempotence_key = str(uuid.uuid4())
         payment = Payment.create({

@@ -31,7 +31,7 @@ def send_password_reset_email(user_id, reset_link):
     plain_message = strip_tags(html_message)
     from_email = 'satriks@mail.ru'
     to = user.email
-    email = EmailMultiAlternatives(subject, plain_message, from_email, [to])
+    email = EmailMultiAlternatives(subject, from_email, [to])
     email.content_subtype = "html"  # Указываем, что это HTML-сообщение
     email.attach_alternative(html_message, "text/html")
     email.send()

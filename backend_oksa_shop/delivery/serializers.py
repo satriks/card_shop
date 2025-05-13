@@ -12,6 +12,11 @@ class DeliverySerializer(serializers.ModelSerializer):
 
         if user_data is not None:
             user = self.context['request'].user
+        # проверка на повторное создание
+        delivery_check = Delivery.objects.get(user=user, delivery_name=validated_data['delivery_name'])
+        print(delivery_check)
+        if delivery_check is not None:
+            return delivery_check
 
         if user is None:
             delivery = Delivery.objects.create(**validated_data)
