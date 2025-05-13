@@ -1,0 +1,59 @@
+@use "./../../../cssVariables/variables.scss";
+
+.forgot_password_wrapper {
+  width: 100vw;
+  height: 100vh;
+  //   margin: 5vh 5vw;
+  position: fixed;
+  background: linear-gradient(
+    180deg,
+    rgba(225, 248, 246, 0.6) 8%,
+    rgba(247, 206, 204, 0.6) 70%
+  );
+  z-index: 4;
+}
+.forgot_password {
+  position: relative;
+  background-color: white;
+  width: 40%;
+  max-width: 700px;
+  height: 30vh;
+  margin: 10vh auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .forgot_password_title {
+    width: 100%;
+    background-color: variables.$mainColor;
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    .modal_wrapper {
+      // position: absolute;
+      position: fixed;
+      top: 20%;
+      // left: 0;
+    }
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    button {
+      background-color: variables.$secondColor;
+      border-radius: 20px;
+      height: 40px;
+    }
+    button:hover {
+      background-color: rgb(165, 241, 165);
+      opacity: 80%;
+    }
+  }
+}

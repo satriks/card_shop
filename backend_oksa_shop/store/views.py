@@ -1,4 +1,6 @@
 from datetime import  timedelta
+
+from django.shortcuts import redirect
 from django.utils import timezone
 from rest_framework import generics, status, permissions
 from rest_framework.permissions import AllowAny
@@ -7,10 +9,23 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from django_rq import job
+from backend import settings
+from backend.settings import BASE_HOST
 from .models import CustomUser
 from .serializers import UserSerializer, CustomTokenObtainPairSerializer
 from rest_framework.exceptions import ValidationError
-
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_decode
+from django.conf import settings
+from backend.tasks import send_password_reset_email
+from backend.tasks import send_registration_email
+from django_rq import job
 
 class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
@@ -26,8 +41,12 @@ class RegisterView(generics.CreateAPIView):
         # Создание нового пользователя
         user = super().create(request, *args, **kwargs).data
 
+
         # Получаем пользователя из базы данных
         user_instance = CustomUser.objects.get(email=email)
+
+        # Отпавляем письмо регистрации
+        job = send_registration_email(user_instance.id)
 
         # Генерация токенов
         refresh = RefreshToken.for_user(user_instance)
@@ -76,3 +95,79 @@ class CustomTokenRefreshView(TokenRefreshView):
     pass
 
 
+# def send_registration_email(user):
+#     token = default_token_generator.make_token(user)
+#     uid = urlsafe_base64_encode(force_bytes(user.pk))
+#     base_url = BASE_HOST
+#     link = f"{base_url}/api/confirm-email/{uid}/{token}/"
+#
+#     subject = "Подтверждение регистрации"
+#     html_message = render_to_string('emails/registration_confirmation.html', {'user': user, 'confirmation_link': link})
+#     plain_message = strip_tags(html_message)
+#     from_email = 'satriks@mail.ru'
+#     to = user.email
+#     email = EmailMultiAlternatives(subject, plain_message, from_email, [to])
+#     email.content_subtype = "html"  # Указываем, что это HTML-сообщение
+#     email.attach_alternative(html_message, "text/html")
+#     email.send()
+# def send_password_reset_email(user, reset_link):
+#     subject = "Восстановление пароля"
+#     html_message = render_to_string('emails/password_reset.html', {'reset_link': reset_link})
+#     plain_message = strip_tags(html_message)
+#     from_email = 'satriks@mail.ru'
+#     to = user.email
+#     email = EmailMultiAlternatives(subject, plain_message, from_email, [to])
+#     email.content_subtype = "html"  # Указываем, что это HTML-сообщение
+#     email.attach_alternative(html_message, "text/html")
+#     email.send()
+
+class ConfirmEmailView(APIView):
+    def get(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = CustomUser.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+            return redirect(f"{settings.BASE_HOST}/?error=invalid_link")  # Замените на ваш URL главной страницы
+        if user is not None and default_token_generator.check_token(user, token):
+            user.email_verified = True
+            user.save()
+            response = redirect(settings.BASE_HOST)  # Замените на ваш URL главной страницы
+            # response.set_cookie('_wp_kcrt', user.access_token)  # Устанавливаем cookie с access token
+            return response
+        else:
+            return redirect(f"{settings.BASE_HOST}/?error=invalid_token")
+
+
+class PasswordResetRequestView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            base_url = settings.BASE_HOST
+            user = CustomUser.objects.get(email=email)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            reset_link = f"{base_url}/api/password_reset/confirm/{uid}/{token}/"
+            job = send_password_reset_email(user.id, reset_link)
+            return Response({"message": "Ссылка для восстановления пароля отправлена на вашу почту."}, status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "Пользователь с таким email не найден."}, status=status.HTTP_404_NOT_FOUND)
+
+
+class PasswordResetEmailView(APIView):
+    def get(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = CustomUser.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+            return redirect(f"{settings.BASE_HOST}/?error=invalid_link")  # Замените на ваш URL главной страницы
+        if user is not None and default_token_generator.check_token(user, token):
+            # user.email_verified = True
+            token = CustomTokenObtainPairSerializer.get_token(user)
+            print(token)
+            # response = redirect(f"{settings.BASE_HOST}/?user={token}&reset=1")  # Замените на ваш URL главной страницы
+            url = "http://localhost:5173/"
+            response = redirect(f"{url}/?user={token}&reset=1")
+            # response.set_cookie('_wp_kcrt', user.access_token)  # Устанавливаем cookie с access token
+            return response
+        else:
+            return redirect(f"{settings.BASE_HOST}/?error=invalid_token")

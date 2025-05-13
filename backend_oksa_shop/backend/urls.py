@@ -1,3 +1,4 @@
+import django_rq
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -10,4 +11,5 @@ urlpatterns = [
     path('sdek/', include('delivery.urls')),
     path('payments/', include('payments.urls')),
     path('orders/', include('orders.urls')),
+    path('django-rq/', include('django_rq.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

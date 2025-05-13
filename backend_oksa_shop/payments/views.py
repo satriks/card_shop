@@ -15,6 +15,8 @@ from cards.models import Postcard
 from orders.serializers import OrderSerializer
 from delivery.models import Delivery
 from orders.models import Order
+from backend.tasks import send_new_order_notification
+from django_rq import job
 import uuid
 
 
@@ -175,6 +177,7 @@ class PaymentWebhookView(APIView):
                 payment_model.save()
                 order = Order.objects.get(payment=payment_model)
                 order.save()
+                job = send_new_order_notification(order.id)
                 if payment_object['status'] == 'succeeded':
                     postcards = order.postcards.all()
                     # Измените атрибут available для каждой открытки

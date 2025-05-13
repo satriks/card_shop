@@ -169,6 +169,20 @@ export const deleteAddress = async (token: string, id: number) => {
   }
 };
 
+// Reset password
+export const resetPasswordApi = async (
+  email: string
+): Promise<[number, any]> => {
+  try {
+    const response = await connect.post("api/password_reset/", { email });
+    return [response.status, response.data];
+  } catch (error) {
+    console.error("Ошибка при сбросе пароля:", error);
+    throw new Error(
+      error.response?.data?.message || "Ошибка при сбросе пароля"
+    );
+  }
+};
 // Create payment
 // export const createPaymentApi = async (
 //   receiver: string,

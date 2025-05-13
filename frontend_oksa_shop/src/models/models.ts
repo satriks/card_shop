@@ -201,9 +201,9 @@ export interface ChangeUserDto {
 }
 
 export interface ReceiverDto {
-  name: string;
-  phone: string;
-  email: string;
+  name: string | null;
+  phone: string | null;
+  email: string | null;
 }
 
 export interface PaymentDto {

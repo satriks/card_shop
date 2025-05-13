@@ -26,6 +26,8 @@ interface InitialStateType {
     middleName: string | null;
     phone: string | null;
     email: string | null;
+    isReset: boolean;
+    isSendReset: boolean;
   };
   addresses: DeliveryDto[] | null;
   delivery: {
@@ -41,6 +43,7 @@ interface InitialStateType {
       maxDeliveryTime: number | null;
     };
   };
+  hesReloaded: boolean;
 }
 
 const initialState: InitialStateType = {
@@ -69,6 +72,8 @@ const initialState: InitialStateType = {
     middleName: null,
     phone: null,
     email: null,
+    isReset: false,
+    isSendReset: false,
   },
   addresses: null,
   delivery: {
@@ -81,12 +86,17 @@ const initialState: InitialStateType = {
     deliveryOfficeDetail: null,
     deliveryTime: { minDeliveryTime: null, maxDeliveryTime: null },
   },
+  hesReloaded: false,
 };
 
 const MainSlice = createSlice({
   name: "main",
   initialState,
   reducers: {
+    // Редьюсер для обновления страницы
+    setHasReloaded: (state, action: PayloadAction<boolean>) => {
+      state.hesReloaded = action.payload;
+    },
     // Редьюсер для установки состояния активности пользователя
     setUserActiveState: (state, action: PayloadAction<boolean>) => {
       state.user.isActive = action.payload;
@@ -110,6 +120,13 @@ const MainSlice = createSlice({
     // Редьюсер для установки телефона
     setUserPhone: (state, action: PayloadAction<string | null>) => {
       state.user.phone = action.payload;
+    },
+    // Редьюсер для состояния сброса пароля
+    setUserReset: (state, action: PayloadAction<boolean>) => {
+      state.user.isReset = action.payload;
+    },
+    setSendReset: (state, action: PayloadAction<boolean>) => {
+      state.user.isSendReset = action.payload;
     },
     // Редьюсер для установки email
     setUserEmail: (state, action: PayloadAction<string | null>) => {
@@ -210,6 +227,7 @@ const MainSlice = createSlice({
 });
 
 export const {
+  setHasReloaded,
   setUserActiveState,
   setUserAccess,
   setUserFirstName,
@@ -218,6 +236,8 @@ export const {
   setUserPhone,
   setUserEmail,
   setUserInfo,
+  setUserReset,
+  setSendReset,
   setDelivery,
   setAddresses,
   setCards,

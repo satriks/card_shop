@@ -25,12 +25,14 @@ import {
   setDeliverySelfState,
   setDeliveryTariffCodeState,
   setDeliveryTime,
+  setUserAccess,
   setUserActiveState,
   setUserEmail,
   setUserFirstName,
   setUserLastName,
   setUserMiddleName,
   setUserPhone,
+  setUserReset,
 } from "./redux/MainSlice";
 import { CardDataDto } from "./models/models";
 import Cart from "./components/Cart/Cart";
@@ -38,6 +40,8 @@ import CardDetail from "./components/CardDetail/CardDetail";
 import Delivery from "./components/Delivery/Delivery";
 import { useRememberUser } from "./utils/utils";
 import { getDeliversApi, getUserApi, refreshApi } from "./utils/api";
+import ResetPassword from "./components/Common/ResetPassword/ResetPassword";
+import SendResetEmail from "./components/Common/SendResetEmail/SendResetEmail";
 
 function App() {
   const [check, setCheck] = useState(true);
@@ -95,6 +99,36 @@ function App() {
   };
 
   //TODO подумать как переннести установку адреса из деливери в апп
+  useEffect(() => {
+    const url = new URL(window.location.href); // Получаем текущий URL
+    const hasParam = url.searchParams.has("reset"); // Замените 'yourParam' на нужный параметр
+    const hasReloaded = localStorage.getItem("hasReloaded");
+    if (hasParam) {
+      const access = url.searchParams.get("user");
+      console.log("устанавливаем токен");
+      console.log(access);
+      console.log(hasReloaded, " hasReloaded");
+      console.log(!hasReloaded, "hasReloaded");
+
+      access && Cookies.set("_wp_kcrt", access);
+      if (!hasReloaded) {
+        console.log(hasReloaded, "hasReloaded");
+
+        window.location.reload();
+        localStorage.setItem("hasReloaded", "true");
+      }
+      dispatch(setUserAccess(access));
+      dispatch(setUserReset(true));
+      console.log(hasParam);
+      console.log(user.isReset, " user.isReset");
+
+      // console.log("check", check);
+      // setCheck(true);
+    }
+    const timer = setTimeout(() => {}, 1000); // Задержка 1 секунда
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (check) {
@@ -138,6 +172,8 @@ function App() {
       <AboutMe />
       <Footer />
       {userInfo && <UserPanel />}
+      {user.isReset && <ResetPassword />}
+      {user.isSendReset && <SendResetEmail />}
     </div>
   );
 }

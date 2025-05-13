@@ -1,4 +1,4 @@
-@use "../../../../main.scss";
+@use "../../../../cssVariables/variables.scss";
 
 .auth_form_wrapper {
   width: 100%;
@@ -75,6 +75,14 @@
     align-items: center;
     justify-content: center;
     margin: 20px auto;
+  }
+  .auth_form_reset_password {
+    color: variables.$mainColor;
+    padding: 0;
+    margin: 0px;
+  }
+  .auth_form_reset_password:hover {
+    color: #e87de6;
   }
   form {
     display: flex;

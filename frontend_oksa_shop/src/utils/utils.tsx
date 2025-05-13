@@ -8,6 +8,8 @@ export const useRememberUser = () => {
   const dispatch = useAppDispatch();
   const token = Cookies.get("_wp_kcrt");
   const rememberUser = async () => {
+    console.log(token, "token from remember");
+
     if (token) {
       try {
         const response = await refreshApi(token);

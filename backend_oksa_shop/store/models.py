@@ -7,9 +7,10 @@ from .managers import UserManager
 class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     middle_name = models.CharField(max_length=30, blank=True, null=True)
-    email = models.EmailField(unique=True)  # Убедитесь, что email уникален
-    username = None  # Убираем поле username
-    USERNAME_FIELD = 'email'  # Установите email как поле для аутентификации
+    email = models.EmailField(unique=True)
+    email_verified = models.BooleanField(default=False)
+    username = None
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = UserManager()# Оставьте пустым, если не хотите, чтобы другие поля были обязательными
 
@@ -23,8 +24,8 @@ class Address(models.Model):
     address_name = models.CharField(max_length=255)
     city = models.CharField(max_length=100)
     street = models.CharField(max_length=100)
-    postal_code = models.CharField(max_length=20, blank=True, null=True)  # Необязательное поле
-    additional_info = models.TextField(blank=True, null=True)  # Более точные данные адреса
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+    additional_info = models.TextField(blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

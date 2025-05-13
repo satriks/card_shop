@@ -62,7 +62,9 @@ export default function UserPanel({}: Props) {
         </div>
         <button onClick={isChange}>
           {user.firstName || user.middleName || user.lastName
-            ? `${user.firstName} ${user.middleName} ${user.lastName}`
+            ? `${user.firstName || ""} ${user.middleName || ""} ${
+                user.lastName || ""
+              }`.trim()
             : "ФИО"}
         </button>
 

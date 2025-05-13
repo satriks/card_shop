@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новый заказ</title>
+</head>
+<body>
+    <h1>Новый заказ создан!</h1>
+    <p>У вас новый заказ:</p>
+    <ul>
+        <li>Номер заказа: {{ order.id }}</li>
+        <li>Сумма: {{ order.postcards_total }}</li>
+        <li>Статус: {{ order.payment_status }}</li>
+        <li>Пользователь: {{ order.user.email }}</li>
+        <!-- Добавьте другие детали заказа по необходимости -->
+    </ul>
+    <p>С уважением, ваша команда.</p>
+</body>
+</html>

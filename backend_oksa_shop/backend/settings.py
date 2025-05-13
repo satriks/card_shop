@@ -28,16 +28,25 @@ YOOKASSA_API_KEY = os.getenv('YKASSA_SECRET')
 SDEK_API_URL = os.getenv("SDEK_API_URL")
 SDEK_API_ID = os.getenv("SDEK_API_ID")
 SDEK_API_SECRET = os.getenv("SDEK_API_SECRET")
+OWNER_EMAIL = os.getenv("OWNER_EMAIL")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+BASE_HOST = os.getenv("BASE_HOST")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-o85pa2&rco30tehse=_@7nc95!yxq9wyt%mm9l-o#p+&2%2xt&'
+
+# Настройки для RQ
+RQ_QUEUES = {
+    'default': {
+        'URL': os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379/0'),
+        'DEFAULT_TIMEOUT': 500,
+    },
+}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -76,6 +85,7 @@ INSTALLED_APPS = [
     "payments",
     "yookassa",
     "orders",
+    'django_rq',
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
@@ -212,3 +222,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'  # SMTP-сервер mail.ru
+EMAIL_PORT = 587  # Порт для TLS
+EMAIL_USE_TLS = True  # Использовать TLS
+EMAIL_HOST_USER = 'satriks@mail.ru'  # Ваш email на mail.ru
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')  # Ваш пароль от почты
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+# # Celery
+#
+# CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение регистрации</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #555;
+        }
+        .content_btn{
+            display: flex;
+            margin: 0 auto;
+
+            background-color: #4ac1f7;
+            width: 170px;
+            height: 20px;
+
+            a {
+                font-size: 12px;
+                color: white;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Подтверждение регистрации</h1>
+        </div>
+        <div class="content">
+            {% if user.first_name or user.middle_name or user.last_name %}
+{#                <p>Здравствуйте, {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}!</p>#}
+                    <p>Здравствуйте,
+
+                    {% if user.first_name %}{{ user.first_name }}{% endif %}
+                    {% if user.middle_name %}{{ user.middle_name }}{% endif %}
+                    {% if user.last_name %}{{ user.last_name }}{% endif %}
+                    </p>
+            {% else %}
+                <p>Здравствуйте!</p>
+            {% endif %}
+            <p>Спасибо за регистрацию на нашем сайте. Пожалуйста, подтвердите свою регистрацию, перейдя по следующей ссылке:</p>
+            <button class="content_btn"><a href="{{ confirmation_link }}">Подтвердить регистрацию</a></button>
+            <p style="margin-top: 20px; color: #555;">Если вы не регистрировались на нашем сайте, просто проигнорируйте это письмо.</p>
+        </div>
+        <div class="footer">
+            <p>С уважением, Kailin cards</p>
+        </div>
+    </div>
+</body>
+</html>

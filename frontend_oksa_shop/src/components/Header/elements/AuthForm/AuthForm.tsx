@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../../../models/hooks";
 import {
+  setSendReset,
   setUserAccess,
   setUserActiveState,
   setUserEmail,
@@ -199,6 +200,17 @@ export default function AuthForm({ onClose }: Props) {
             {isLogin ? "Войти" : "Зарегистрироваться"}
           </button>
         </form>
+        <p
+          className="auth_form_reset_password"
+          onClick={() => {
+            console.log(42);
+            dispatch(setSendReset(true));
+            dispatch(setUserInfo(false));
+          }}
+        >
+          {" "}
+          Забыли пароль ?
+        </p>
 
         <p>
           {isLogin ? "Нет аккаунта?" : "Уже есть аккаунт?"}
