@@ -10,7 +10,8 @@ from rest_framework import generics
 from .models import Delivery
 from .serializers import DeliverySerializer
 from orders.models import Order
-
+import logging
+logger = logging.getLogger('shop')
 status_dict = {
     "CREATED": "Заказ зарегистрирован в базе данных СДЭК",
     "REMOVED": "Заказ отменен ИМ после регистрации в системе до прихода груза на склад СДЭК в городе-отправителе",
@@ -64,6 +65,7 @@ class DeliveryListCreateView(generics.ListCreateAPIView):
         # if cached_data is not None:
         #     return cached_data
         # Возвращаем только те объекты Delivery, которые принадлежат текущему пользователю
+        logger.info(f'Запрос доставок для пользователя  {self.request.user}')
         queryset  =  Delivery.objects.filter(user=self.request.user)
         # cache.set(cache_key, queryset, timeout=60)
         return queryset
@@ -83,6 +85,7 @@ class DeliveryDetailView(generics.RetrieveUpdateDestroyAPIView):
         return context
     def perform_destroy(self, instance):
         # Проверяем, принадлежит ли адрес текущему пользователю
+        logger.info(f'Пользователем {self.request.user} далена доставка id: {instance.id}')
         if instance.user == self.request.user:  # Предполагается, что у вас есть поле user в модели Delivery
             instance.delete()
         else:
@@ -151,6 +154,7 @@ class DeliveryWebhookView(APIView):
     def post(self, request):
         # Получаем данные из запроса
         payload = request.data
+        logger.info(f'Полученны данные о доставыке {payload['uuid']} статус доставки {status_dict[payload['attributes']['code']]}')
         #logger
         try :
             order = Order.objects.get(sdek_id=payload['uuid'])

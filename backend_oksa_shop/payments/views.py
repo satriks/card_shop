@@ -18,6 +18,8 @@ from orders.models import Order
 from backend.tasks import send_new_order_notification
 from django_rq import job
 import uuid
+import logging
+logger = logging.getLogger('shop')
 
 
 Configuration.account_id = settings.YOOKASSA_SHOP_ID
@@ -99,7 +101,7 @@ class CreatePaymentView(APIView):
         else:
             print(delivery_serializer.errors)
 
-        print(delivery_addres)
+
 
 
         idempotence_key = str(uuid.uuid4())
@@ -130,10 +132,11 @@ class CreatePaymentView(APIView):
         # payment_data = serializer.save()
         payment_serializer = PaymentSerializer(data={"payment_id": payment.id, "status" : payment.status , "amount" : amount, "idempotence_key" : idempotence_key})
         if payment_serializer.is_valid():  # Проверяем, валидны ли данные
-            payment_data = payment_serializer.save()  # Сохраняем данные
+            payment_data = payment_serializer.save()
+            logger.info('Создан платеж в БД')# Сохраняем данные
         else:
             print("Ошибка в данных платежа:", payment_serializer.errors)
-
+            logger.error(payment_serializer.errors)
 
 
         receiver_data = { "recipient_name" : receiver['name'], 'recipient_email': receiver['email'], 'recipient_phone': receiver['phone']}
@@ -157,10 +160,12 @@ class CreatePaymentView(APIView):
 
         if order_serializer.is_valid():
             order = order_serializer.save()
+            logger.info('Отравлена ссылка на оплату')
             return Response({"payment_url": payment.confirmation.confirmation_url}, status=status.HTTP_201_CREATED)
 
-
+        logger.error('Ошибка при подготовке платежа')
         return Response(order_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
         # return Response({"str":42})
 
@@ -193,8 +198,10 @@ class PaymentWebhookView(APIView):
                     if not order.delivery.delivery_self:
                         sdek = SdekApiClient()
                         sdek.oreder(order)
-
+                logger.info('Изменение статуса платежа')
                 return Response(status=status.HTTP_200_OK)
             except PaymentModel.DoesNotExist:
+                logger.error('Нет платежа в БД')
                 return Response(status=status.HTTP_404_NOT_FOUND)
+        logger.error('Запрос к БД без данных о оплате')
         return Response(status=status.HTTP_400_BAD_REQUEST)

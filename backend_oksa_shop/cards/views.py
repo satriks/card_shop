@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from backend.decorators import cache_response
 from .models import Postcard, Gallery
 from .serializers import PostcardSerializer
-
+import logging
+logger = logging.getLogger('shop')
 
 class PostcardViewSet(viewsets.ModelViewSet):
     queryset = Postcard.objects.all()
@@ -15,7 +16,9 @@ class PostcardViewSet(viewsets.ModelViewSet):
         # Сначала создаем объект Postcard
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        postcard = serializer.save()  # Сохраняем объект, чтобы получить его ID
+        postcard = serializer.save()
+        logger.info(f'Добаляем открытку {postcard.title}')
+        # Сохраняем объект, чтобы получить его ID
         # Сохраняем изображения, если они были переданы
         images = request.FILES.getlist('images')  # Получаем список загруженных изображений
         for image in images:

@@ -26,6 +26,8 @@ from django.conf import settings
 from backend.tasks import send_password_reset_email
 from backend.tasks import send_registration_email
 from django_rq import job
+import logging
+logger = logging.getLogger('shop')
 
 class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
@@ -40,6 +42,7 @@ class RegisterView(generics.CreateAPIView):
 
         # Создание нового пользователя
         user = super().create(request, *args, **kwargs).data
+        logger.info(f'User created {user.email}')
 
 
         # Получаем пользователя из базы данных
@@ -82,8 +85,9 @@ class UserProfileView(APIView):
         if serializer.is_valid():
             serializer.save()  # Сохраняем обновленные данные
             user.save()  # Сохраняем изменения пользователя
+            logger.info(f'Пользователь изменил данные {user.email}')
             return Response(serializer.data, status=status.HTTP_200_OK)
-
+        logger.error(f'Обшибка при изменении данных {user.email}')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -95,32 +99,6 @@ class CustomTokenRefreshView(TokenRefreshView):
     pass
 
 
-# def send_registration_email(user):
-#     token = default_token_generator.make_token(user)
-#     uid = urlsafe_base64_encode(force_bytes(user.pk))
-#     base_url = BASE_HOST
-#     link = f"{base_url}/api/confirm-email/{uid}/{token}/"
-#
-#     subject = "Подтверждение регистрации"
-#     html_message = render_to_string('emails/registration_confirmation.html', {'user': user, 'confirmation_link': link})
-#     plain_message = strip_tags(html_message)
-#     from_email = 'satriks@mail.ru'
-#     to = user.email
-#     email = EmailMultiAlternatives(subject, plain_message, from_email, [to])
-#     email.content_subtype = "html"  # Указываем, что это HTML-сообщение
-#     email.attach_alternative(html_message, "text/html")
-#     email.send()
-# def send_password_reset_email(user, reset_link):
-#     subject = "Восстановление пароля"
-#     html_message = render_to_string('emails/password_reset.html', {'reset_link': reset_link})
-#     plain_message = strip_tags(html_message)
-#     from_email = 'satriks@mail.ru'
-#     to = user.email
-#     email = EmailMultiAlternatives(subject, plain_message, from_email, [to])
-#     email.content_subtype = "html"  # Указываем, что это HTML-сообщение
-#     email.attach_alternative(html_message, "text/html")
-#     email.send()
-
 class ConfirmEmailView(APIView):
     def get(self, request, uidb64, token):
         try:
@@ -131,6 +109,7 @@ class ConfirmEmailView(APIView):
         if user is not None and default_token_generator.check_token(user, token):
             user.email_verified = True
             user.save()
+            logger.info(f'{user.email} подтвердил почту')
             response = redirect(settings.BASE_HOST)  # Замените на ваш URL главной страницы
             # response.set_cookie('_wp_kcrt', user.access_token)  # Устанавливаем cookie с access token
             return response
@@ -148,8 +127,10 @@ class PasswordResetRequestView(APIView):
             token = default_token_generator.make_token(user)
             reset_link = f"{base_url}/api/password_reset/confirm/{uid}/{token}/"
             job = send_password_reset_email(user.id, reset_link)
+            logger.info(f'User {user.email} запросил ссылку на смену пароля ссылка: {reset_link}')
             return Response({"message": "Ссылка для восстановления пароля отправлена на вашу почту."}, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
+            logger.error(f'Запрос на сброс пароля незарегестрированного пользователя')
             return Response({"error": "Пользователь с таким email не найден."}, status=status.HTTP_404_NOT_FOUND)
 
 
@@ -164,7 +145,9 @@ class PasswordResetEmailView(APIView):
             # user.email_verified = True
             token = CustomTokenObtainPairSerializer.get_token(user)
             print(token)
-            # response = redirect(f"{settings.BASE_HOST}/?user={token}&reset=1")  # Замените на ваш URL главной страницы
+            # response = redirect(f"{settings.BASE_HOST}/?user={token}&reset=1")
+            # Замените на ваш URL главной страницы
+            logger.info(f'Пользователь {user.email} перешел по ссылке восстановленя пароля')
             url = "http://localhost:5173/"
             response = redirect(f"{url}/?user={token}&reset=1")
             # response.set_cookie('_wp_kcrt', user.access_token)  # Устанавливаем cookie с access token

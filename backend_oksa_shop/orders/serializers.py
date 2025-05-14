@@ -3,7 +3,8 @@ from .models import Order
 from delivery.serializers import DeliverySerializer
 from cards.serializers import PostcardSerializer
 from payments.serializers import PaymentSerializer
-
+import logging
+logger = logging.getLogger('shop')
 
 class OrderSerializer(serializers.ModelSerializer):
     postcards = PostcardSerializer(many=True, read_only=True )
@@ -36,6 +37,7 @@ class OrderSerializer(serializers.ModelSerializer):
         order.postcards.set(self.initial_data['postcards'])
         order.payment = self.initial_data['payment']
         order.save()
+        logger.info(f'Создан новый заказ {order.id}')
 
         return order
 
@@ -47,7 +49,7 @@ class OrderSerializer(serializers.ModelSerializer):
         instance.delivery_status = validated_data.get('delivery_status', instance.delivery_status)
         instance.payment_status = validated_data.get('payment_status', instance.payment_status)
         instance.save()
-
+        logger.info(f'Изменения в заказе {instance.id}')
         if postcards_data is not None:
             instance.postcards.set(postcards_data)
         return instance
