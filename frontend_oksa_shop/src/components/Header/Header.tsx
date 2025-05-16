@@ -35,9 +35,14 @@ export function Header() {
           onClick={goToMain}
         />
         <p onClick={goToMain} className="header_title">
-          Kailin card
+          Kailin_cards
         </p>
-        <Search />
+        <div>
+          <p className="header_main_title">
+            Магазин авторских открыток Kailin card
+          </p>
+        </div>
+        {/* <Search /> */}
         <Catalog />
         {auth && <AuthForm onClose={setAuth} />}
         <div className="header_cart">

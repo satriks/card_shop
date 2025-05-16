@@ -44,6 +44,7 @@ interface InitialStateType {
     };
   };
   hesReloaded: boolean;
+  scrollTo: HTMLDivElement | null;
 }
 
 const initialState: InitialStateType = {
@@ -87,6 +88,7 @@ const initialState: InitialStateType = {
     deliveryTime: { minDeliveryTime: null, maxDeliveryTime: null },
   },
   hesReloaded: false,
+  scrollTo: null,
 };
 
 const MainSlice = createSlice({
@@ -138,6 +140,13 @@ const MainSlice = createSlice({
     setDelivery: (state: InitialStateType, action: PayloadAction<boolean>) => {
       state.isDelivery = action.payload;
     },
+    //Элемент для скрола
+    setScrollTo: (
+      state: InitialStateType,
+      action: PayloadAction<HTMLDivElement | null>
+    ) => {
+      state.scrollTo = action.payload;
+    },
 
     setAddresses: (state, action: PayloadAction<DeliveryDto[] | null>) => {
       state.addresses = action.payload;
@@ -150,6 +159,7 @@ const MainSlice = createSlice({
     },
     setActiveCategory: (state, action: PayloadAction<string>) => {
       state.category.isActive = action.payload;
+      state.scrollTo?.scrollIntoView({ behavior: "smooth" });
     },
     setActiveCart: (state, action: PayloadAction<boolean>) => {
       state.cart.isActive = action.payload;
@@ -258,6 +268,7 @@ export const {
   setReceiverName,
   setReceiverEmail,
   setReceiverPhone,
+  setScrollTo,
 } = MainSlice.actions;
 
 export default MainSlice.reducer;
