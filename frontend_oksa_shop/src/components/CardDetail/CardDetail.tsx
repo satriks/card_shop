@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./CardDetail.scss";
 import CardGallery from "./CardGallery/CardGallery";
 import SetDelivery from "../Common/SetDelivery/SetDelivery";
@@ -16,6 +16,7 @@ export default function CardDetail({ card }: Props) {
   const cart = useAppSelector((state) => state.store.cart.items);
   const cardDetail = useAppSelector((state) => state.store.cardDetail);
   const delivery = useAppSelector((state) => state.store.delivery);
+  const [isVisible, setIsVisible] = useState(true);
   const activeCategory = useAppSelector(
     (state) => state.store.category.isActive
   );
@@ -24,14 +25,21 @@ export default function CardDetail({ card }: Props) {
   );
   const dispatch = useAppDispatch();
 
+  const closeFadeOut = () => {
+    setIsVisible(false);
+    const timer = setTimeout(() => {
+      dispatch(setCardDetail(null));
+      clearTimeout(timer);
+    }, 800);
+  };
+
   const clearCardDetail = () => {
-    dispatch(setCardDetail(null));
+    closeFadeOut();
   };
 
   const clearCardDetailWrapper = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    target.classList.contains("card_detail_wrapper") &&
-      dispatch(setCardDetail(null));
+    target.classList.contains("card_detail_wrapper") && closeFadeOut();
   };
 
   let cardsFiltered = activeCategory
@@ -51,12 +59,12 @@ export default function CardDetail({ card }: Props) {
 
   return (
     <div
-      className="card_detail_wrapper"
+      className={`card_detail_wrapper ${!isVisible ? "hide" : ""}`}
       onClick={(e: React.MouseEvent) => {
         clearCardDetailWrapper(e);
       }}
     >
-      <div className="card_detail">
+      <div className={`card_detail ${!isVisible ? "hide" : ""}`}>
         <div className="card_detail_gallery">
           <CardGallery images={card.images} />
         </div>
@@ -75,7 +83,7 @@ export default function CardDetail({ card }: Props) {
             <button
               onClick={() => {
                 dispatch(addCard(card));
-                dispatch(setActiveCart());
+                dispatch(setActiveCart(true));
                 dispatch(setCardDetail(null));
               }}
             >

@@ -1,4 +1,4 @@
-@use "../../main.scss";
+@use "../../cssVariables/variables.scss";
 
 .cart_wrapper {
   margin-top: 150px;
@@ -24,12 +24,20 @@
     right: 40px;
   }
 }
-
+.cart_wrapper.hide {
+  animation: fadeOut 0.7s forwards;
+}
 .cart {
   display: grid;
   box-sizing: border-box;
   grid-template-columns: 60% 30%;
   gap: 20px;
+
+  opacity: 0;
+  animation: slideInFromBottom 1.5s forwards;
+}
+.cart.hide {
+  animation: fadeOut 0.7s forwards;
 }
 
 .cart_title {

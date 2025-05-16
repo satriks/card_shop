@@ -33,7 +33,8 @@ class OrderSerializer(serializers.ModelSerializer):
         order = Order(**validated_data)
         order.save()
         print(order.postcards)
-        order.delivery = self.initial_data['delivery']
+        (delivery_data, _) = self.initial_data['delivery']
+        order.delivery = delivery_data
         order.postcards.set(self.initial_data['postcards'])
         order.payment = self.initial_data['payment']
         order.save()

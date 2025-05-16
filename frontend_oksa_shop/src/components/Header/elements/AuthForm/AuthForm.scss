@@ -16,6 +16,9 @@
 }
 
 .auth_form {
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+
   top: 40%;
   position: relative;
   background-color: white;

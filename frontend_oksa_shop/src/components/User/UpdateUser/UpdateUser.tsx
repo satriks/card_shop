@@ -27,6 +27,7 @@ export default function UpdateUser({ onClose }: Props) {
   const [password, setPassword] = useState("********");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isVisible, setIsVisible] = useState(true);
   const setData = () => {
     dispatch(setUserFirstName(firstName));
     dispatch(setUserLastName(lastName));
@@ -67,7 +68,7 @@ export default function UpdateUser({ onClose }: Props) {
     }
   };
   return (
-    <div className="update_user_wrapper">
+    <div className={`update_user_wrapper ${!isVisible ? "hide" : ""}`}>
       <div className="update_user">
         <h2>Изменение данных пользователя</h2>
         <form className="update_user_form" onSubmit={handleSubmit}>
@@ -141,7 +142,11 @@ export default function UpdateUser({ onClose }: Props) {
         </form>
         <CancelButton
           onClick={() => {
-            onClose(false);
+            setIsVisible(false);
+            const timer = setTimeout(() => {
+              onClose();
+              clearTimeout(timer);
+            }, 800);
           }}
         />
         {success && (

@@ -8,12 +8,12 @@ import CartOrder from "./CartOrder/CartOrder";
 import CancelButton from "../Common/CancelButton/cancelButton";
 import { useAppDispatch } from "../../models/hooks";
 import { setActiveCart } from "../../redux/MainSlice";
-import PaymentComponent from "../Common/PaymentComponent/PaymentComponent";
 
 type Props = {};
 
 export default function Cart({}: Props) {
   const dispatch = useAppDispatch();
+  const [isVisible, setIsVisible] = useState(true);
   const [receiverData, setReceiverData] = useState({
     name: "",
     phone: "",
@@ -21,7 +21,7 @@ export default function Cart({}: Props) {
   });
 
   return (
-    <div className="cart_wrapper">
+    <div className={`cart_wrapper ${!isVisible ? "hide" : ""}`}>
       {/* <h2 className="cart_title">Заказ №4355</h2> */}
       <div className="cart">
         <div className="cart_detail">
@@ -48,10 +48,13 @@ export default function Cart({}: Props) {
       <CancelButton
         className="cart_cancel"
         onClick={() => {
-          dispatch(setActiveCart(false));
+          setIsVisible(false);
+          const timer = setTimeout(() => {
+            dispatch(setActiveCart(false));
+            clearTimeout(timer);
+          }, 800);
         }}
       />
-      <PaymentComponent />
     </div>
   );
 }

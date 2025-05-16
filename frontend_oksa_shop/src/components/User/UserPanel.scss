@@ -1,4 +1,4 @@
-@use "../../main.scss";
+@use "../../cssVariables/variables.scss";
 /* Личный кабинет  */
 .user_panel_wrapper {
   width: 100vw;
@@ -11,6 +11,13 @@
     rgba(247, 206, 204, 0.6) 70%
   );
   z-index: 3;
+
+  opacity: 0;
+  animation: fadeIn 1.5s forwards;
+}
+
+.user_panel_wrapper.hide {
+  animation: fadeOut 0.7s forwards;
 }
 
 .user_panel {
@@ -61,3 +68,7 @@
     cursor: pointer;
   }
 }
+
+// .user_panel.hide {
+//   animation: fadeOut 0.7s forwards;
+// }

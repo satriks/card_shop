@@ -68,6 +68,7 @@ export default function Delivery({}: Props) {
   const [cityInput, setCityInput] = useState<string>("");
   const [cityCurrent, setCityCurrent] = useState<boolean>();
   const [deliveryCost, setDeliveryCost] = useState<number>();
+  const [isVisible, setIsVisible] = useState(true);
   const [selectedCoordinates, setSelectedCoordinates] = useState<
     number[] | null
   >(null);
@@ -140,6 +141,13 @@ export default function Delivery({}: Props) {
   };
 
   // функции
+  const closeFadeIn = () => {
+    setIsVisible(false);
+    const timer = setTimeout(() => {
+      dispatch(setDelivery(false));
+      clearTimeout(timer);
+    }, 800);
+  };
   const findPostalCode = (obj: Record<string, any>): string | undefined => {
     if (typeof obj === "object" && obj !== null) {
       // Проходим по всем ключам объекта
@@ -197,7 +205,7 @@ export default function Delivery({}: Props) {
   };
   const wrapperCancel = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).className == "delivery_wrapper") {
-      dispatch(setDelivery(false));
+      closeFadeIn();
     }
   };
   const scrollDown = (shift = 0) => {
@@ -273,8 +281,8 @@ export default function Delivery({}: Props) {
           Number(address.max_delivery_time),
         ])
       );
-      dispatch(setDelivery(false));
       if (address.delivery_name) Cookies.set("_da", address.delivery_name);
+      closeFadeIn();
     }
   };
 
@@ -344,7 +352,7 @@ export default function Delivery({}: Props) {
     sendAddress(deliveryAddressDetail);
     if (deliveryAddressDetail.delivery_name)
       Cookies.set("_da", deliveryAddressDetail.delivery_name);
-    dispatch(setDelivery(false));
+    closeFadeIn();
   };
   const checkSave = () => {
     if (["136", "483"].includes(tariffCode)) {
@@ -377,7 +385,10 @@ export default function Delivery({}: Props) {
   }, [isLoading, isOfficesLoading, officesData]);
 
   return (
-    <div className="delivery_wrapper" onClick={wrapperCancel}>
+    <div
+      className={`delivery_wrapper ${!isVisible ? "hide" : ""}`}
+      onClick={wrapperCancel}
+    >
       <div className="delivery">
         <h2>Выбор доставки</h2>
         <div className="delivery_addresses">
@@ -735,7 +746,7 @@ export default function Delivery({}: Props) {
         />
         <CancelButton
           onClick={() => {
-            dispatch(setDelivery(false));
+            closeFadeIn();
           }}
         />
       </div>

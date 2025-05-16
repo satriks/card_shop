@@ -32,14 +32,22 @@ type Props = {
 export default function Orders({ onClose }: Props) {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.store.user);
+  const [isVisible, setIsVisible] = useState(true);
   const { data, error, isLoading, isError } = useGetOrdersQuery(user.access);
+  const closeFadeIn = () => {
+    setIsVisible(false);
+    const timer = setTimeout(() => {
+      onClose(false);
+      clearTimeout(timer);
+    }, 800);
+  };
   return (
     <div
-      className="orders_wrapper"
+      className={`orders_wrapper ${!isVisible ? "hide" : ""}`}
       onClick={(e) => {
         console.log(e);
         if ((e.target as HTMLElement).classList.contains("orders_wrapper")) {
-          onClose(false);
+          closeFadeIn();
         }
       }}
     >
@@ -51,7 +59,7 @@ export default function Orders({ onClose }: Props) {
           data.map((order) => <OrderItem key={order.id} order={order} />)}
         <CancelButton
           onClick={() => {
-            onClose(false);
+            closeFadeIn();
           }}
         />
       </div>
@@ -65,8 +73,22 @@ type OrderItemProps = {
 
 const OrderItem = ({ order }: OrderItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const toggleDetails = () => {
-    setIsOpen(!isOpen);
+    console.log(isOpen, " this isOpen");
+
+    if (isOpen == true) {
+      console.log(`order-details ${!isVisible ? "hide" : ""}`);
+
+      setIsVisible(false);
+      const timer = setTimeout(() => {
+        setIsOpen(false);
+        clearTimeout(timer);
+      }, 800);
+    } else {
+      setIsVisible(true);
+      setIsOpen(true);
+    }
   };
   // let iconCurrent: string;
   // if (order.payment_status in iconStatus) {
@@ -120,7 +142,7 @@ const OrderItem = ({ order }: OrderItemProps) => {
         </div>
       </div>
       {isOpen && (
-        <div className="order-details">
+        <div className={`order-details ${!isVisible ? "hide" : ""}`}>
           <h3>Подробная информация о заказе:</h3>
           <div>
             Товары:{" "}

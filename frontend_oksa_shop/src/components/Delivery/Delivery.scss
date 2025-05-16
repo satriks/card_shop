@@ -13,6 +13,9 @@
   );
   z-index: 4;
 }
+.delivery_wrapper.hide {
+  animation: fadeOut 0.7s forwards;
+}
 
 .delivery {
   position: relative;
@@ -27,6 +30,9 @@
   flex-direction: column;
   //   justify-content: center;
   align-items: center;
+
+  opacity: 0;
+  animation: fadeIn 1.5s forwards;
 
   .delivery_addresses {
     display: flex;
@@ -60,6 +66,10 @@
     width: 30px;
     height: 30px;
   }
+}
+
+.delivery.hide {
+  animation: fadeOut 0.7s forwards;
 }
 
 .delivery_select {

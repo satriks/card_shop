@@ -26,13 +26,18 @@ export default function UserPanel({}: Props) {
   const delivery = useAppSelector((state) => state.store.delivery);
   const [updateUser, setUpdateUser] = useState(false);
   const [isOrders, setIsOrders] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const isChange = () => {
     setUpdateUser(true);
   };
   const closeUserInfo = (e: React.MouseEvent) => {
     e.preventDefault();
-    if ((e.target as HTMLElement).className == "userPanel_wrapper") {
-      dispatch(setUserInfo(false));
+    if ((e.target as HTMLElement).className == "user_panel_wrapper") {
+      setIsVisible(false);
+      const timer = setTimeout(() => {
+        dispatch(setUserInfo(false));
+        clearTimeout(timer);
+      }, 800);
     }
   };
   const clearUserData = () => {
@@ -54,8 +59,11 @@ export default function UserPanel({}: Props) {
     dispatch(setUserInfo(false));
   };
   return (
-    <div className="user_panel_wrapper" onClick={closeUserInfo}>
-      <div className="user_panel">
+    <div
+      className={`user_panel_wrapper ${!isVisible ? "hide" : ""}`}
+      onClick={closeUserInfo}
+    >
+      <div className={`user_panel ${!isVisible ? "hide" : ""}`}>
         <h2>Личный кабинет </h2>
         <div className="userPanel_button_wrapper">
           <label>ФИО</label>
@@ -94,7 +102,11 @@ export default function UserPanel({}: Props) {
         <button onClick={logout}>Выход</button>
         <CancelButton
           onClick={() => {
-            dispatch(setUserInfo(false));
+            setIsVisible(false);
+            const timer = setTimeout(() => {
+              dispatch(setUserInfo(false));
+              clearTimeout(timer);
+            }, 800);
           }}
         />
         {updateUser && <UpdateUser onClose={() => setUpdateUser(false)} />}

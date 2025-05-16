@@ -27,7 +27,7 @@ class Order(models.Model):
     @property
     def postcards_total(self):
         postcards_cost  = sum(postcard.price for postcard in self.postcards.all())
-        delivery_cost = self.delivery.delivery_cost if self.delivery else 0
+        delivery_cost = self.delivery.delivery_cost if self.delivery and (self.delivery.delivery_cost is not None) else 0
         return postcards_cost + delivery_cost
 
     def save(self, *args, **kwargs):

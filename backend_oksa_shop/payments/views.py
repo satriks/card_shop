@@ -88,8 +88,8 @@ class CreatePaymentView(APIView):
         print(delivery_serializer.is_valid())
         if delivery_serializer.is_valid():
             if user  and user.is_authenticated:
-                delivery_addres = Delivery.objects.get(delivery_name=delivery_serializer.validated_data["delivery_name"], user=user)
 
+                    delivery_addres = Delivery.objects.get_or_create(delivery_name=delivery_serializer.validated_data["delivery_name"], user=user)
             else:
                 if delivery_serializer.validated_data["delivery_name"] == "Самовывоз":
                     delivery_addres = Delivery.objects.get(

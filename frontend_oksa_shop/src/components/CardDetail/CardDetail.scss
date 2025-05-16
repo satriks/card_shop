@@ -1,4 +1,4 @@
-@use "../../main.scss" as *;
+@use "../.././cssVariables/variables.scss";
 
 .card_detail_wrapper {
   position: fixed;
@@ -15,7 +15,15 @@
   overflow: auto;
 }
 
+.card_detail_wrapper.hide {
+  opacity: 0;
+  animation: fadeOut 0.7s forwards;
+}
+
 .card_detail {
+  opacity: 0;
+  animation: fadeIn 1.5s forwards;
+
   box-sizing: border-box;
   position: relative;
   display: flex;

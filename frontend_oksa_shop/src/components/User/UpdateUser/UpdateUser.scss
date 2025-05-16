@@ -9,6 +9,9 @@
     rgba(247, 206, 204, 0.6) 70%
   );
 }
+.update_user_wrapper.hide {
+  animation: fadeOut 0.7s forwards;
+}
 
 .update_user {
   position: relative;
@@ -23,6 +26,9 @@
   //   justify-content: center;
   align-items: center;
   z-index: 5;
+
+  opacity: 0;
+  animation: fadeIn 1.5s forwards;
 
   .success {
     background-color: rgb(121, 177, 121);
