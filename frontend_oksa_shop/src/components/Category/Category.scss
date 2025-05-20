@@ -16,3 +16,15 @@
   flex-wrap: wrap;
   gap: 30px;
 }
+
+@media (max-width: 1020px) {
+  .category {
+    margin-bottom: 100px;
+  }
+  .category_tags {
+    .category_tag {
+      // width: 70%;
+      min-width: 180px;
+    }
+  }
+}

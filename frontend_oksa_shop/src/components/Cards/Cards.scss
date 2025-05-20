@@ -66,3 +66,24 @@
   font-size: 1.2em;
   font-weight: bold;
 }
+
+@media (max-width: 1020px) {
+  .cards {
+    width: 80%;
+  }
+
+  .cardItem_title {
+    font-size: 24px;
+  }
+
+  .cardItem > img {
+    width: 400px;
+    height: auto;
+  }
+
+  .cardItem_price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

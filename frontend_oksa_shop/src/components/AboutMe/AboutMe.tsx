@@ -1,5 +1,5 @@
 import React from "react";
-import aboutMeImg from "../../assets/aboutMe/me.png";
+import aboutMeImg from "../../assets/aboutMe/me2.png";
 import line from "../../assets/aboutMe/line.png";
 import "./AboutMe.scss";
 
@@ -9,31 +9,40 @@ export default function AboutMe({}: Props) {
   return (
     <div className="about_wrapper">
       <img className="about_line" src={line} alt="" />
+      <h2>Обо мне</h2>
       <div className="about">
         <div className="about_text">
-          <h2>Обо мне</h2>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel
-            neque at felis posuere viverra. Nulla facilisi. Sed vel justo vel mi
-            dapibus tempus. Donec facilisis felis at justo lobortis, non
-            porttitor odio vestibulum. Nullam vel lacus at nunc rutrum
-            scelerisque. Nulla facilisi. Donec nec odio vel justo fringilla
-            facilisis. Sed non velit et ligula sagittis commodo vel vel justo.
-            Quisque non lacus at velit fermentum interdum. Sed vel neque at
-            felis posuere viverra.
+            Добрый день! Рада вас видеть на своём сайте авторских открыток. Меня
+            зовут Оксана, и я создаю уникальные открытки, конверты и другие
+            изделия для праздников и особых моментов в жизни. Моё желание
+            создавать что-то красивое и делиться своими эмоциями с другими
+            людьми вдохновили меня на создание этого интернет-магазина.
           </p>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel
-            neque at felis posuere viverra. Nulla facilisi. Sed vel justo vel mi
-            dapibus tempus. Donec facilisis felis at justo lobortis, non
-            porttitor odio vestibulum. Nullam vel lacus at nunc rutrum
-            scelerisque. Nulla facilisi. Donec nec odio vel justo fringilla
-            facilisis. Sed non velit et ligula sagittis commodo vel vel justo.
-            Quisque non lacus at velit fermentum interdum. Sed vel neque at
-            felis posuere viverra.
+            Я использую только качественные материалы проверенных
+            производителей. В ассортименте есть как дорогие изделия, так и
+            изделия с более демократичной ценой. Стоимость изделия складывается
+            из стоимости материалов, количества времени потраченного на
+            изготовление, а так же учитывается сложность изготовления.
+          </p>
+          <p>
+            На сайте вы найдете разнообразные коллекции, которые подойдут для
+            любого повода. Верю, что открытка — это не просто кусочек
+            декорированной бумаги, а способ выразить свои чувства,
+            индивидуальность, передать теплоту и заботу. Поэтому каждая из моих
+            работ создаётся с особым вниманием и любовью. Стремлюсь сделать так,
+            чтобы каждая открытка стала не просто подарком, а настоящим символом
+            ваших искренних эмоций.
+          </p>
+          <p>
+            Благодарю Вас за посещение моего сайта! Надеюсь, что мои авторские
+            работы принесут радость и вдохновение. Если у вас есть вопросы или
+            предложения, не стесняйтесь обращаться — мне будет приятно
+            пообщаться!
           </p>
         </div>
-        <div>
+        <div className="about_image_wrapper">
           <img className="about_img" src={aboutMeImg} alt="" />
         </div>
       </div>

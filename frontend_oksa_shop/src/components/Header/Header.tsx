@@ -38,9 +38,7 @@ export function Header() {
           Kailin_cards
         </p>
         <div>
-          <p className="header_main_title">
-            Магазин авторских открыток Kailin card
-          </p>
+          <h1 className="header_main_title">Магазин авторских открыток</h1>
         </div>
         {/* <Search /> */}
         <Catalog />

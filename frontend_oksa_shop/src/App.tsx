@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "./models/hooks";
 import UserPanel from "./components/User/UserPanel";
 import { useGetCardQuery } from "./redux/cardAPI";
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import Spinner from "./components/Common/Spinner/Spinner";
 import {
   setAddresses,
@@ -162,6 +163,10 @@ function App() {
 
   return (
     <div className="wrapper">
+      <Helmet>
+        {/* <meta name="viewport" content="width=device-width, initial-scale=1" /> */}
+        <title>Kailin_cards</title>
+      </Helmet>
       <Header />
       <Title />
       {isDelivery && <Delivery />}

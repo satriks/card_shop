@@ -10,6 +10,8 @@ body {
   background: #e1f8f6;
   // overflow-y: auto;
   overflow-x: hidden;
+  padding: 0;
+  margin: 0;
 }
 
 h1 {
@@ -34,4 +36,17 @@ h2 {
 
 button:hover {
   border: 2px solid variables.$borderColor;
+}
+
+@media (max-width: 620px) {
+  html {
+    // width: 100%;
+    // padding: 0;
+    // margin: 0 auto;
+    body {
+      width: 600px;
+      padding: 0 20px;
+      // margin: 0;
+    }
+  }
 }

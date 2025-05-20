@@ -14,3 +14,15 @@
   // margin: 0 auto;
   @extend .TextLabel;
 }
+
+@media (max-width: 1200px) {
+  .title {
+    min-height: 160px;
+  }
+}
+@media (max-width: 1020px) {
+  .title {
+    min-height: 80px;
+    margin-bottom: 100px;
+  }
+}

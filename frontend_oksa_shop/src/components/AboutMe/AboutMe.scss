@@ -1,8 +1,8 @@
-@use "../../main.scss" as *;
+@use "../../cssVariables/variables.scss";
 
 .about {
   display: flex;
-  gap: 50px;
+  gap: 20px;
   justify-content: space-around;
   margin: 0 10%;
   @extend .TextLabel;
@@ -14,11 +14,18 @@
   width: 600px;
   justify-content: flex-start;
   align-items: center;
+  p {
+    margin: 10px;
+  }
 }
 
-.about_text > h2 {
-  margin: 0;
+h2 {
+  text-align: center;
+  @extend .TextH2;
 }
+// .about_text > h2 {
+//   margin: 0;
+// }
 
 .about_img {
   width: 500px;
@@ -29,6 +36,23 @@
   //   margin: 0 auto;
   //   align-self: center;
   margin: 125px 10%;
+}
+
+@media (max-width: 1200px) {
+  .about {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+}
+
+@media (max-width: 1300px) {
+  .about_img {
+    width: 400px;
+  }
+
+  .about_image_wrapper {
+    margin-top: 30px;
+  }
 }
 
 @media (min-width: 2200px) {

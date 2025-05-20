@@ -25,12 +25,13 @@
   background-color: white;
   width: 50%;
   max-width: 700px;
-  height: 80vh;
+  height: 60vh;
   margin: 10vh auto;
   display: flex;
   flex-direction: column;
   //   justify-content: center;
   align-items: center;
+  padding-bottom: 30px;
 
   .userPanel_button_wrapper {
     position: relative;
@@ -69,6 +70,30 @@
   }
 }
 
+@media (max-width: 1200px) {
+  .user_panel {
+    height: 80vh;
+    button {
+      width: 320px;
+      margin: 10px;
+    }
+    .userPanel_button_wrapper {
+      width: 340px;
+    }
+    h2 {
+      margin: 20px auto;
+    }
+  }
+}
 // .user_panel.hide {
 //   animation: fadeOut 0.7s forwards;
 // }
+@media (max-width: 768px) {
+  .user_panel_wrapper {
+    width: 100%;
+
+    .user_panel {
+      width: 80%;
+    }
+  }
+}

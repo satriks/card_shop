@@ -58,7 +58,7 @@ export default function CartOrder({}: Props) {
       <div className="cart_order_delivery">
         <h3>Доставка</h3>
         <div className="cart_order_delivery_detail">
-          <p>Доставка</p>
+          <p>{delivery.deliveryName || "-"}</p>
           <p>{delivery.deliveryCost} руб.</p>
         </div>
       </div>

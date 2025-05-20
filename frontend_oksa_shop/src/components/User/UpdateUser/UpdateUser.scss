@@ -29,6 +29,9 @@
 
   opacity: 0;
   animation: fadeIn 1.5s forwards;
+  h2 {
+    margin-top: 40px;
+  }
 
   .success {
     background-color: rgb(121, 177, 121);
@@ -47,5 +50,24 @@
       display: flex;
       justify-content: space-between;
     }
+  }
+}
+
+@media (max-width: 767px) {
+  .update_user_wrapper {
+    width: 110%;
+    height: 100%;
+    .update_user_form {
+      div {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) and (min-width: 550px) {
+  .update_user {
+    margin-top: 0;
   }
 }
