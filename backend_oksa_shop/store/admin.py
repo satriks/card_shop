@@ -1,9 +1,12 @@
 from django.contrib import admin
 
-from .models import CustomUser, Address, Order
+from .models import CustomUser
 
 
 class MyModelAdmin(admin.ModelAdmin):
+
+    search_fields = ('email',)  # Поля, по которым будет осуществляться поиск
+    ordering = ('email',)
     class Media:
         css = {
             'all': ('css/custom.css',)
@@ -13,6 +16,3 @@ class MyModelAdmin(admin.ModelAdmin):
 admin.site.register(CustomUser, MyModelAdmin)
 # Register your models here
 
-admin.site.register(Address)
-
-admin.site.register(Order)

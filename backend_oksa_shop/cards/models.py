@@ -5,13 +5,21 @@ from django.templatetags.static import static
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True) # Название категории
-    # postcard = models.ForeignKey(Postcard, on_delete=models.CASCADE, related_name='categories')
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        verbose_name = 'Категории'
+        verbose_name_plural = 'Категория'
+
     def __str__(self):
         return self.name
 
 class Materials(models.Model):
     name = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = 'Материал'
+        verbose_name_plural = 'Материалы'
     def __str__(self):
         return self.name
 
@@ -30,6 +38,9 @@ class Postcard(models.Model):
     weight = models.PositiveIntegerField(blank=True, null=True, verbose_name="Вес")
     materials = models.ManyToManyField(Materials, related_name='postcards', verbose_name="Материалы")
 
+    class Meta:
+        verbose_name = 'Открытка'
+        verbose_name_plural = 'Открытки'
     def __str__(self):
         return self.title
 

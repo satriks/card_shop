@@ -8,3 +8,9 @@ class Payment(models.Model):
     idempotence_key = models.CharField(max_length=120, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     payment_id = models.CharField(max_length=100, unique=True)
+    class Meta:
+        verbose_name = 'Оплата'
+        verbose_name_plural = 'Оплаты'
+
+    def __str__(self):
+        return f"Payment {self.payment_id} - {self.amount} ({self.status})"

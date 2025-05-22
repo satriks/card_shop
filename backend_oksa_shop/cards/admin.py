@@ -15,6 +15,7 @@ class PostcardAdmin(admin.ModelAdmin):
     inlines = [PostcardImageInline, ]
     fields = ["title", "price","categories","materials", "available", "length", "width", "weight", ]
 
+    search_fields = ('title',)
     # Сортировка материалов в алфавитном порядке
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -34,6 +35,17 @@ class PostcardAdmin(admin.ModelAdmin):
             form.save_images(obj) 
 
 
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)  # Поля, которые будут отображаться в списке
+    search_fields = ('name',)  # Поля, по которым будет осуществляться поиск
+    ordering = ('name',)  # Устанавливаем порядок по алфавиту
+class MaterialsAdmin(admin.ModelAdmin):
+    list_display = ('name',)  # Поля, которые будут отображаться в списке
+    search_fields = ('name',)  # Поля, по которым будет осуществляться поиск
+    ordering = ('name',)  # Устанавливаем порядок по алфавиту
+
+
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Materials, MaterialsAdmin)
 admin.site.register(Postcard, PostcardAdmin)
-admin.site.register(Category)
-admin.site.register(Materials)

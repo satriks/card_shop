@@ -45,6 +45,7 @@ interface InitialStateType {
   };
   hesReloaded: boolean;
   scrollTo: HTMLDivElement | null;
+  PageNotFound: boolean;
 }
 
 const initialState: InitialStateType = {
@@ -89,6 +90,7 @@ const initialState: InitialStateType = {
   },
   hesReloaded: false,
   scrollTo: null,
+  PageNotFound: false,
 };
 
 const MainSlice = createSlice({
@@ -205,6 +207,9 @@ const MainSlice = createSlice({
     setDeliverySelfState: (state, action) => {
       state.delivery.deliverySelf = action.payload;
     },
+    setPageNotFound: (state, action: PayloadAction<boolean>) => {
+      state.PageNotFound = action.payload;
+    },
     // Редьюсер для установки имени получателя
     setReceiverName: (state, action: PayloadAction<string | null>) => {
       state.receiver.name = action.payload;
@@ -269,6 +274,7 @@ export const {
   setReceiverEmail,
   setReceiverPhone,
   setScrollTo,
+  setPageNotFound,
 } = MainSlice.actions;
 
 export default MainSlice.reducer;

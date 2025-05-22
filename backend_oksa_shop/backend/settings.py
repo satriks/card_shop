@@ -33,6 +33,7 @@ OWNER_EMAIL = os.getenv("OWNER_EMAIL")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_HOST = os.getenv("BASE_HOST")
+TEST_SITE = os.getenv("TEST_SITE")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -67,7 +68,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console', 'file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
         'myapp': {  # Замените 'myapp' на имя вашего приложения

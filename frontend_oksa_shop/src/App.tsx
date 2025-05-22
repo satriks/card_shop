@@ -26,6 +26,7 @@ import {
   setDeliverySelfState,
   setDeliveryTariffCodeState,
   setDeliveryTime,
+  setPageNotFound,
   setUserAccess,
   setUserActiveState,
   setUserEmail,
@@ -43,6 +44,7 @@ import { useRememberUser } from "./utils/utils";
 import { getDeliversApi, getUserApi, refreshApi } from "./utils/api";
 import ResetPassword from "./components/Common/ResetPassword/ResetPassword";
 import SendResetEmail from "./components/Common/SendResetEmail/SendResetEmail";
+import PageNotFound from "./components/PageNotFound/PageNotFound";
 
 function App() {
   const [check, setCheck] = useState(true);
@@ -54,6 +56,7 @@ function App() {
   const cartIsActive = useAppSelector((state) => state.store.cart.isActive);
   const isDelivery = useAppSelector((state) => state.store.isDelivery);
   const activeCard = useAppSelector((state) => state.store.cardDetail);
+  const pageNotFound = useAppSelector((state) => state.store.PageNotFound);
   const { rememberUser, token } = useRememberUser();
   const dispatch = useAppDispatch();
   const fetchUserData = async () => {
@@ -99,22 +102,24 @@ function App() {
     }
   };
 
-  //TODO подумать как переннести установку адреса из деливери в апп
   useEffect(() => {
-    const url = new URL(window.location.href); // Получаем текущий URL
-    const hasParam = url.searchParams.has("reset"); // Замените 'yourParam' на нужный параметр
+    const url = new URL(window.location.href);
+    const hasParam = url.searchParams.has("reset");
+    const pageNotFoundStatus = url.searchParams.has("status");
     const hasReloaded = localStorage.getItem("hasReloaded");
+
+    if (pageNotFoundStatus) {
+      const status = url.searchParams.get("status");
+      if (status == "404") {
+        dispatch(setPageNotFound(true));
+      }
+    }
+
     if (hasParam) {
       const access = url.searchParams.get("user");
-      console.log("устанавливаем токен");
-      console.log(access);
-      console.log(hasReloaded, " hasReloaded");
-      console.log(!hasReloaded, "hasReloaded");
 
       access && Cookies.set("_wp_kcrt", access);
       if (!hasReloaded) {
-        console.log(hasReloaded, "hasReloaded");
-
         window.location.reload();
         localStorage.setItem("hasReloaded", "true");
       }
@@ -122,12 +127,9 @@ function App() {
       dispatch(setUserReset(true));
       console.log(hasParam);
       console.log(user.isReset, " user.isReset");
-
-      // console.log("check", check);
-      // setCheck(true);
     }
-    const timer = setTimeout(() => {}, 1000); // Задержка 1 секунда
 
+    const timer = setTimeout(() => {}, 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -161,12 +163,17 @@ function App() {
     }
   }, [user, data, delivery, dispatch]);
 
+  if (pageNotFound) {
+    return <PageNotFound />;
+  }
+
   return (
     <div className="wrapper">
       <Helmet>
         {/* <meta name="viewport" content="width=device-width, initial-scale=1" /> */}
         <title>Kailin_cards</title>
       </Helmet>
+
       <Header />
       <Title />
       {isDelivery && <Delivery />}

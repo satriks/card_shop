@@ -4,6 +4,9 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from backend.views import custom_404_view
+
+handler404 = custom_404_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('store.urls')),
