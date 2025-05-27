@@ -1,4 +1,4 @@
-@use "../../main.scss";
+@use "../../cssVariables/variables.scss";
 
 .cards_wrapper {
   display: flex;
@@ -8,6 +8,9 @@
 }
 
 .cards {
+  opacity: 0;
+  animation: fadeIn 1.5s forwards;
+
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

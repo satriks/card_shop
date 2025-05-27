@@ -3,6 +3,7 @@ import "./Cards.scss";
 import { CardDataDto } from "../../models/models";
 import { useAppDispatch, useAppSelector } from "../../models/hooks";
 import { addCard, setCardDetail } from "../../redux/MainSlice";
+import { motion, AnimatePresence } from "framer-motion";
 type Props = {};
 
 export default function Cards({}: Props) {
@@ -28,8 +29,46 @@ export default function Cards({}: Props) {
       ) : (
         <h2>Открытки :</h2>
       )}
-
       <div className="cards">
+        <AnimatePresence>
+          {cardsFiltered.length > 0 ? (
+            cardsFiltered.map((card) => (
+              <motion.div
+                key={card.id}
+                className="cardItem"
+                onClick={(e) => setActiveCard(e, card)}
+                initial={{ opacity: 0, y: -20 }} // Начальное состояние
+                animate={{ opacity: 1, y: 0 }} // Анимированное состояние
+                exit={{ opacity: 0, y: 20 }} // Состояние при выходе
+                transition={{ duration: 0.8 }} // Длительность анимации
+              >
+                <img
+                  src={import.meta.env.VITE_BASE_URL + card.images[0]}
+                  alt={card.title}
+                />
+                <h2 className="cardItem_title">{card.title}</h2>
+                <div className="cardItem_price">
+                  <button
+                    className="cardItem_button"
+                    onClick={() => {
+                      dispatch(addCard(card));
+                    }}
+                  >
+                    В корзину
+                  </button>
+                  <p>{card.price} Р</p>
+                </div>
+              </motion.div>
+            ))
+          ) : (
+            <p>
+              К сожалению сейчас нет доступных открыток данной категории,
+              попробуйте посмотреть другие категории
+            </p>
+          )}
+        </AnimatePresence>
+      </div>
+      {/* <div className="cards">
         {cardsFiltered.length > 0 ? (
           cardsFiltered.map((card: CardDataDto) => (
             <div
@@ -61,7 +100,7 @@ export default function Cards({}: Props) {
             попробуйте посмотреть другие категории
           </p>
         )}
-      </div>
+      </div> */}
     </div>
   );
 
