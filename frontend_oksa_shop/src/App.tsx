@@ -12,7 +12,6 @@ import { useAppDispatch, useAppSelector } from "./models/hooks";
 import UserPanel from "./components/User/UserPanel";
 import { useGetCardQuery } from "./redux/cardAPI";
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
 import Spinner from "./components/Common/Spinner/Spinner";
 import {
   setAddresses,
@@ -45,6 +44,7 @@ import { getDeliversApi, getUserApi, refreshApi } from "./utils/api";
 import ResetPassword from "./components/Common/ResetPassword/ResetPassword";
 import SendResetEmail from "./components/Common/SendResetEmail/SendResetEmail";
 import PageNotFound from "./components/PageNotFound/PageNotFound";
+import CookieConsent from "react-cookie-consent";
 
 function App() {
   const [check, setCheck] = useState(true);
@@ -169,11 +169,6 @@ function App() {
 
   return (
     <div className="wrapper">
-      <Helmet>
-        {/* <meta name="viewport" content="width=device-width, initial-scale=1" /> */}
-        <title>Kailin_cards</title>
-      </Helmet>
-
       <Header />
       <Title />
       {isDelivery && <Delivery />}
@@ -186,6 +181,17 @@ function App() {
       {userInfo && <UserPanel />}
       {user.isReset && <ResetPassword />}
       {user.isSendReset && <SendResetEmail />}
+      <CookieConsent
+        location="bottom"
+        buttonText="Согласен"
+        cookieName="myAwesomeCookieName2"
+        style={{ background: "#c3abdb" }}
+        buttonStyle={{ color: "#4e503b", fontSize: "16px" }}
+        expires={150}
+      >
+        Этот сайт использует куки для улучшения пользовательского опыта. Нажмите
+        "Согласен", чтобы продолжить{" "}
+      </CookieConsent>
     </div>
   );
 }
