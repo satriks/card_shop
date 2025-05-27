@@ -1,7 +1,6 @@
 import "./Header.scss";
 import logo from "../../assets/header/ava.png";
 import burger from "../../assets/header/burger.png";
-import Search from "./elements/Search/Search";
 import Catalog from "./elements/Catalog/Catalog";
 import {
   setActiveCart,
