@@ -56,7 +56,7 @@ function App() {
   const cartIsActive = useAppSelector((state) => state.store.cart.isActive);
   const isDelivery = useAppSelector((state) => state.store.isDelivery);
   const activeCard = useAppSelector((state) => state.store.cardDetail);
-  const pageNotFound = useAppSelector((state) => state.store.PageNotFound);
+  const pageNotFound = useAppSelector((state) => state.store.pageNotFound);
   const { rememberUser, token } = useRememberUser();
   const dispatch = useAppDispatch();
   const fetchUserData = async () => {

@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import aboutMeImg from "../../assets/aboutMe/me2.png";
 import line from "../../assets/aboutMe/line.png";
 import "./AboutMe.scss";
+import { useActionData } from "react-router-dom";
+import { useAppDispatch } from "../../models/hooks";
+import { setAboutMe } from "../../redux/MainSlice";
 
 type Props = {};
 
 export default function AboutMe({}: Props) {
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setAboutMe(aboutRef));
+  }, [dispatch, aboutRef]);
+
   return (
-    <div className="about_wrapper">
+    <div className="about_wrapper" ref={aboutRef}>
       <img className="about_line" src={line} alt="" />
       <h2>Обо мне</h2>
       <div className="about">

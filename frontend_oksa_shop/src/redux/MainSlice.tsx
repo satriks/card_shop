@@ -6,6 +6,7 @@ import {
   OfficeDto,
   ReceiverDto,
 } from "../models/models";
+import React from "react";
 
 interface InitialStateType {
   cards: CardDataDto[];
@@ -45,7 +46,8 @@ interface InitialStateType {
   };
   hesReloaded: boolean;
   scrollTo: HTMLDivElement | null;
-  PageNotFound: boolean;
+  pageNotFound: boolean;
+  aboutMe: React.RefObject<HTMLDivElement>;
 }
 
 const initialState: InitialStateType = {
@@ -90,7 +92,8 @@ const initialState: InitialStateType = {
   },
   hesReloaded: false,
   scrollTo: null,
-  PageNotFound: false,
+  pageNotFound: false,
+  aboutMe: null,
 };
 
 const MainSlice = createSlice({
@@ -208,7 +211,7 @@ const MainSlice = createSlice({
       state.delivery.deliverySelf = action.payload;
     },
     setPageNotFound: (state, action: PayloadAction<boolean>) => {
-      state.PageNotFound = action.payload;
+      state.pageNotFound = action.payload;
     },
     // Редьюсер для установки имени получателя
     setReceiverName: (state, action: PayloadAction<string | null>) => {
@@ -221,6 +224,13 @@ const MainSlice = createSlice({
     // Редьюсер для установки email получателя
     setReceiverEmail: (state, action: PayloadAction<string | null>) => {
       state.receiver.email = action.payload;
+    },
+    // Редьюсер для сохранение ссылки aboutMe
+    setAboutMe: (
+      state,
+      action: PayloadAction<React.RefObject<HTMLDivElement>>
+    ) => {
+      state.aboutMe = action.payload;
     },
     addCard: (state, action: PayloadAction<CardDataDto>) => {
       const cardData = action.payload;
@@ -275,6 +285,7 @@ export const {
   setReceiverPhone,
   setScrollTo,
   setPageNotFound,
+  setAboutMe,
 } = MainSlice.actions;
 
 export default MainSlice.reducer;
