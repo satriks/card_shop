@@ -1,6 +1,8 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../models/hooks";
 import { setActiveCart, setDelivery } from "../../../redux/MainSlice";
+import flowwow from "../../../assets/footer/flowwow.jpeg";
+import master from "../../../assets/footer/Master.png";
 
 type Props = {};
 
@@ -49,8 +51,28 @@ export default function FooterInfo({}: Props) {
       <div className="footer_info_contacts">
         <p>Контакты:</p>
         <p>почта - email@email.ru </p>
-        <p>тел - +7(910)105-31-32</p>
-        <div>socials</div>
+        {/* <p>тел - +7(910)105-31-32</p> */}
+        <p>Мои работы так же можно найти :</p>
+        <div className="social_links">
+          <div className="flowwow">
+            <a
+              href="https://flowwow.com/shop/kailin-cards/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={flowwow} alt="Логотип flowwow" />
+            </a>
+          </div>
+          <div className="master">
+            <a
+              href="https://www.livemaster.ru/vereskun-yurij"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={master} alt="Логотип flowwow" />
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

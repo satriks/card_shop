@@ -80,6 +80,17 @@
 .footer_info_contacts :first-child {
   margin-bottom: 10px;
 }
+.social_links {
+  display: flex;
+}
+.flowwow,
+.master {
+  img {
+    margin-top: 10px;
+    width: 50px;
+    height: 50px;
+  }
+}
 
 @media (max-width: 1200px) {
   .footer_info {
