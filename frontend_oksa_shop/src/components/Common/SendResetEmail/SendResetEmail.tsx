@@ -4,6 +4,7 @@ import ModalAlert from "../ModalAlert/ModalAlert";
 import { resetPasswordApi } from "../../../utils/api";
 import { useAppDispatch, useAppSelector } from "../../../models/hooks";
 import { setSendReset, setUserInfo } from "../../../redux/MainSlice";
+import CancelButton from "../CancelButton/cancelButton";
 
 const SendResetEmail: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -84,6 +85,10 @@ const SendResetEmail: React.FC = () => {
             Отправить ссылку для восстановления пароля
           </button>
         </form>
+        <CancelButton
+          className="forgot_password_cancel"
+          onClick={() => dispatch(setSendReset(false))}
+        />
       </div>
     </div>
   );
