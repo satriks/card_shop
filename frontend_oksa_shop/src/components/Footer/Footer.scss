@@ -7,7 +7,8 @@
   color: black;
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  gap: 20px;
   padding: 0 100px;
   @extend .TextLabel;
 

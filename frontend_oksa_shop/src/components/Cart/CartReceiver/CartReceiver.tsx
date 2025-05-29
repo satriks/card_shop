@@ -39,7 +39,6 @@ export default function CartReceiver({}: Props) {
     dispatch(setReceiverName(name));
     dispatch(setReceiverPhone(phone));
     dispatch(setReceiverEmail(email));
-    console.log(42);
   }, [name, phone, email, dispatch]);
 
   return (

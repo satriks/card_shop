@@ -96,6 +96,11 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://fleshly-slick-wildcat.cloudpub.ru',
+    'https://hourly-adroit-crab.cloudpub.ru',
+]
+
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
        "http://localhost:5173",  # Замените на ваш фронтенд-домен

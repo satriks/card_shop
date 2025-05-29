@@ -4,6 +4,8 @@ import CartOrderCard from "./CartOrderCard/CartOrderCard";
 import { useAppSelector } from "../../../models/hooks";
 import { getOrderApi } from "../../../utils/api";
 import { DeliveryDto } from "../../../models/models";
+import ModalAlert from "../../Common/ModalAlert/ModalAlert";
+import { useState } from "react";
 
 type Props = {};
 
@@ -13,6 +15,7 @@ export default function CartOrder({}: Props) {
   const receiver = useAppSelector((state) => state.store.receiver);
   const delivery = useAppSelector((state) => state.store.delivery);
   const cart = useAppSelector((state) => state.store.cart);
+  const [alert, setAlert] = useState<string>();
 
   const getOrder = async () => {
     const cardData = cart.items.map((card) => {
@@ -30,6 +33,26 @@ export default function CartOrder({}: Props) {
       min_delivery_time: delivery.deliveryTime.minDeliveryTime,
       max_delivery_time: delivery.deliveryTime.maxDeliveryTime,
     };
+
+    // проверка есть ли в корзине открытки
+    if (cardData.length == 0) {
+      setAlert("Нет ни одной открытки");
+      return;
+    }
+
+    // проверка выбрана ли доставка
+    if (!delivery.deliveryName) {
+      setAlert("Не выбрана доставка");
+      return;
+    }
+    //проверка выбран ли получатель
+    const check_reciver = Object.values(receiver).every(
+      (value) => value !== "" && value !== null
+    );
+    if (!check_reciver) {
+      setAlert("Не выбран получатель ");
+      return;
+    }
 
     const [responseStatus, response] = await getOrderApi(
       user.access || undefined,
@@ -73,6 +96,15 @@ export default function CartOrder({}: Props) {
         </p>
       </div>
       <button onClick={getOrder}>Заказать</button>
+      {alert && (
+        <ModalAlert
+          duration={2000}
+          onClose={() => {
+            setAlert("");
+          }}
+          message={alert}
+        />
+      )}
     </div>
   );
 }
