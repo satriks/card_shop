@@ -52,9 +52,7 @@ interface MapClickEvent {
   get: (key: string) => number[];
 }
 
-type Props = {};
-
-export default function Delivery({}: Props) {
+export default function Delivery() {
   const dispatch = useAppDispatch();
   const addresses = useAppSelector((state) => state.store.addresses);
   const delivery = useAppSelector((state) => state.store.delivery);
@@ -153,7 +151,7 @@ export default function Delivery({}: Props) {
       // Проходим по всем ключам объекта
       for (const key in obj) {
         if (key === "PostalCode") {
-          let res = obj[key]["PostalCodeNumber"];
+          const res = obj[key]["PostalCodeNumber"];
           return res;
         }
         // Рекурсивно вызываем функцию для вложенных объектов
@@ -287,7 +285,7 @@ export default function Delivery({}: Props) {
   };
 
   const saveDelivery = (name: string) => {
-    let key = name;
+    const key = name;
     const deliveryAddressDetail: DeliveryDto = {};
 
     if (selectedOption === "self") {

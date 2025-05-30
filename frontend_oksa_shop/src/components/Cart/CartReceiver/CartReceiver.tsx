@@ -6,11 +6,8 @@ import {
   setReceiverName,
   setReceiverPhone,
 } from "../../../redux/MainSlice";
-import { ReceiverDto } from "../../../models/models";
 
-type Props = {};
-
-export default function CartReceiver({}: Props) {
+export default function CartReceiver() {
   const user = useAppSelector((state) => state.store.user);
   const [isOtherReceiver, setIsOtherReceiver] = useState(false);
   const dispatch = useAppDispatch();

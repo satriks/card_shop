@@ -7,9 +7,7 @@ import { DeliveryDto } from "../../../models/models";
 import ModalAlert from "../../Common/ModalAlert/ModalAlert";
 import { useState } from "react";
 
-type Props = {};
-
-export default function CartOrder({}: Props) {
+export default function CartOrder() {
   const order = useAppSelector((state) => state.store.cart.items);
   const user = useAppSelector((state) => state.store.user);
   const receiver = useAppSelector((state) => state.store.receiver);

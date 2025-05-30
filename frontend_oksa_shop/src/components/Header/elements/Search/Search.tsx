@@ -1,9 +1,7 @@
 import "./Search.scss";
 import searchImg from "../../../../assets/header/search.png";
 
-type Props = {};
-
-function Search({}: Props) {
+function Search() {
   return (
     <div className="header_search_wrapper">
       <input type="filter" className="header_search" placeholder="поиск" />

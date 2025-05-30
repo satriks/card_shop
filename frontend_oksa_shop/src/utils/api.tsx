@@ -1,6 +1,12 @@
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import { ChangeUserDto, DeliveryDto, ReceiverDto } from "../models/models";
+import {
+  ChangeUserDto,
+  DeliveryDto,
+  ReceiverDto,
+  UserDataDTO,
+  UserTokenDTO,
+} from "../models/models";
 import { validatePassword } from "./validators";
 
 const connect = axios.create({
@@ -25,23 +31,30 @@ export const loginApi = async (email: string, password: string) => {
   }
 };
 // refresh token
-export const refreshApi = async (refresh) => {
+export const refreshApi = async (refresh: string) => {
   try {
     const response = await connect.post("api/token/refresh/", {
       refresh: refresh,
     });
     if (response.status === 200) {
-      const { access, refresh } = response.data;
+      const { refresh } = response.data;
+
       Cookies.set("_wp_kcrt", refresh, { expires: 30 });
       return response; // Возвращаем response
     }
-  } catch (error) {
-    // Проверяем статус ошибки, если он 401, удаляем токен
-    if (error.response && error.response.status === 401) {
-      Cookies.remove("_wp_kcrt");
+  } catch (error: AxiosError | unknown) {
+    if (error instanceof AxiosError) {
+      // Если статус 401, удаляем токен
+      if (error.response && error.response.status === 401) {
+        Cookies.remove("_wp_kcrt");
+      }
+      console.error("Ошибка при обновлении:", error.message);
+    } else {
+      console.error("Неизвестная ошибка:", error);
     }
-    console.error("Ошибка при обновлении:", error);
-    throw new Error(error.message || "Ошибка при обновлении токена");
+    throw new Error(
+      error instanceof Error ? error.message : "Ошибка при обновлении токена"
+    );
   }
 };
 
@@ -53,7 +66,7 @@ export const registrationApi = async (
   lastName: string = "",
   middleName: string = "",
   phone: string = ""
-): Promise<[number, any]> => {
+): Promise<[number, UserTokenDTO]> => {
   const requestData: ChangeUserDto = {
     email: email,
     first_name: firstName,
@@ -78,26 +91,19 @@ export const registrationApi = async (
       console.error("Ошибка ответа:", error.response?.data);
       console.error("Статус:", error.response?.status);
       throw new Error(error.response?.data.email);
-
-      // } else if (error instanceof Error) {
-      //   // Обработка других ошибок
-      //   console.error("Ошибка:", error.message);
-      //   throw new Error(`Ошибка регистрации: ${error.message}`);
-      // } else {
-      //   // Произошла ошибка, но она не является экземпляром Error
-      //   console.error("Неизвестная ошибка:", error);
-      //   throw new Error("Ошибка регистрации: Неизвестная ошибка");
-      // }
     }
+    throw new Error("Произошла ошибка при регистрации");
   }
 };
 
 //Get user
-export const getUserApi = async (token: string): Promise<any> => {
+export const getUserApi = async (token: string): Promise<UserDataDTO> => {
   try {
     const response = await connect.get("api/user/", {
       headers: { Authorization: "Bearer " + token }, // Используйте Bearer для JWT
     });
+    console.log(response.data, " response.data from geruserAPi");
+
     return response.data; // Возвращаем данные
   } catch (error) {
     console.error("Ошибка при получении пользователей:", error);
@@ -170,9 +176,10 @@ export const deleteAddress = async (token: string, id: number) => {
 };
 
 // Reset password
+type PasswordResetResponse = { message: string } | { error: string };
 export const resetPasswordApi = async (
   email: string
-): Promise<[number, any]> => {
+): Promise<[number, PasswordResetResponse]> => {
   try {
     const response = await connect.post("api/password_reset/", { email });
     return [response.status, response.data];
@@ -183,78 +190,20 @@ export const resetPasswordApi = async (
     );
   }
 };
-// Create payment
-// export const createPaymentApi = async (
-//   receiver: string,
-//   delivery: string,
-//   cartItems: Array<{ id: number }>
-// ): Promise<[number, any]> => {
-//   try {
-//     const response = await fetch("http://localhost:8000/payments/create/", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json; charset=utf-8",
-//       },
-//       body: JSON.stringify({
-//         receiver,
-//         delivery,
-//         cart: cartItems.map((card) => card.id),
-//       }),
-//     });
-//     // Проверяем, успешно ли выполнен запрос
-//     if (!response.ok) {
-//       throw new Error(`Ошибка при создании платежа: ${response.status}`);
-//     }
-//     const data = await response.json();
-//     return [response.status, data];
-//   } catch (error) {
-//     console.error("Ошибка при создании платежа:", error);
-//     throw new Error(error.message || "Ошибка при создании платежа");
-//   }
-// };
-
-// Get Order
-
-// export const getOrderApi = async (
-//   token: string = "",
-//   receiver: ReceiverDto,
-//   delivery: DeliveryDto,
-//   cartItems: number[]
-// ): Promise<[number, any]> => {
-//   const headers: { [key: string]: string } = {
-//     "Content-Type": "application/json",
-//   };
-//   // Если токен предоставлен, добавляем заголовок авторизации
-//   if (token) {
-//     headers.Authorization = "Bearer " + token;
-//   }
-//   try {
-//     const response = await fetch("http://localhost:8000/payments/create/", {
-//       method: "POST",
-//       headers: headers,
-//       body: JSON.stringify({
-//         receiver,
-//         delivery,
-//         cart: cartItems,
-//       }),
-//     });
-//     if (!response.ok) {
-//       throw new Error(`Ошибка при создании платежа: ${response.status}`);
-//     }
-//     const data = await response.json();
-//     return [response.status, data];
-//   } catch (error) {
-//     console.error("Ошибка при создании платежа:", error);
-//     throw new Error(error.message || "Ошибка при создании платежа");
-//   }
-// };
 
 export const getOrderApi = async (
   token: string = "",
   receiver: ReceiverDto,
   delivery: DeliveryDto,
   cartItems: number[]
-): Promise<[number, any]> => {
+): Promise<
+  [
+    number,
+    {
+      payment_url: string;
+    }
+  ]
+> => {
   const headers: { [key: string]: string } = {
     "Content-Type": "application/json",
   };

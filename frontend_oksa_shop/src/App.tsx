@@ -27,7 +27,6 @@ import {
   setDeliveryTime,
   setPageNotFound,
   setUserAccess,
-  setUserActiveState,
   setUserEmail,
   setUserFirstName,
   setUserLastName,
@@ -40,7 +39,7 @@ import Cart from "./components/Cart/Cart";
 import CardDetail from "./components/CardDetail/CardDetail";
 import Delivery from "./components/Delivery/Delivery";
 import { useRememberUser } from "./utils/utils";
-import { getDeliversApi, getUserApi, refreshApi } from "./utils/api";
+import { getDeliversApi, getUserApi } from "./utils/api";
 import ResetPassword from "./components/Common/ResetPassword/ResetPassword";
 import SendResetEmail from "./components/Common/SendResetEmail/SendResetEmail";
 import PageNotFound from "./components/PageNotFound/PageNotFound";
@@ -57,7 +56,7 @@ function App() {
   const isDelivery = useAppSelector((state) => state.store.isDelivery);
   const activeCard = useAppSelector((state) => state.store.cardDetail);
   const pageNotFound = useAppSelector((state) => state.store.pageNotFound);
-  const { rememberUser, token } = useRememberUser();
+  const { rememberUser } = useRememberUser();
   const dispatch = useAppDispatch();
   const fetchUserData = async () => {
     if (user.isActive && user.access) {
@@ -153,7 +152,7 @@ function App() {
 
     if (data.length > 0) {
       dispatch(setCards(data));
-      let category: string[] = [];
+      const category: string[] = [];
       console.log(data);
 
       data.forEach((element: CardDataDto) => {

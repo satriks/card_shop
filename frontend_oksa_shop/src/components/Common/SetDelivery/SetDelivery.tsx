@@ -1,13 +1,9 @@
-import React from "react";
 import "./SetDelivery.scss";
-import { useAppDispatch, useAppSelector } from "../../../models/hooks";
+import { useAppDispatch } from "../../../models/hooks";
 import { setDelivery } from "../../../redux/MainSlice";
 
-type Props = {};
-
-export default function SetDelivery({}: Props) {
+export default function SetDelivery() {
   const dispatch = useAppDispatch();
-  // const onDelivery = useAppSelector((state) => state.store.delivery);
 
   return (
     <div className="set_delivery">

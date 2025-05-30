@@ -1,8 +1,6 @@
 import footerLogo from "../../../assets/footer/footerLogo.png";
 
-type Props = {};
-
-export default function FooterLogo({}: Props) {
+export default function FooterLogo() {
   return (
     <div className="footer_logo">
       <p className="footer_logo_title">Kailin Card</p>

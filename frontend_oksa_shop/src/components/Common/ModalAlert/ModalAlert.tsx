@@ -1,6 +1,5 @@
-import CancelButton from "../CancelButton/cancelButton";
 import "./ModalAlert.scss";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 type Props = {
   addClass?: string;
@@ -17,9 +16,9 @@ export default function ModalAlert({
 }: Props) {
   useEffect(() => {
     const timer = setTimeout(() => {
-      onClose(); // Закрываем модальное окно по истечении времени
+      onClose();
     }, duration);
-    return () => clearTimeout(timer); // Очистка таймера при размонтировании
+    return () => clearTimeout(timer);
   }, [duration, onClose]);
 
   return (

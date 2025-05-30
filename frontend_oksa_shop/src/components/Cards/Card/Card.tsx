@@ -1,7 +1,3 @@
-import React from "react";
-
-type Props = {};
-
-export default function Card({}: Props) {
+export default function Card() {
   return <div>Card</div>;
 }

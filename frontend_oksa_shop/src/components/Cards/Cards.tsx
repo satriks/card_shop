@@ -1,12 +1,10 @@
-import cardImg from "../../assets/testCard/card.png";
 import "./Cards.scss";
 import { CardDataDto } from "../../models/models";
 import { useAppDispatch, useAppSelector } from "../../models/hooks";
 import { addCard, setCardDetail } from "../../redux/MainSlice";
 import { motion, AnimatePresence } from "framer-motion";
-type Props = {};
 
-export default function Cards({}: Props) {
+export default function Cards() {
   // const cartActive = useAppSelector((state) => state.store.cart.isActive);
   const cards = useAppSelector((state) => state.store.cards);
   const cart = useAppSelector((state) => state.store.cart.items);

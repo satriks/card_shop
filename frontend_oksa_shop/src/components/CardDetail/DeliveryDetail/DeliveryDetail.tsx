@@ -2,11 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../../models/hooks";
 import { setDelivery } from "../../../redux/MainSlice";
 import "./DeliveryDetail.scss";
 
-import React from "react";
-
-type Props = {};
-
-export default function DeliveryDetail({}: Props) {
+export default function DeliveryDetail() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.store.delivery);
 

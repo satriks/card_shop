@@ -18,9 +18,7 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import Orders from "./Orders/Orders";
 
-type Props = {};
-
-export default function UserPanel({}: Props) {
+export default function UserPanel() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.store.user);
   const delivery = useAppSelector((state) => state.store.delivery);

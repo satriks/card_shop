@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "../../../../models/hooks";
+import { useAppDispatch } from "../../../../models/hooks";
 import {
   setSendReset,
   setUserAccess,
@@ -27,7 +27,6 @@ export default function AuthForm({ onClose }: Props) {
   const [lastName, setLastName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [phone, setPhone] = useState("");
-  const user = useAppSelector((state) => state.store.user);
   const registerUser = async () => {
     try {
       setErrorModal(null);

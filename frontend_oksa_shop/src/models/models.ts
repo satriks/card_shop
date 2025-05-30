@@ -228,16 +228,21 @@ export interface OrderDto {
   created_at: string;
   postcards_total?: number;
 }
-// export interface User {
-//   id: number;
-//   username: string;
-//   first_name: string;
-//   last_name: string;
-//   email: string;
-//   is_staff: boolean;
-//   files: File_data[];
-//   date_joined: string;
-// }
+export interface UserTokenDTO {
+  user: string;
+  refresh: string;
+  access: string;
+}
+
+export interface UserDataDTO {
+  id?: number;
+  first_name?: string;
+  middle_name?: string;
+  last_name?: string;
+  email?: string;
+  phone_number?: string;
+  is_staff?: boolean;
+}
 
 // export interface ChangeUser {
 //   first_name?: string;

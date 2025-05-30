@@ -1,27 +1,24 @@
-import React from "react";
-import { useAppDispatch, useAppSelector } from "../../../models/hooks";
+import { useAppDispatch } from "../../../models/hooks";
 import { setActiveCart, setDelivery } from "../../../redux/MainSlice";
 import flowwow from "../../../assets/footer/flowwow.jpeg";
 import master from "../../../assets/footer/Master.png";
 
-type Props = {};
-
-export default function FooterInfo({}: Props) {
+export default function FooterInfo() {
   const dispatch = useAppDispatch();
-  const adoutMeElement = useAppSelector((state) => state.store.aboutMe);
-  const categoryElement = useAppSelector((state) => state.store.scrollTo);
 
   const scrollToAbout = () => {
-    if (adoutMeElement.current) {
-      const top =
-        adoutMeElement.current.getBoundingClientRect().top + window.scrollY; // Получаем позицию элемента
-      window.scrollTo({ top, behavior: "smooth" }); // Прокручиваем к элементу
+    const aboutElement = document.querySelector(".about_wrapper");
+    if (aboutElement) {
+      const top = aboutElement.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top, behavior: "smooth" });
     }
   };
-  const scrollToCatrgory = () => {
+
+  const scrollToCategory = () => {
+    const categoryElement = document.querySelector(".category");
     if (categoryElement) {
-      const top = categoryElement.getBoundingClientRect().top + window.scrollY; // Получаем позицию элемента
-      window.scrollTo({ top, behavior: "smooth" }); // Прокручиваем к элементу
+      const top = categoryElement.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top, behavior: "smooth" });
     }
   };
 
@@ -29,7 +26,8 @@ export default function FooterInfo({}: Props) {
     <div className="footer_info">
       <div className="footer_info_pages">
         <p>Информация:</p>
-        <p onClick={scrollToCatrgory}> Каталог </p>
+
+        <p onClick={scrollToCategory}> Каталог </p>
         <p onClick={scrollToAbout}> Обо мне </p>
         <p
           onClick={() => {

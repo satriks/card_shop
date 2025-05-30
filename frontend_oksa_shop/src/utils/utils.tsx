@@ -2,7 +2,6 @@ import Cookies from "js-cookie";
 import { setUserAccess, setUserActiveState } from "../redux/MainSlice";
 import { useAppDispatch } from "../models/hooks";
 import { refreshApi } from "./api";
-// import { DeliveryDto } from "../models/models";
 
 export const useRememberUser = () => {
   const dispatch = useAppDispatch();
@@ -18,7 +17,7 @@ export const useRememberUser = () => {
           dispatch(setUserActiveState(true));
           dispatch(setUserAccess(response.data.access));
         } else {
-          console.error("Ошибка обновления токена:", response?.message);
+          console.error("Ошибка обновления токена:", response);
         }
       } catch (error) {
         console.error("Произошла ошибка при обновлении токена:", error);

@@ -2,7 +2,7 @@ import "./SendResetEmail.scss";
 import React, { useState } from "react";
 import ModalAlert from "../ModalAlert/ModalAlert";
 import { resetPasswordApi } from "../../../utils/api";
-import { useAppDispatch, useAppSelector } from "../../../models/hooks";
+import { useAppDispatch } from "../../../models/hooks";
 import { setSendReset, setUserInfo } from "../../../redux/MainSlice";
 import CancelButton from "../CancelButton/cancelButton";
 

@@ -9,9 +9,7 @@ type DeliveryInfo = [
   { minDeliveryTime: number | null; maxDeliveryTime: number | null } // Время доставки
 ];
 
-type Props = {};
-
-export default function CartDelivery({}: Props) {
+export default function CartDelivery() {
   const dispatch = useAppDispatch();
   const delivery = useAppSelector((state) => state.store.delivery);
   const getDeliveryInfo = (): DeliveryInfo => {

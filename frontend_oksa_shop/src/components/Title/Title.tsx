@@ -1,8 +1,6 @@
 import "./Title.scss";
 
-type Props = {};
-
-export default function Title({}: Props) {
+export default function Title() {
   return (
     <div className="title">
       {/* <h1>Магазин авторских открыток Kailin card </h1> */}

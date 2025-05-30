@@ -1,12 +1,9 @@
-import React from "react";
 import "./PageNotFound.scss";
 import pageImage from "../../assets/PageNotFound/404.png";
 import { useAppDispatch } from "../../models/hooks";
 import { setPageNotFound } from "../../redux/MainSlice";
 
-type Props = {};
-
-export default function PageNotFound({}: Props) {
+export default function PageNotFound() {
   const dispatch = useAppDispatch();
   return (
     <div className="page_not_found_wrapper">

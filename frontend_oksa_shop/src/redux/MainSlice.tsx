@@ -6,7 +6,6 @@ import {
   OfficeDto,
   ReceiverDto,
 } from "../models/models";
-import React from "react";
 
 interface InitialStateType {
   cards: CardDataDto[];
@@ -45,9 +44,7 @@ interface InitialStateType {
     };
   };
   hesReloaded: boolean;
-  scrollTo: HTMLDivElement | null;
   pageNotFound: boolean;
-  aboutMe: React.RefObject<HTMLDivElement>;
 }
 
 const initialState: InitialStateType = {
@@ -91,9 +88,7 @@ const initialState: InitialStateType = {
     deliveryTime: { minDeliveryTime: null, maxDeliveryTime: null },
   },
   hesReloaded: false,
-  scrollTo: null,
   pageNotFound: false,
-  aboutMe: null,
 };
 
 const MainSlice = createSlice({
@@ -139,18 +134,11 @@ const MainSlice = createSlice({
     setUserEmail: (state, action: PayloadAction<string | null>) => {
       state.user.email = action.payload;
     },
-    setUserInfo: (state: InitialStateType, action: PayloadAction<boolean>) => {
+    setUserInfo: (state, action: PayloadAction<boolean>) => {
       state.isUserInfo = action.payload;
     },
-    setDelivery: (state: InitialStateType, action: PayloadAction<boolean>) => {
+    setDelivery: (state, action: PayloadAction<boolean>) => {
       state.isDelivery = action.payload;
-    },
-    //Элемент для скрола
-    setScrollTo: (
-      state: InitialStateType,
-      action: PayloadAction<HTMLDivElement | null>
-    ) => {
-      state.scrollTo = action.payload;
     },
 
     setAddresses: (state, action: PayloadAction<DeliveryDto[] | null>) => {
@@ -164,7 +152,12 @@ const MainSlice = createSlice({
     },
     setActiveCategory: (state, action: PayloadAction<string>) => {
       state.category.isActive = action.payload;
-      state.scrollTo?.scrollIntoView({ behavior: "smooth" });
+      const categoryElement = document.querySelector(".category");
+      if (categoryElement) {
+        const top =
+          categoryElement.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
     },
     setActiveCart: (state, action: PayloadAction<boolean>) => {
       state.cart.isActive = action.payload;
@@ -225,13 +218,7 @@ const MainSlice = createSlice({
     setReceiverEmail: (state, action: PayloadAction<string | null>) => {
       state.receiver.email = action.payload;
     },
-    // Редьюсер для сохранение ссылки aboutMe
-    setAboutMe: (
-      state,
-      action: PayloadAction<React.RefObject<HTMLDivElement>>
-    ) => {
-      state.aboutMe = action.payload;
-    },
+
     addCard: (state, action: PayloadAction<CardDataDto>) => {
       const cardData = action.payload;
       if (state.cart.items.some((item) => item.id === cardData.id)) {
@@ -283,9 +270,7 @@ export const {
   setReceiverName,
   setReceiverEmail,
   setReceiverPhone,
-  setScrollTo,
   setPageNotFound,
-  setAboutMe,
 } = MainSlice.actions;
 
 export default MainSlice.reducer;

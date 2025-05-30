@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { useAppDispatch, useAppSelector } from "../../../models/hooks";
 import { ChangeUserDto } from "../../../models/models";
 import {
@@ -53,18 +54,26 @@ export default function UpdateUser({ onClose }: Props) {
       password: password,
     };
     try {
-      await updateUserApi(user.access, body); // Отправка запроса на обновление данных
-      setSuccess("Данные успешно обновлены!");
-      const waitShowMessage = setTimeout(() => {
-        onClose();
-        setData();
-        clearTimeout(waitShowMessage);
-      }, 2000);
-    } catch (err: any) {
-      setError(
-        "Ошибка при обновлении данных: " +
-          (err.response?.data?.message || err.message)
-      );
+      if (user.access) {
+        await updateUserApi(user.access, body);
+        setSuccess("Данные успешно обновлены!");
+        const waitShowMessage = setTimeout(() => {
+          onClose();
+          setData();
+          clearTimeout(waitShowMessage);
+        }, 2000);
+      } else {
+        throw new Error("Необходим доступ для обновления данных.");
+      }
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        setError(
+          "Ошибка при обновлении данных: " +
+            (err.response?.data?.message || err.message)
+        );
+      } else {
+        setError("Неизвестная ошибка при обновлении данных.");
+      }
     }
   };
   return (

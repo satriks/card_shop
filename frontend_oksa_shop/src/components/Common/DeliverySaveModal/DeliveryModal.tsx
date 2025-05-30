@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./DeliveryModal.scss";
 import CancelButton from "../CancelButton/cancelButton";
-import { useAppSelector } from "../../../models/hooks";
 
 type Props = {
   isOpen: boolean;
@@ -12,7 +11,6 @@ type Props = {
 export default function DeliveryModal({ isOpen, onClose, onSave }: Props) {
   const [deliveryName, setDeliveryName] = useState<string>("");
   const [hasError, setHasError] = useState<boolean>(false);
-  const addresses = useAppSelector((state) => state.store.addresses);
   const handleSave = () => {
     if (deliveryName) {
       onSave(deliveryName);

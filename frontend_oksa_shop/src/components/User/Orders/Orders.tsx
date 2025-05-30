@@ -1,11 +1,11 @@
-import { useAppDispatch, useAppSelector } from "../../../models/hooks";
+import { useAppSelector } from "../../../models/hooks";
 import { OrderDto } from "../../../models/models";
 import { useGetOrdersQuery } from "../../../redux/cardAPI";
 import { deliveryDate, formatDate } from "../../../utils/utils";
 import CancelButton from "../../Common/CancelButton/cancelButton";
 import Spinner from "../../Common/Spinner/Spinner";
 import "./Orders.scss";
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface IconStatus {
   succeeded: string;
@@ -30,7 +30,6 @@ type Props = {
 };
 
 export default function Orders({ onClose }: Props) {
-  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.store.user);
   const [isVisible, setIsVisible] = useState(true);
   const { data, error, isLoading, isError } = useGetOrdersQuery(user.access);

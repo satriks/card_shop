@@ -1,8 +1,6 @@
 import "./Spinner.scss";
 
-type Props = {};
-
-export default function Spinner({}: Props) {
+export default function Spinner() {
   return (
     <div className="lds-spinner">
       <div></div>

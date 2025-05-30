@@ -5,7 +5,6 @@ import SetDelivery from "../Common/SetDelivery/SetDelivery";
 import { useAppDispatch, useAppSelector } from "../../models/hooks";
 import { CardDataDto } from "../../models/models";
 import { addCard, setActiveCart, setCardDetail } from "../../redux/MainSlice";
-import cardImg from "../../assets/testCard/card.png";
 import CancelButton from "../Common/CancelButton/cancelButton";
 import DeliveryDetail from "./DeliveryDetail/DeliveryDetail";
 
@@ -19,9 +18,6 @@ export default function CardDetail({ card }: Props) {
   const [isVisible, setIsVisible] = useState(true);
   const activeCategory = useAppSelector(
     (state) => state.store.category.isActive
-  );
-  const deliveryAddress = useAppSelector(
-    (state) => state.store.delivery.deliveryAddress
   );
   const dispatch = useAppDispatch();
 
