@@ -105,6 +105,7 @@ class CityView(APIView):
             city_data = sdek_client.get_city(city_name)
             cache.set(city_name, city_data, timeout=60)
         if city_data is not None:
+            # return Response({"error": "Не удалось получить данные о городе."}, status=status.HTTP_400_BAD_REQUEST)
             return Response(city_data, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Не удалось получить данные о городе."}, status=status.HTTP_400_BAD_REQUEST)

@@ -24,9 +24,13 @@ export const loginApi = async (email: string, password: string) => {
         return [response.status, access];
       });
     return access;
-  } catch (error: AxiosError) {
-    if (error.response) {
-      throw new Error(Object.values(error.response.data).flat()[0]);
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      throw new Error(error.message);
+    } else {
+      // Обработка случая, если ошибка не является AxiosError
+      console.error("Неизвестная ошибка:", error);
+      throw new Error("Неизвестная ошибка");
     }
   }
 };
@@ -102,14 +106,18 @@ export const getUserApi = async (token: string): Promise<UserDataDTO> => {
     const response = await connect.get("api/user/", {
       headers: { Authorization: "Bearer " + token }, // Используйте Bearer для JWT
     });
-    console.log(response.data, " response.data from geruserAPi");
 
     return response.data; // Возвращаем данные
-  } catch (error) {
-    console.error("Ошибка при получении пользователей:", error);
-    throw new Error(
-      error.response?.data?.message || "Ошибка при получении пользователей"
-    );
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      console.error("Ошибка при получении пользователей:", error);
+      throw new Error(
+        error.response?.data?.message || "Ошибка при получении пользователей"
+      );
+    } else {
+      console.error("Неизвестная ошибка:", error);
+      throw new Error("Неизвестная ошибка при получении пользователей");
+    }
   }
 };
 //Update user
@@ -183,11 +191,16 @@ export const resetPasswordApi = async (
   try {
     const response = await connect.post("api/password_reset/", { email });
     return [response.status, response.data];
-  } catch (error) {
-    console.error("Ошибка при сбросе пароля:", error);
-    throw new Error(
-      error.response?.data?.message || "Ошибка при сбросе пароля"
-    );
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      console.error("Ошибка при сбросе пароля:", error);
+      throw new Error(
+        error.response?.data?.message || "Ошибка при сбросе пароля"
+      );
+    } else {
+      console.error("Неизвестная ошибка:", error);
+      throw new Error("Неизвестная ошибка при сбросе пароля");
+    }
   }
 };
 
@@ -222,10 +235,15 @@ export const getOrderApi = async (
       { headers }
     );
     return [response.status, response.data];
-  } catch (error) {
-    console.error("Ошибка при создании платежа:", error);
-    throw new Error(
-      error.response?.data?.message || "Ошибка при создании платежа"
-    );
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      console.error("Ошибка при создании платежа:", error);
+      throw new Error(
+        error.response?.data?.message || "Ошибка при создании платежа"
+      );
+    } else {
+      console.error("Неизвестная ошибка:", error);
+      throw new Error("Неизвестная ошибка при создании платежа");
+    }
   }
 };

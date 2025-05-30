@@ -44,6 +44,7 @@ import ResetPassword from "./components/Common/ResetPassword/ResetPassword";
 import SendResetEmail from "./components/Common/SendResetEmail/SendResetEmail";
 import PageNotFound from "./components/PageNotFound/PageNotFound";
 import CookieConsent from "react-cookie-consent";
+import ModalAlert from "./components/Common/ModalAlert/ModalAlert";
 
 function App() {
   const [check, setCheck] = useState(true);
@@ -84,11 +85,11 @@ function App() {
         if (address) {
           dispatch(setDeliverySelfState(address.delivery_self || false));
           dispatch(setDeliveryCostState(Number(address.delivery_cost)));
-          dispatch(setDeliveryName(address.delivery_name));
+          dispatch(setDeliveryName(address.delivery_name!));
           dispatch(setDeliveryTariffCodeState(address.delivery_tariff_code));
           dispatch(setDeliveryOfficeState(address.delivery_office));
-          dispatch(setDeliveryOfficeDetail(address.delivery_office_detail));
-          dispatch(setDeliveryAddress(address.delivery_address));
+          dispatch(setDeliveryOfficeDetail(address.delivery_office_detail!));
+          dispatch(setDeliveryAddress(address.delivery_address!));
           dispatch(
             setDeliveryTime([
               Number(address.min_delivery_time),
@@ -116,8 +117,9 @@ function App() {
 
     if (hasParam) {
       const access = url.searchParams.get("user");
-
-      access && Cookies.set("_wp_kcrt", access);
+      if (access) {
+        Cookies.set("_wp_kcrt", access);
+      }
       if (!hasReloaded) {
         window.location.reload();
         localStorage.setItem("hasReloaded", "true");
@@ -130,14 +132,14 @@ function App() {
 
     const timer = setTimeout(() => {}, 1000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [dispatch, user.isReset]);
 
   useEffect(() => {
     if (check) {
       rememberUser();
       setCheck(false);
     }
-  }, [check]);
+  }, [check, rememberUser]);
 
   useEffect(() => {
     fetchUserData();
@@ -174,6 +176,16 @@ function App() {
       {activeCard && <CardDetail card={activeCard} />}
       {cartIsActive && <Cart />}
       <Category />
+      {isError && (
+        <ModalAlert
+          onClose={() => {}}
+          duration={2000}
+          addClass=""
+          message={
+            "Произошла ошибка попробуйте обновить страницу. \n  Если ошибка сохранится свяжитесь с администрацией сайта"
+          }
+        />
+      )}
       {isLoading ? <Spinner /> : <Cards />}
       <AboutMe />
       <Footer />

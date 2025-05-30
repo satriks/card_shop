@@ -35,7 +35,9 @@ export default function CardDetail({ card }: Props) {
 
   const clearCardDetailWrapper = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    target.classList.contains("card_detail_wrapper") && closeFadeOut();
+    if (target.classList.contains("card_detail_wrapper")) {
+      closeFadeOut();
+    }
   };
 
   let cardsFiltered = activeCategory
@@ -46,10 +48,11 @@ export default function CardDetail({ card }: Props) {
   cardsFiltered = cardsFiltered.filter(
     (card) => !cart.includes(card) && card !== cardDetail
   );
-  cardsFiltered.length <= 3 &&
+  if (cardsFiltered.length <= 3) {
     cardsFiltered.push(
       ...cards.filter((card) => !cart.includes(card) && card !== cardDetail)
     );
+  }
 
   cardsFiltered = [...new Set(cardsFiltered)];
 

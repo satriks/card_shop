@@ -17,7 +17,9 @@ export default function Tag({ title = "Все" }: Props) {
       }`}
       onClick={(e) => {
         const text: string | null = (e.target as HTMLElement).textContent;
-        text && dispatch(setActiveCategory(text));
+        if (text) {
+          dispatch(setActiveCategory(text));
+        }
       }}
     >
       {title}

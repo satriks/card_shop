@@ -31,3 +31,4 @@ starts_script
 *.njsproj
 *.sln
 *.sw?
+.eslintrc.js

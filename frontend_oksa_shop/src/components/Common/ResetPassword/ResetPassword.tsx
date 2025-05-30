@@ -25,7 +25,7 @@ const ResetPassword: React.FC = () => {
       console.log("запрос сервера");
 
       try {
-        user.access &&
+        if (user.access) {
           updateUserApi(user.access, { password: newPassword }).then((resp) => {
             if (resp.status === 200) {
               setSuccess("Пароль успешно обновлен!"); // Успешное обновление пароля
@@ -37,6 +37,7 @@ const ResetPassword: React.FC = () => {
               }, 2000);
             }
           });
+        }
         // Сброс сообщения об ошибке
       } catch (error) {
         console.error("Ошибка при обновлении пароля:", error);

@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 from .models import Delivery
 class DeliverySerializer(serializers.ModelSerializer):
@@ -13,7 +14,10 @@ class DeliverySerializer(serializers.ModelSerializer):
         if user_data is not None:
             user = self.context['request'].user
         # проверка на повторное создание
-        delivery_check = Delivery.objects.get(user=user, delivery_name=validated_data['delivery_name'])
+        try:
+            delivery_check = Delivery.objects.get(user=user, delivery_name=validated_data['delivery_name'])
+        except ObjectDoesNotExist:
+            delivery_check = None
         print(delivery_check)
         if delivery_check is not None:
             return delivery_check

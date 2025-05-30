@@ -146,23 +146,56 @@ export default function Delivery() {
       clearTimeout(timer);
     }, 800);
   };
-  const findPostalCode = (obj: Record<string, any>): string | undefined => {
+  interface Dict {
+    [key: string]: string | Dict;
+  }
+  const findPostalCode = (obj: Dict): string | undefined => {
     if (typeof obj === "object" && obj !== null) {
       // Проходим по всем ключам объекта
       for (const key in obj) {
-        if (key === "PostalCode") {
-          const res = obj[key]["PostalCodeNumber"];
-          return res;
+        if (key === "PostalCode" && typeof obj[key] === "object") {
+          const postalCodeObj = obj[key] as Dict;
+          const res = postalCodeObj["PostalCodeNumber"];
+          if (typeof res == "string") {
+            return res; // Возвращаем найденный почтовый код
+          } else {
+            return undefined;
+          }
         }
-        // Рекурсивно вызываем функцию для вложенных объектов
-        const result: string | undefined = findPostalCode(obj[key]); // Сохраняем результат рекурсивного вызова
-        if (result) {
-          // Если результат не undefined, возвращаем его
-          return result;
+
+        if (typeof obj[key] === "object" && obj[key] !== null) {
+          const result: string | undefined = findPostalCode(obj[key] as Dict);
+          if (result) {
+            // Если результат не undefined, возвращаем его
+            return result;
+          }
         }
       }
     }
+    return undefined; // Возвращаем undefined, если ничего не найдено
   };
+  // const findPostalCode = (
+  //   obj: Record<string, string | Record<string, string>>
+  // ): string | undefined => {
+  //   if (typeof obj === "object" && obj !== null) {
+  //     // Проходим по всем ключам объекта
+
+  //     for (const key in obj) {
+  //       if (key === "PostalCode") {
+  //         const res = obj[key]["PostalCodeNumber"];
+  //         return res;
+  //       }
+  //       // Рекурсивно вызываем функцию для вложенных объектов
+  //       const result: string | undefined = findPostalCode(obj[key]); // Сохраняем результат рекурсивного вызова
+  //       console.log(obj[key]);
+
+  //       if (result) {
+  //         // Если результат не undefined, возвращаем его
+  //         return result;
+  //       }
+  //     }
+  //   }
+  // };
   const handleMapClick = (event: MapClickEvent) => {
     const coords: number[] = event.get("coords");
     setSelectedCoordinates(coords); // Сохраняем координаты
@@ -228,7 +261,7 @@ export default function Delivery() {
   const sendAddress = (deliveryAddressDetail: DeliveryDto) => {
     console.log(deliveryAddressDetail, "данные для отправки");
 
-    if (user.access) {
+    if (user.access && user.access != null) {
       const token = user.access;
       console.log(token);
 
@@ -236,16 +269,17 @@ export default function Delivery() {
         const result = createAddress(token, deliveryAddressDetail);
         console.log("Доставка успешно создана:", result);
         const timeout = setTimeout(() => {
-          getDeliversApi(user.access).then((response) => {
+          getDeliversApi(user.access!).then((response) => {
             dispatch(setAddresses(response));
           });
+          clearTimeout(timeout);
         }, 3000);
       } catch (error) {
         console.error("Ошибка при создании доставки:", error);
       }
     }
   };
-  const delAddress = (id) => {
+  const delAddress = (id: number) => {
     const newAddresses = addresses?.filter((address) => {
       return address.id != id;
     });
@@ -255,7 +289,7 @@ export default function Delivery() {
       deleteAddress(token, id)
         .then((response) => {
           if (response.status == 204)
-            setSuccessDelAddress("Адресс успешно удален");
+            setSuccessDelAddress("Адрес успешно удален");
         })
         .catch((error) => {
           setErrorDelAddress(error.message);
@@ -268,11 +302,15 @@ export default function Delivery() {
     if (address) {
       dispatch(setDeliverySelfState(address.delivery_self || false));
       dispatch(setDeliveryCostState(Number(address.delivery_cost)));
-      dispatch(setDeliveryName(address.delivery_name));
+      dispatch(setDeliveryName(address.delivery_name!));
       dispatch(setDeliveryTariffCodeState(address.delivery_tariff_code));
       dispatch(setDeliveryOfficeState(address.delivery_office));
-      dispatch(setDeliveryOfficeDetail(address.delivery_office_detail));
-      dispatch(setDeliveryAddress(address.delivery_address));
+      if (address.delivery_office_detail) {
+        dispatch(setDeliveryOfficeDetail(address.delivery_office_detail));
+      }
+      if (address.delivery_address) {
+        dispatch(setDeliveryAddress(address.delivery_address));
+      }
       dispatch(
         setDeliveryTime([
           Number(address.min_delivery_time),
@@ -285,7 +323,6 @@ export default function Delivery() {
   };
 
   const saveDelivery = (name: string) => {
-    const key = name;
     const deliveryAddressDetail: DeliveryDto = {};
 
     if (selectedOption === "self") {
@@ -380,7 +417,8 @@ export default function Delivery() {
     if (!isLoading && !isOfficesLoading && cityDetail) {
       setCityCurrent(true); // Устанавливаем cityCurrent в true только после загрузки данных
     }
-  }, [isLoading, isOfficesLoading, officesData]);
+    console.log(officesData, " this is offices data");
+  }, [isLoading, isOfficesLoading, officesData, cityDetail]);
 
   return (
     <div
@@ -395,7 +433,7 @@ export default function Delivery() {
               return (
                 <div
                   className="delivery_address"
-                  key={address.delivery_name + address.id}
+                  key={address.delivery_name! + address.id!}
                 >
                   <button
                     onClick={() => {
@@ -406,7 +444,7 @@ export default function Delivery() {
                   </button>
                   <CancelButton
                     onClick={() => {
-                      delAddress(address.id);
+                      if (address.id) delAddress(address.id);
                     }}
                   />
                 </div>
@@ -501,6 +539,17 @@ export default function Delivery() {
                 />
               </p>
             </label>
+            {isCityLoading && <Spinner />}
+            {cityError && (
+              <ModalAlert
+                onClose={() => {}}
+                duration={2000}
+                addClass=""
+                message={
+                  "Произошла ошибка попробуйте обновить страницу. \n  Если ошибка сохранится свяжитесь с администрацией сайта"
+                }
+              />
+            )}
             {cityData && cityData.length > 0 && (
               <ul className="city_dropdown">
                 {cityData.map((city) => (
@@ -510,7 +559,6 @@ export default function Delivery() {
                     onClick={() => {
                       setCityInfo(city);
                       setCityInput(city.full_name);
-                      // console.log(cityDetail," до сброса");
 
                       getCity("");
                       getCityDetail(city.code);
@@ -524,6 +572,17 @@ export default function Delivery() {
               </ul>
             )}
           </div>
+        )}
+
+        {(error || officesError) && (
+          <ModalAlert
+            onClose={() => {}}
+            duration={2000}
+            addClass=""
+            message={
+              "Произошла ошибка попробуйте обновить страницу. \n  Если ошибка сохранится свяжитесь с администрацией сайта"
+            }
+          />
         )}
         {selectedOption === "delivery" &&
           cityDetail &&
@@ -598,7 +657,6 @@ export default function Delivery() {
                         setBuilding(baloonHouse);
                         setComment(baloonComment);
                         setHandleTariffCode("137");
-                        setTariffCode;
                         scrollDown();
                       }}
                     />
@@ -607,13 +665,23 @@ export default function Delivery() {
               </div>
             </YMaps>
           )}
+        {tariffError && (
+          <ModalAlert
+            onClose={() => {}}
+            duration={2000}
+            addClass=""
+            message={
+              "Произошла ошибка попробуйте обновить страницу. \n  Если ошибка сохранится свяжитесь с администрацией сайта"
+            }
+          />
+        )}
         {isLoadingTariff && <Spinner />}
         {selectedOption === "delivery" && !isLoadingTariff && (
           <div className="delivery_select_detail">
             {selectedOption === "delivery" &&
               tariffData &&
               tariffData.map((tariff) => (
-                <label>
+                <label key={tariff.tariff_code}>
                   <input
                     type="radio"
                     value={tariff.tariff_code}
