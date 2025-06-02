@@ -31,8 +31,6 @@ const SendResetEmail: React.FC = () => {
           clearTimeout(timer);
         }, 2000);
       } else {
-        console.log(data);
-
         setError("Произошла ошибка. Попробуйте еще раз.");
       }
     } catch (error) {

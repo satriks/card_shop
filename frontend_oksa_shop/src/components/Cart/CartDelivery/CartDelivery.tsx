@@ -3,10 +3,10 @@ import { useAppDispatch, useAppSelector } from "../../../models/hooks";
 import { setDelivery } from "../../../redux/MainSlice";
 
 type DeliveryInfo = [
-  string | undefined, // Адрес
-  string | undefined, // Дополнительная информация
-  number | null | undefined, // Стоимость доставки
-  { minDeliveryTime: number | null; maxDeliveryTime: number | null } // Время доставки
+  string | undefined,
+  string | undefined,
+  number | null | undefined,
+  { minDeliveryTime: number | null; maxDeliveryTime: number | null }
 ];
 
 export default function CartDelivery() {

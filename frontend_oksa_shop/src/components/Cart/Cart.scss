@@ -82,8 +82,6 @@
 
 @media (max-width: 1020px) {
   .cart {
-    // grid-template-columns: 100%;
-    // justify-items: center;
     margin-bottom: 100px;
     display: flex;
     flex-direction: column;
@@ -107,13 +105,7 @@
       text-align: center;
       font-size: 26px;
       margin: 10px auto;
-      // left: 0;
-      // right: 0;
-      // width: auto;
     }
-    // .cart_delivery_active {
-    //   justify-items: center;
-    // }
     .cart_order {
       min-width: 400px;
     }

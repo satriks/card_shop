@@ -1,5 +1,5 @@
 # tasks.py
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
@@ -19,10 +19,11 @@ def send_registration_email(user_id):
     plain_message = strip_tags(html_message)
     from_email = 'satriks@mail.ru'
     to = user.email
-    email = EmailMultiAlternatives(subject, plain_message, from_email, [to])
-    email.content_subtype = "html"  # Указываем, что это HTML-сообщение
-    email.attach_alternative(html_message, "text/html")
-    email.send()
+    send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+    # email = EmailMultiAlternatives(subject, plain_message, from_email, [to])
+    # email.content_subtype = "html"  # Указываем, что это HTML-сообщение
+    # email.attach_alternative(html_message, "text/html")
+    # email.send()
 
 def send_password_reset_email(user_id, reset_link):
     user = User.objects.get(pk=user_id)  # Получаем пользователя по ID

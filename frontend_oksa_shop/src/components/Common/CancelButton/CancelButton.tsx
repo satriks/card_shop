@@ -1,4 +1,3 @@
-import React from "react";
 import "./CancelButton.scss";
 import cancel from "../../../assets/common/cancel.png";
 

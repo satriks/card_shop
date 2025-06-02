@@ -1,18 +1,7 @@
-/* styles.css */
-.image-gallery-slide img {
-  // width: 480px;
-  // height: 370px;
-  /* Установите нужную ширину */
-  //   height: auto; /* Автоматическая высота для сохранения пропорций */
-  // max-width: 610px;
-  //   max-height: 370px;
-  // object-fit: contain;
-}
 .image-gallery .image-gallery-svg {
-  width: 30px; /* Установите нужную ширину стрелок */
-  height: 30px; /* Установите нужную высоту стрелок */
+  width: 30px;
+  height: 30px;
 }
-
 .image-gallery-thumbnails {
   max-width: 300px;
 }

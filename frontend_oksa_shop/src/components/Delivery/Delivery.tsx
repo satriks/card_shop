@@ -116,7 +116,7 @@ export default function Delivery() {
     latitude: string,
     longitude: string
   ) => {
-    const apiKey = import.meta.env.VITE_YMAPS_KEY; // Замените на ваш API-ключ
+    const apiKey = import.meta.env.VITE_YMAPS_KEY;
     const url = `https://geocode-maps.yandex.ru/1.x/?apikey=${apiKey}&geocode=${longitude},${latitude}&format=json`;
     try {
       const response = await fetch(url);
@@ -174,28 +174,7 @@ export default function Delivery() {
     }
     return undefined; // Возвращаем undefined, если ничего не найдено
   };
-  // const findPostalCode = (
-  //   obj: Record<string, string | Record<string, string>>
-  // ): string | undefined => {
-  //   if (typeof obj === "object" && obj !== null) {
-  //     // Проходим по всем ключам объекта
 
-  //     for (const key in obj) {
-  //       if (key === "PostalCode") {
-  //         const res = obj[key]["PostalCodeNumber"];
-  //         return res;
-  //       }
-  //       // Рекурсивно вызываем функцию для вложенных объектов
-  //       const result: string | undefined = findPostalCode(obj[key]); // Сохраняем результат рекурсивного вызова
-  //       console.log(obj[key]);
-
-  //       if (result) {
-  //         // Если результат не undefined, возвращаем его
-  //         return result;
-  //       }
-  //     }
-  //   }
-  // };
   const handleMapClick = (event: MapClickEvent) => {
     const coords: number[] = event.get("coords");
     setSelectedCoordinates(coords); // Сохраняем координаты
@@ -204,8 +183,6 @@ export default function Delivery() {
     // Получаем адрес по координатам
     getAddressFromCoordinates(coords[0].toString(), coords[1].toString()).then(
       (address: GeoObjectCollectionDto) => {
-        console.log(address, "this is adr");
-
         clearDeliveryForm();
         const bStreet = address.Components.filter(
           (item) => item.kind == "street"
@@ -231,7 +208,6 @@ export default function Delivery() {
       getCity(cityInput);
     } else {
       setCityCurrent(false);
-      // cityDetail = [];
     }
   };
   const wrapperCancel = (e: React.MouseEvent) => {
@@ -252,22 +228,18 @@ export default function Delivery() {
       const tariff = tariffs.filter((tariff) => {
         return tariff.tariff_code == Number(code);
       })[0];
-      // console.log("tarif from handle tarif", tariff);
 
       setDeliveryCost(tariff.delivery_sum * 1.2);
       dispatch(setDeliveryTime([tariff.calendar_min, tariff.calendar_max]));
     }
   };
   const sendAddress = (deliveryAddressDetail: DeliveryDto) => {
-    console.log(deliveryAddressDetail, "данные для отправки");
-
     if (user.access && user.access != null) {
       const token = user.access;
-      console.log(token);
 
       try {
         const result = createAddress(token, deliveryAddressDetail);
-        console.log("Доставка успешно создана:", result);
+        console.log("Доставка успешно создана:");
         const timeout = setTimeout(() => {
           getDeliversApi(user.access!).then((response) => {
             dispatch(setAddresses(response));
@@ -391,7 +363,6 @@ export default function Delivery() {
   };
   const checkSave = () => {
     if (["136", "483"].includes(tariffCode)) {
-      console.log(sdekOffice);
       if (sdekOffice) {
         setIsModalOpen(true);
       } else {
@@ -401,23 +372,11 @@ export default function Delivery() {
       setIsModalOpen(true);
     }
   };
-  // const setActiveDelivery = () => {
-  //   const name = Cookies.get("_da");
-  //   if (name) {
-  //     const address = addresses?.filter((address) => {
-  //       address.delivery_name === name;
-  //     });
-  //     if (address) {
-  //       setAddress(address[0]);
-  //     }
-  //   }
-  // };
 
   useEffect(() => {
     if (!isLoading && !isOfficesLoading && cityDetail) {
       setCityCurrent(true); // Устанавливаем cityCurrent в true только после загрузки данных
     }
-    console.log(officesData, " this is offices data");
   }, [isLoading, isOfficesLoading, officesData, cityDetail]);
 
   return (
@@ -475,8 +434,8 @@ export default function Delivery() {
         {selectedOption === "self" && (
           <YMaps
             query={{
-              apikey: import.meta.env.VITE_YMAPS_KEY, // Здесь вставьте ваш API-ключ
-              lang: "ru_RU", // Укажите язык, если необходимо
+              apikey: import.meta.env.VITE_YMAPS_KEY,
+              lang: "ru_RU",
             }}
           >
             <div className="delivery_map">
@@ -590,8 +549,8 @@ export default function Delivery() {
           officesData && (
             <YMaps
               query={{
-                apikey: import.meta.env.VITE_YMAPS_KEY, // Здесь вставьте ваш API-ключ
-                lang: "ru_RU", // Укажите язык, если необходимо
+                apikey: import.meta.env.VITE_YMAPS_KEY,
+                lang: "ru_RU",
               }}
             >
               <div className="delivery_map">
@@ -636,7 +595,6 @@ export default function Delivery() {
                         setStreet(data[0]);
                         setBuilding(data[1]);
                         setComment(office.note);
-                        // setTariffCode("136");
                         setHandleTariffCode("136");
                         scrollDown();
                         setSdekOffice(office.code);

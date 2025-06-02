@@ -93,8 +93,15 @@ export const registrationApi = async (
     if (error instanceof AxiosError) {
       // Проверяем, является ли ошибка экземпляром AxiosError
       console.error("Ошибка ответа:", error.response?.data);
+      let mess;
+      if (error.response?.data.email) {
+        mess = error.response?.data.email;
+      } else {
+        mess = error.response?.data;
+      }
+
       console.error("Статус:", error.response?.status);
-      throw new Error(error.response?.data.email);
+      throw new Error(mess);
     }
     throw new Error("Произошла ошибка при регистрации");
   }

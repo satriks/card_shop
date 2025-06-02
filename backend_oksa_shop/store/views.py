@@ -42,14 +42,17 @@ class RegisterView(generics.CreateAPIView):
 
         # Создание нового пользователя
         user = super().create(request, *args, **kwargs).data
-        logger.info(f'User created {user.email}')
+        logger.info(f'User created {user}')
 
 
         # Получаем пользователя из базы данных
         user_instance = CustomUser.objects.get(email=email)
 
         # Отпавляем письмо регистрации
-        job = send_registration_email(user_instance.id)
+        try:
+            job = send_registration_email(user_instance.id)
+        except Exception as e:
+            return Response( 'Такой почты не существует', status=status.HTTP_400_BAD_REQUEST )
 
         # Генерация токенов
         refresh = RefreshToken.for_user(user_instance)
@@ -110,7 +113,7 @@ class ConfirmEmailView(APIView):
             user.email_verified = True
             user.save()
             logger.info(f'{user.email} подтвердил почту')
-            response = redirect(settings.BASE_HOST)  # Замените на ваш URL главной страницы
+            response = redirect(settings.TEST_SITE)  # Замените на ваш URL главной страницы
             # response.set_cookie('_wp_kcrt', user.access_token)  # Устанавливаем cookie с access token
             return response
         else:

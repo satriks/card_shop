@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { useAppDispatch } from "../../../../models/hooks";
 import {
   setSendReset,
@@ -11,7 +12,7 @@ import {
   setUserPhone,
 } from "../../../../redux/MainSlice";
 import { loginApi, registrationApi } from "../../../../utils/api";
-import CancelButton from "../../../Common/CancelButton/cancelButton";
+import CancelButton from "../../../Common/CancelButton/CancelButton";
 import ModalAlert from "../../../Common/ModalAlert/ModalAlert";
 import "./AuthForm.scss";
 import React, { useState } from "react";
@@ -40,8 +41,6 @@ export default function AuthForm({ onClose }: Props) {
         middleName,
         phone
       );
-      console.log("Статус:", status);
-      console.log("Данные:", data);
       if (status === 201) {
         dispatch(setUserActiveState(true));
         dispatch(setUserAccess(data.access));
@@ -57,9 +56,19 @@ export default function AuthForm({ onClose }: Props) {
           clearTimeout(waitShowMessage);
         }, 2000);
       }
-    } catch (error) {
-      setErrorModal(error.message);
-      console.error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const errorMessage =
+          error.response?.data?.message ||
+          error.message ||
+          "Ошибка при выполнении запроса";
+        setErrorModal(errorMessage);
+      } else {
+        console.error("Неизвестная ошибка:", error);
+        const unknownErrorMessage =
+          (error as Error).message || "Неизвестная ошибка";
+        setErrorModal(unknownErrorMessage);
+      }
     }
   };
   const loginUser = async () => {

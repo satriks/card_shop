@@ -8,7 +8,6 @@
   align-items: center;
   gap: 30px;
   padding: 20px;
-  // margin-left: 60px;
   @extend .TextLabel;
 
   h2 {
@@ -29,7 +28,6 @@
   }
   .cart_delivery_name {
     margin: 0;
-    // margin-bottom: 10px;
     @extend .TextLabel;
     opacity: 0.3;
   }
