@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./DeliveryModal.scss";
-import CancelButton from "../CancelButton/cancelButton";
+import CancelButton from "../CancelButton/CancelButton";
 
 type Props = {
   isOpen: boolean;

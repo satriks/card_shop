@@ -213,6 +213,7 @@ export interface PaymentDto {
   status: string;
   payment_id: string;
 }
+type PaymentStatus = "succeeded" | "pending" | "canceled";
 
 export interface OrderDto {
   id: number;
@@ -222,7 +223,7 @@ export interface OrderDto {
   recipient_email: string;
   delivery_status: string;
   delivery: DeliveryDto;
-  payment_status: string;
+  payment_status: PaymentStatus;
   payment_id: PaymentDto;
   postcards: CardDataDto[];
   created_at: string;

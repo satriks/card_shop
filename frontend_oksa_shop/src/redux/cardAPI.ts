@@ -31,7 +31,7 @@ export const cardApi = createApi({
     getAddresses: build.query<DeliveryDto, void>({
       query: () => "sdek/deliveries/",
     }),
-    getOrders: build.query<OrderDto[], void>({
+    getOrders: build.query<OrderDto[], string>({
       query: (token) => ({
         url: "orders/get/",
         headers: {

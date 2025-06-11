@@ -12,7 +12,7 @@ import {
   setUserPhone,
 } from "../../redux/MainSlice";
 import "./UserPanel.scss";
-import CancelButton from "../Common/CancelButton/cancelButton";
+import CancelButton from "../Common/CancelButton/CancelButton";
 import UpdateUser from "./UpdateUser/UpdateUser";
 import { useState } from "react";
 import Cookies from "js-cookie";

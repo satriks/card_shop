@@ -5,7 +5,7 @@ import SetDelivery from "../Common/SetDelivery/SetDelivery";
 import CartDelivery from "./CartDelivery/CartDelivery";
 import CartReceiver from "./CartReceiver/CartReceiver";
 import CartOrder from "./CartOrder/CartOrder";
-import CancelButton from "../Common/CancelButton/cancelButton";
+import CancelButton from "../Common/CancelButton/CancelButton";
 import { useAppDispatch, useAppSelector } from "../../models/hooks";
 import { setActiveCart } from "../../redux/MainSlice";
 

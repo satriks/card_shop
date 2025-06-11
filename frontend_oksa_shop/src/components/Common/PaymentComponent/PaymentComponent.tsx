@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 const PaymentComponent = () => {
   const [amount, setAmount] = useState("");
   const handlePayment = async () => {

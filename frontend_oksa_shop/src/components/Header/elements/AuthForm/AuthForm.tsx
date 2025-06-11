@@ -91,8 +91,13 @@ export default function AuthForm({ onClose }: Props) {
         onClose();
         // логика получения данных с юзера с сервера
       }
-    } catch (error) {
-      setErrorModal(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrorModal(error.message);
+      } else {
+        console.error("Неизвестная ошибка:", error);
+        setErrorModal("Произошла неизвестная ошибка");
+      }
     }
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

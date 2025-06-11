@@ -6,6 +6,7 @@ import CancelButton from "../../Common/CancelButton/CancelButton";
 import Spinner from "../../Common/Spinner/Spinner";
 import "./Orders.scss";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 interface IconStatus {
   succeeded: string;
@@ -32,7 +33,9 @@ type Props = {
 export default function Orders({ onClose }: Props) {
   const user = useAppSelector((state) => state.store.user);
   const [isVisible, setIsVisible] = useState(true);
-  const { data, error, isLoading, isError } = useGetOrdersQuery(user.access);
+  const { data, error, isLoading, isError } = useGetOrdersQuery(
+    user.access ?? ""
+  );
   const closeFadeIn = () => {
     setIsVisible(false);
     const timer = setTimeout(() => {
@@ -53,9 +56,22 @@ export default function Orders({ onClose }: Props) {
       <div className="orders">
         <h2>Мои заказы</h2>
         {isLoading && <Spinner />}
-        {isError && error && <div>{error}</div>}
+        {/* {isError && error && <div>{error}</div>} */}
+        {isError && error && (
+          <div>
+            {error && "status" in error && error.status === 500 ? (
+              <div>Произошла ошибка сервера. Пожалуйста, попробуйте позже.</div>
+            ) : error && "message" in error ? (
+              <div>{error.message || "Неизвестная ошибка"}</div>
+            ) : (
+              <div>Произошла неизвестная ошибка</div>
+            )}
+          </div>
+        )}
         {data &&
-          data.map((order) => <OrderItem key={order.id} order={order} />)}
+          data.map((order) => (
+            <OrderItem key={order.id + uuidv4()} order={order} />
+          ))}
         <CancelButton
           onClick={() => {
             closeFadeIn();
@@ -90,7 +106,11 @@ const OrderItem = ({ order }: OrderItemProps) => {
   let deliveryDateDisplay: string | undefined; // Определяем переменную здесь
 
   if (order.delivery && order.delivery.delivery_self !== undefined) {
-    if (order.delivery.delivery_self == false) {
+    if (
+      order.delivery.delivery_self == false &&
+      order.delivery.max_delivery_time != null &&
+      order.delivery.min_delivery_time != null
+    ) {
       const minDeliveryDate = deliveryDate(
         order.created_at,
         order.delivery.min_delivery_time

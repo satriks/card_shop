@@ -41,7 +41,7 @@ export function Header() {
         </div>
         {/* <Search /> */}
         <Catalog />
-        {auth && <AuthForm onClose={setAuth} />}
+        {auth && <AuthForm onClose={() => setAuth(false)} />}
         <div className="header_cart">
           <button
             className="header_cart_button"

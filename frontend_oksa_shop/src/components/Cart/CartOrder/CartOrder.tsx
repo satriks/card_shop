@@ -89,7 +89,7 @@ export default function CartOrder() {
         <p>
           {order.reduce((summ, card) => {
             return summ + card.price;
-          }, delivery.deliveryCost)}{" "}
+          }, delivery.deliveryCost ?? 0)}{" "}
           руб.
         </p>
       </div>

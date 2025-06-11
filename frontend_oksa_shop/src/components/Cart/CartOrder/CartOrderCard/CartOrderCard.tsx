@@ -2,7 +2,7 @@ import "./CartOrderCard.scss";
 import { CardDataDto } from "../../../../models/models";
 import { useAppDispatch } from "../../../../models/hooks";
 import { delCard, setCardDetail } from "../../../../redux/MainSlice";
-import CancelButton from "../../../Common/CancelButton/cancelButton";
+import CancelButton from "../../../Common/CancelButton/CancelButton";
 
 type Props = { card: CardDataDto };
 
