@@ -22,7 +22,7 @@ const ResetPassword: React.FC = () => {
       setError("Пароли не совпадают");
     }
     if (newPassword == confirmPassword) {
-      console.log("запрос сервера");
+      // console.log("запрос сервера");
 
       try {
         if (user.access) {

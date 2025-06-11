@@ -4,7 +4,7 @@ import ModalAlert from "../ModalAlert/ModalAlert";
 import { resetPasswordApi } from "../../../utils/api";
 import { useAppDispatch } from "../../../models/hooks";
 import { setSendReset, setUserInfo } from "../../../redux/MainSlice";
-import CancelButton from "../CancelButton/cancelButton";
+import CancelButton from "../CancelButton/CancelButton";
 
 const SendResetEmail: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -23,7 +23,13 @@ const SendResetEmail: React.FC = () => {
       const [status, data] = await resetPasswordApi(email);
 
       if (status == 200) {
-        setSuccess("Ссылка для восстановления пароля отправлена на ваш email!");
+        if ("message" in data) {
+          setSuccess(data.message);
+        } else {
+          setSuccess(
+            "Ссылка для восстановления пароля отправлена на ваш email!"
+          );
+        }
         setError("");
         const timer = setTimeout(() => {
           dispatch(setUserInfo(false));

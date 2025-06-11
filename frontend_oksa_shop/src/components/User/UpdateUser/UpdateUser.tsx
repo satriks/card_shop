@@ -9,7 +9,7 @@ import {
   setUserPhone,
 } from "../../../redux/MainSlice";
 import { updateUserApi } from "../../../utils/api";
-import CancelButton from "../../Common/CancelButton/cancelButton";
+import CancelButton from "../../Common/CancelButton/CancelButton";
 import ModalAlert from "../../Common/ModalAlert/ModalAlert";
 import "./UpdateUser.scss";
 import React, { useState } from "react";
@@ -139,8 +139,6 @@ export default function UpdateUser({ onClose }: Props) {
               required
             />
           </div>
-          {/* {error && <p className="error">{error}</p>}
-          {success && <p className="success">{success}</p>} */}
           <button
             className="update_user_save"
             type="submit"

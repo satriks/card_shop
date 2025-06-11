@@ -126,8 +126,6 @@ function App() {
       }
       dispatch(setUserAccess(access));
       dispatch(setUserReset(true));
-      console.log(hasParam);
-      console.log(user.isReset, " user.isReset");
     }
 
     const timer = setTimeout(() => {}, 1000);
@@ -155,7 +153,6 @@ function App() {
     if (data.length > 0) {
       dispatch(setCards(data));
       const category: string[] = [];
-      console.log(data);
 
       data.forEach((element: CardDataDto) => {
         category.push(...element.categories);

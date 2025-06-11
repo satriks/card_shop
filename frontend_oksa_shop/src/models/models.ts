@@ -229,7 +229,7 @@ export interface OrderDto {
   postcards_total?: number;
 }
 export interface UserTokenDTO {
-  user: string;
+  user: RegistrationData;
   refresh: string;
   access: string;
 }
@@ -252,10 +252,12 @@ export interface UserDataDTO {
 //   password?: string;
 // }
 
-// export interface RegistrationData {
-//   username: string;
-//   password: string;
-//   email: string;
-//   firstName: string;
-//   lastName: string;
-// }
+export interface RegistrationData {
+  email: string;
+  id: number;
+  is_staff: boolean;
+  first_name?: string;
+  last_name?: string;
+  middle_name?: string;
+  phone_number?: string;
+}

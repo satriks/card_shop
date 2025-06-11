@@ -92,6 +92,9 @@
     justify-content: space-between;
     @extend .TextBody;
     text-align: center;
+    h3 {
+      font-size: 24px;
+    }
 
     .card_detail_info_delivery_detail {
       width: 70%;

@@ -5,7 +5,7 @@ import SetDelivery from "../Common/SetDelivery/SetDelivery";
 import { useAppDispatch, useAppSelector } from "../../models/hooks";
 import { CardDataDto } from "../../models/models";
 import { addCard, setActiveCart, setCardDetail } from "../../redux/MainSlice";
-import CancelButton from "../Common/CancelButton/cancelButton";
+import CancelButton from "../Common/CancelButton/CancelButton";
 import DeliveryDetail from "./DeliveryDetail/DeliveryDetail";
 
 type Props = { card: CardDataDto };
@@ -90,7 +90,7 @@ export default function CardDetail({ card }: Props) {
             </button>
           </div>
           <div className="card_detail_info_delivery">
-            <h3>Доставка : </h3>
+            <h3>Доставка: </h3>
             {delivery.deliverySelf ||
             delivery.deliveryAddress ||
             delivery.deliveryOffice ? (

@@ -273,7 +273,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mail.ru'  # SMTP-сервер mail.ru
 EMAIL_PORT = 587  # Порт для TLS
 EMAIL_USE_TLS = True  # Использовать TLS
-EMAIL_HOST_USER = 'satriks@mail.ru'  # Ваш email на mail.ru
+EMAIL_HOST_USER = os.getenv('OWNER_EMAIL')  # Ваш email на mail.ru
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')  # Ваш пароль от почты
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 

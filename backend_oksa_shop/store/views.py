@@ -52,7 +52,8 @@ class RegisterView(generics.CreateAPIView):
         try:
             job = send_registration_email(user_instance.id)
         except Exception as e:
-            return Response( 'Такой почты не существует', status=status.HTTP_400_BAD_REQUEST )
+            # return Response( 'Такой почты не существует', status=status.HTTP_400_BAD_REQUEST )
+            pass
 
         # Генерация токенов
         refresh = RefreshToken.for_user(user_instance)

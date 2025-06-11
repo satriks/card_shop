@@ -2,7 +2,7 @@ import { useAppSelector } from "../../../models/hooks";
 import { OrderDto } from "../../../models/models";
 import { useGetOrdersQuery } from "../../../redux/cardAPI";
 import { deliveryDate, formatDate } from "../../../utils/utils";
-import CancelButton from "../../Common/CancelButton/cancelButton";
+import CancelButton from "../../Common/CancelButton/CancelButton";
 import Spinner from "../../Common/Spinner/Spinner";
 import "./Orders.scss";
 import { useState } from "react";
@@ -44,7 +44,7 @@ export default function Orders({ onClose }: Props) {
     <div
       className={`orders_wrapper ${!isVisible ? "hide" : ""}`}
       onClick={(e) => {
-        console.log(e);
+        // console.log(e);
         if ((e.target as HTMLElement).classList.contains("orders_wrapper")) {
           closeFadeIn();
         }
@@ -74,11 +74,7 @@ const OrderItem = ({ order }: OrderItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const toggleDetails = () => {
-    console.log(isOpen, " this isOpen");
-
     if (isOpen == true) {
-      console.log(`order-details ${!isVisible ? "hide" : ""}`);
-
       setIsVisible(false);
       const timer = setTimeout(() => {
         setIsOpen(false);
@@ -89,18 +85,9 @@ const OrderItem = ({ order }: OrderItemProps) => {
       setIsOpen(true);
     }
   };
-  // let iconCurrent: string;
-  // if (order.payment_status in iconStatus) {
-  //   iconCurrent = iconStatus[order.payment_status]; // Получаем иконку
-  // } else {
-  //   iconCurrent = ""; // Если статус не найден, присваиваем пустую строку
-  // }
 
-  const iconСurrent: string = iconStatus[order.payment_status] || "";
+  const iconCurrent: string = iconStatus[order.payment_status] || "";
   let deliveryDateDisplay: string | undefined; // Определяем переменную здесь
-  // console.log(order, "order");
-  // console.log(order.delivery, "deliv");
-  // console.log(order.delivery.delivery_self, " diliv self");
 
   if (order.delivery && order.delivery.delivery_self !== undefined) {
     if (order.delivery.delivery_self == false) {
@@ -127,7 +114,7 @@ const OrderItem = ({ order }: OrderItemProps) => {
         <span>Сумма: {order.postcards_total}₽</span>
         <div className="icons">
           <div
-            className={`icon payment_icon ${iconСurrent}`}
+            className={`icon payment_icon ${iconCurrent}`}
             title={`Статус оплаты: ${titleStatus[order.payment_status]}`}
           >
             💳

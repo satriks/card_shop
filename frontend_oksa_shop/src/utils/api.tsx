@@ -85,6 +85,7 @@ export const registrationApi = async (
   validatePassword(password);
   try {
     const response = await connect.post("api/register/", requestData);
+
     Cookies.set("_wp_kcrt", response.data.refresh, { expires: 30 });
 
     return [response.status, response.data];

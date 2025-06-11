@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Delivery.scss";
 import Cookies from "js-cookie";
-import CancelButton from "../Common/CancelButton/cancelButton";
+import CancelButton from "../Common/CancelButton/CancelButton";
 import { Map, Placemark, YMaps } from "@pbe/react-yandex-maps";
 import { useAppDispatch, useAppSelector } from "../../models/hooks";
 import {
@@ -178,7 +178,6 @@ export default function Delivery() {
   const handleMapClick = (event: MapClickEvent) => {
     const coords: number[] = event.get("coords");
     setSelectedCoordinates(coords); // Сохраняем координаты
-    console.log("Выбранные координаты:", coords);
 
     // Получаем адрес по координатам
     getAddressFromCoordinates(coords[0].toString(), coords[1].toString()).then(
@@ -238,8 +237,7 @@ export default function Delivery() {
       const token = user.access;
 
       try {
-        const result = createAddress(token, deliveryAddressDetail);
-        console.log("Доставка успешно создана:");
+        createAddress(token, deliveryAddressDetail);
         const timeout = setTimeout(() => {
           getDeliversApi(user.access!).then((response) => {
             dispatch(setAddresses(response));

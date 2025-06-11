@@ -19,7 +19,6 @@ export default function Catalog() {
   const chooseCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const element = e.target;
     setValue(element.value);
-    console.log(element.value);
     dispatch(setActiveCategory(element.value));
     // dispatch(fetchProducts(e.target.value));
   };

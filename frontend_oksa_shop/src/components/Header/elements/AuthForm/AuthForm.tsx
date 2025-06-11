@@ -44,10 +44,19 @@ export default function AuthForm({ onClose }: Props) {
       if (status === 201) {
         dispatch(setUserActiveState(true));
         dispatch(setUserAccess(data.access));
-        dispatch(setUserFirstName(data.user.first_name));
-        dispatch(setUserLastName(data.user.last_name));
-        dispatch(setUserMiddleName(data.user.middle_name));
-        dispatch(setUserPhone(data.user.phone_number));
+        if (data.user.first_name) {
+          dispatch(setUserFirstName(data.user.first_name));
+        }
+
+        if (data.user.last_name) {
+          dispatch(setUserLastName(data.user.last_name));
+        }
+        if (data.user.middle_name) {
+          dispatch(setUserMiddleName(data.user.middle_name));
+        }
+        if (data.user.phone_number) {
+          dispatch(setUserPhone(data.user.phone_number));
+        }
         dispatch(setUserEmail(data.user.email));
         dispatch(setUserInfo(false));
         setSuccessModal("Вы успешно зарегестрировались");
@@ -211,7 +220,6 @@ export default function AuthForm({ onClose }: Props) {
         <p
           className="auth_form_reset_password"
           onClick={() => {
-            console.log(42);
             dispatch(setSendReset(true));
             dispatch(setUserInfo(false));
           }}
