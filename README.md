@@ -12,6 +12,8 @@
 
 ## Fronend  
   - React SPA
+  - TypeScript
+  - VITE
   - Redux
   - подключены Яндекс карты 
   - расчет доставки 
